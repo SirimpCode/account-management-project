@@ -1,6 +1,5 @@
 package com.github.accountmanagementproject.service.authAccount.userDetailsService;
 
-import com.github.accountmanagementproject.repository.account.users.CustomUserDetails;
 import com.github.accountmanagementproject.repository.account.users.User;
 import com.github.accountmanagementproject.repository.account.users.UsersJpa;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
@@ -35,11 +34,9 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(User user) {
-        return CustomUserDetails.builder()
+        return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .nickname(user.getNickname())
-                .profileImg(user.getProfileImg())
                 .authorities(user.getRoles().stream()
                         .map(roles->new SimpleGrantedAuthority(roles.getName().name()))
                         .collect(Collectors.toSet())

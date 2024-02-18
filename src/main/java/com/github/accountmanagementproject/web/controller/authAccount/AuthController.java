@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.controller.authAccount;
 
-import com.github.accountmanagementproject.repository.account.users.CustomUserDetails;
+import com.github.accountmanagementproject.config.security.exception.ExceptionContextHolder;
 import com.github.accountmanagementproject.service.MakeResponseService;
 import com.github.accountmanagementproject.service.authAccount.SignUpLoginService;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
@@ -13,9 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,10 +49,11 @@ public class AuthController {
     }
     @GetMapping("/testsuc")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomSuccessResponse successTest(){
+    public CustomSuccessResponse successTest() throws IOException {
+        System.out.println("나가유"+ExceptionContextHolder.getExceptionMessage());
         //3번째 요소 데이터는 없어도됨
         return new CustomSuccessResponse(makeResponseService.makeSuccessDetail(
-                HttpStatus.CREATED, "메세지", Arrays.asList(1,2,3,4,5))
+                HttpStatus.CREATED, "메세지")
         );
     }
     @GetMapping("/security-test")
@@ -61,10 +66,15 @@ public class AuthController {
     }
 
     @GetMapping("/auth-test")
-    public CustomUserDetails authTest(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public String authTest(@AuthenticationPrincipal String customUserDetails){
+
         return customUserDetails;
     }
 
+    @GetMapping("authorize-test")
+    public String authorizeTest(@AuthenticationPrincipal String email){
+        return email;
+    }
 
 
 }

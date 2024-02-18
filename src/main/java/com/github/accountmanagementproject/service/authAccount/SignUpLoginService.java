@@ -2,7 +2,6 @@ package com.github.accountmanagementproject.service.authAccount;
 
 import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtTokenConfig;
-import com.github.accountmanagementproject.repository.account.users.CustomUserDetails;
 import com.github.accountmanagementproject.repository.account.users.User;
 import com.github.accountmanagementproject.repository.account.users.UsersJpa;
 import com.github.accountmanagementproject.service.MakeResponseService;
@@ -93,16 +92,13 @@ public class SignUpLoginService {
 
 
         return Arrays.asList(jwtTokenDTO.getGrantType()+" "+jwtTokenDTO.getAccessToken(),new CustomSuccessResponse(
-                makeResponseService.makeSuccessDetail(HttpStatus.OK, "\""+"\""+"로그인에 성공 하였습니다.", jwtTokenDTO)
+                makeResponseService.makeSuccessDetail(HttpStatus.OK, "로그인에 성공 하였습니다.", jwtTokenDTO)
         ));
         }
         catch (BadCredentialsException e){
             throw new CustomBadCredentialsException(e.getMessage(), "비밀번호가 틀렸습니다.", loginRequest.getPassword());
         }catch (LazyInitializationException e){
             throw new CustomNotAcceptException(e.getMessage(), "db 조회 실패", loginRequest.getEmailOrPhoneNumber());
-        }
-        catch (Exception e){
-            throw  new CustomBadRequestException(e.getMessage(),"오류 발생", loginRequest);
         }
     }
 

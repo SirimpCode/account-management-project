@@ -1,10 +1,8 @@
 package com.github.accountmanagementproject.config.security;
 
+import com.github.accountmanagementproject.config.security.exception.ExceptionContextHolder;
 import com.github.accountmanagementproject.web.dto.account.JwtTokenDTO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -13,12 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -33,9 +30,9 @@ public class JwtTokenConfig {
     }
 
     public JwtTokenDTO createToken(Authentication authentication) {
-        List<String> roles = authentication.getAuthorities().stream()
+        String roles = authentication.getAuthorities().stream()
                 .map(authority->authority.getAuthority())
-                .toList();
+                .collect(Collectors.joining(","));
         Date now = new Date();
 
         String accessToken = Jwts.builder()
@@ -57,28 +54,11 @@ public class JwtTokenConfig {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-
-//        return Jwts.builder()
-//                .setIssuedAt(now)
-//                .setSubject(email)
-//                .claim("role", roles)
-//                .setExpiration(new Date(now.getTime()+1000L * 60 *60))
-//                .signWith(SignatureAlgorithm.HS256, KEY)
-//                .compact();
     }
 
 
-//    public boolean validateToken(String token){
-//        try{//.ExpiredJwtException 토큰검증실패시 캐치문으로 넘어감.
-//            Claims claims = Jwts.parser()
-//                    .setSigningKey(key).parseClaimsJws(token)
-//                    .getBody();
-//            return claims.getExpiration().after(new Date());
-//        }catch (Exception e){
-//            return false;
-//        }
-//    }
     public Authentication getAuthentication(String accessToken) {
+
         try {
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build()
                     .parseSignedClaims(accessToken);//검증은 여기서 내부적으로 진행됨
@@ -88,15 +68,24 @@ public class JwtTokenConfig {
                     Arrays.stream(payload.get("roles").toString().split(","))
                             .map(role->new SimpleGrantedAuthority(role))
                             .toList();
-            UserDetails principal = new User(payload.getSubject(), "", authorities);
 
-            return new UsernamePasswordAuthenticationToken(payload.getSubject(), accessToken, principal.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(payload.getSubject(), accessToken, authorities);
 
-        } catch (SignatureException e) {
-            // 비밀키 일치 X 처리
+        } catch (MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"토큰의 형식이 올바르지 않거나 지원되지 않는 형식입니다.");
             return null;
-        } catch (ExpiredJwtException e) {
-            // 만료 exception 처리
+        } catch (ExpiredJwtException e){
+            System.out.println(e.getMessage());
+            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"만료된 토큰 입니다.");
+            return null;
+        } catch (SignatureException e){
+            System.out.println(e.getMessage());
+            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"변조된 토큰이거나, 잘못된 서명의 토큰 입니다.");
+            return null;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"확인되지 않은 오류");
             return null;
         }
 //        String email = Jwts.parser().setSigningKey(KEY).parseClaimsJws(jwtToken).getBody().getSubject();
