@@ -1,154 +1,125 @@
 package com.github.accountmanagementproject.service.authAccount;
 
+import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtTokenConfig;
-import com.github.accountmanagementproject.repository.userRoles.Roles;
-import com.github.accountmanagementproject.repository.userRoles.RolesJpa;
-import com.github.accountmanagementproject.repository.userRoles.UserRoles;
-import com.github.accountmanagementproject.repository.userRoles.UserRolesJpa;
-import com.github.accountmanagementproject.repository.users.UserEntity;
-import com.github.accountmanagementproject.repository.users.UserJpa;
+import com.github.accountmanagementproject.repository.account.users.CustomUserDetails;
+import com.github.accountmanagementproject.repository.account.users.User;
+import com.github.accountmanagementproject.repository.account.users.UsersJpa;
+import com.github.accountmanagementproject.service.MakeResponseService;
+import com.github.accountmanagementproject.service.authAccount.userDetailsService.CustomUserDetailService;
 import com.github.accountmanagementproject.service.customExceptions.*;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
+import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.account.JwtTokenDTO;
 import com.github.accountmanagementproject.web.dto.account.LoginRequest;
-import com.github.accountmanagementproject.web.dto.account.SignUpRequest;
-import com.github.accountmanagementproject.web.dto.account.SignUpResponse;
+import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.HibernateException;
+import org.hibernate.LazyInitializationException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class SignUpLoginService {
-    private final UserJpa userJpa;
-    private final RolesJpa rolesJpa;
-    private final UserRolesJpa userRolesJpa;
-    private final JwtTokenConfig jwtTokenConfig;
+    private final MakeResponseService makeResponseService;
 
+    private final UsersJpa usersJpa;
+    private final AccountConfig accountConfig;
+    private final JwtTokenConfig jwtTokenConfig;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
 
-    //회원가입 로직
-    @Transactional(transactionManager = "tm")
-    public String signUp(SignUpRequest signUpRequest) {
-        String email = signUpRequest.getEmail();
-        String phoneNumber = signUpRequest.getPhoneNumber();
-        String password = signUpRequest.getPassword();
+    @Transactional(transactionManager = "jtm")
+    public CustomSuccessResponse signUp(AccountDto signUpRequest) {
+
+        //필수입력값 요구사항 확인, 기본 프사설정 로직
+        accountConfig.signUpChecker(signUpRequest);
+
+        //비번 암호화
+        signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+
+        //매퍼로 엔티티변환 후 롤 세팅
+        User signUpUser = UserMapper.INSTANCE.AccountDtoToUserEntity(signUpRequest);
+        signUpUser.getRoles().add(accountConfig.getNormalUserRole());
 
 
-        if(!email.matches(".+@.+\\..+")){
-            throw new CustomBindException("이메일을 정확히 입력해주세요.",email);
-        } else if (!phoneNumber.matches("01\\d{9}")) {
-            throw new CustomBindException("핸드폰 번호를 확인해주세요.", phoneNumber);
-        } else if (signUpRequest.getNickName().matches("01\\d{9}")){
-            throw new CustomBindException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",signUpRequest.getNickName());
-        }
 
-        if(userJpa.existsByEmail(signUpRequest.getEmail())){
-            throw new DuplicateKeyException("이미 입력하신 "+signUpRequest.getEmail()+" 이메일로 가입된 계정이 있습니다.",signUpRequest.getEmail());
-        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
-            throw new DuplicateKeyException("이미 입력하신 "+signUpRequest.getPhoneNumber()+" 핸드폰 번호로 가입된 계정이 있습니다.",signUpRequest.getPhoneNumber());
-        }else if(userJpa.existsByNickName(signUpRequest.getNickName())){
-            throw new DuplicateKeyException("이미 입력하신 "+signUpRequest.getNickName()+" 닉네임으로 가입된 계정이 있습니다.",signUpRequest.getNickName());
-        }
-        else if(!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$")
-                ||!(password.length()>=8&&password.length()<=20)
-        ){
-            throw new CustomBindException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.",password);
-        } else if (!signUpRequest.getPasswordConfirm().equals(password)) {
-            throw new CustomBindException("비밀번호와 비밀번호 확인이 같지 않습니다.","password : "+password+", password_confirm : "+signUpRequest.getPasswordConfirm());
+        //세이브 실행하면서 중복값 발생시 발생되는 익셉션 예외처리
+        try {
+            usersJpa.save(signUpUser);
+        }catch (DataIntegrityViolationException e){
+            Map<String, String> duplicateResponse = new LinkedHashMap<>();
+            duplicateResponse.put("email", signUpRequest.getEmail());
+            duplicateResponse.put("phoneNumber", signUpRequest.getPhoneNumber());
+            duplicateResponse.put("nickname", signUpRequest.getNickname());
+            throw new DuplicateKeyException(e.getMessage(),"이메일, 핸드폰 번호, 닉네임 세 값중 중복 값이 있습니다. 중복 확인을 해주세요.", duplicateResponse);
         }
 
 
-
-        signUpRequest.setPassword(passwordEncoder.encode(password));
-
-        Roles roles = rolesJpa.findByName("ROLE_USER");
-
-
-
-
-        UserEntity userEntity = UserMapper.INSTANCE.signUpRequestToUserEntity(signUpRequest);
-        userJpa.save(userEntity);
-
-        userRolesJpa.save(UserRoles.builder()
-                        .userEntity(userEntity)
-                        .roles(roles)
-                .build());
-
-        SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
-
-        return signUpResponse.getName()+"님 회원 가입이 완료 되었습니다.\n"+
-                "가입 날짜 : "+signUpResponse.getJoinDate();
+        return new CustomSuccessResponse(
+                makeResponseService.makeSuccessDetail(HttpStatus.CREATED, "회원가입에 성공 하였습니다.")
+        );
     }
 
+    public List<Object> loginResponseToken(LoginRequest loginRequest){
+        String emailOrPhoneNumber = loginRequest.getEmailOrPhoneNumber();
+        String password = loginRequest.getPassword();
 
-    //로그인 로직
-    public List<String> login(LoginRequest loginRequest){
-        String emailOrPhoneNumber = loginRequest.getEmailOrPhoneNumberOrNickName();
-        UserEntity userEntity;
-
-        if(emailOrPhoneNumber.matches("01\\d+")&&emailOrPhoneNumber.length()==11){
-            userEntity = userJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 핸드폰 번호의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
-                    );
-        } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
-            userEntity = userJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 이메일의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
-            );
-        } else userEntity = userJpa.findByNickNameJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 닉네임의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
+        if(emailOrPhoneNumber==null||password==null){
+            throw new CustomBadRequestException("로그인 요청값이 전달되지 않았습니다.", loginRequest);
+        }
+        try{
+        Authentication authentication = authenticationManager.authenticate(
+                //내가 만든 loadUserByUsername 메서드로 인증진행
+                new UsernamePasswordAuthenticationToken(emailOrPhoneNumber,password)
         );
 
-        try{
-            if(userEntity.getStatus().equals("delete")){
-                throw new AccessDenied("탈퇴한 계정입니다.",emailOrPhoneNumber);
-            }
+        JwtTokenDTO jwtTokenDTO = jwtTokenConfig.createToken(authentication);
 
-            if(userEntity.getStatus().equals("lock")){
-                LocalDateTime lockDateTime = userEntity.getLockDate();
-                LocalDateTime now = LocalDateTime.now();
-                if(now.isBefore(lockDateTime.plusMinutes(5))){
-                    Duration duration = Duration.between(now, lockDateTime.plusMinutes(5));
-                    String minute = String.valueOf(duration.toMinutes());
-                    String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
-                    throw new AccountLockedException(String.format(
-                            "\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", userEntity.getEmail(),minute,seconds
-                    ), loginRequest.getPassword());
-                }
-            }
-            String email = userEntity.getEmail();
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            List<String> roles = userEntity.getUserRoles().stream()
-                    .map(u->u.getRoles()).map(r->r.getName()).toList();
 
-            return Arrays.asList(jwtTokenConfig.createToken(email, roles), userEntity.getName());
-//        }catch (InternalAuthenticationServiceException e){
-//            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
+        return Arrays.asList(jwtTokenDTO.getGrantType()+" "+jwtTokenDTO.getAccessToken(),new CustomSuccessResponse(
+                makeResponseService.makeSuccessDetail(HttpStatus.OK, "\""+"\""+"로그인에 성공 하였습니다.", jwtTokenDTO)
+        ));
         }
         catch (BadCredentialsException e){
-            throw new CustomBadCredentialsException("비밀번호가 틀립니다. "+e.getMessage(),loginRequest.getPassword());
+            throw new CustomBadCredentialsException(e.getMessage(), "비밀번호가 틀렸습니다.", loginRequest.getPassword());
+        }catch (LazyInitializationException e){
+            throw new CustomNotAcceptException(e.getMessage(), "db 조회 실패", loginRequest.getEmailOrPhoneNumber());
+        }
+        catch (Exception e){
+            throw  new CustomBadRequestException(e.getMessage(),"오류 발생", loginRequest);
         }
     }
 
-    public boolean checkEmail(String email) {
-        if (!email.matches(".+@.+\\..+")) {
-            throw new CustomBindException("이메일을 정확히 입력해주세요.",email);
-        }
-        return !userJpa.existsByEmail(email);
+    public String securityTest(Integer userId) {
+        CustomUserDetailService customUserDetailService = new CustomUserDetailService(usersJpa);
+        User user = usersJpa.findById(userId).orElseThrow(()->new CustomNotFoundException("으악",userId));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(user.getPhoneNumber());
+        return userDetails.getAuthorities().toString();
+    }
+
+    public String tokenTest(String authorization) {
+        if(authorization==null||!authorization.startsWith("Bearer")) return "토큰똑바로줘라";
+        Authentication authentication = jwtTokenConfig.getAuthentication(authorization.substring(7));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Object customUserDetails = authentication.getPrincipal();
+
+
+        return authorization.substring(7);
     }
 }

@@ -25,3 +25,6 @@ spring:
       matching-strategy: ant_path_matcher #와일드카드사용해서 매칭전략 스웨거도 필요함
   jpa:
     open-in-view: false #지연로딩 성능이슈로인해 false 기본값이 true 임
+logging:
+  level:
+    sql: debug

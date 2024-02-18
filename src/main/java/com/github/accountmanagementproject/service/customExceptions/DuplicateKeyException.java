@@ -4,10 +4,16 @@ import lombok.Getter;
 
 @Getter
 public class DuplicateKeyException extends RuntimeException{
-    private final String request;
+    private final String customMessage;
+    private final Object request;
 
-    public DuplicateKeyException(String message, String request) {
-        super(message);
+    public DuplicateKeyException(String systemMessage,String customMessage, Object request) {
+        super(systemMessage);
+        this.customMessage = customMessage;
+        this.request = request;
+    }
+    public DuplicateKeyException(String customMessage, Object request){
+        this.customMessage = customMessage;
         this.request = request;
     }
 }

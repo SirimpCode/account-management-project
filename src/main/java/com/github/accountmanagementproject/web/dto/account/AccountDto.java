@@ -1,20 +1,25 @@
 package com.github.accountmanagementproject.web.dto.account;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@NoArgsConstructor
 public class AccountDto {
-    private String name;
     private String email;
-    private String nickName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String password;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String passwordConfirm;
+    private String nickname;
     private String phoneNumber;
-    private String imageUrl;
-    private String neighborhood;
     private String gender;
-    private String joinDate;
+    private String dateOfBirth;
+    private String profileImg;
+    private Set<String> roles;
 }
