@@ -21,7 +21,7 @@ public class CustomErrorResponse {
         private final String systemMessage;
         private final String customMessage;
         private final Object request;
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private final LocalDateTime timestamp;
 
         public ErrorDetail(HttpStatus httpStatus, String systemMessage, String customMessage, Object request){

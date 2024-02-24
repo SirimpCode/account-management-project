@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.repository.account.socialIds;
 
-import com.github.accountmanagementproject.repository.account.users.User;
+import com.github.accountmanagementproject.repository.account.users.MyUser;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public class SocialId {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private MyUser myUser;
 
     @Column(unique = true, nullable = false)
     private String socialId;

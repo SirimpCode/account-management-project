@@ -3,6 +3,7 @@ package com.github.accountmanagementproject.repository.account.users;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
+import com.github.accountmanagementproject.service.mappers.converter.GenderConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ import java.util.Set;
 @DynamicInsert
 @Entity
 @Table(name = "users")
-public class User {
+public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -40,7 +41,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = GenderConverter.class)
     @Column(length = 4)
     private Gender gender;
 
@@ -71,8 +72,8 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)//⬅️기본값이 lazy 이기 때문에 굳이 명시적으로 작성할 필요는 없음
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "user_id"),//참조할 fk
+            inverseJoinColumns = @JoinColumn(name = "role_id"))//상대 엔티티에서 참조할 fk
     private Set<Role> roles = new HashSet<>();//널포인트익셉션 방지하기위해 빈 HashSet 적용
 
 

@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.repository.account.friendships;
 
 
-import com.github.accountmanagementproject.repository.account.users.User;
+import com.github.accountmanagementproject.repository.account.users.MyUser;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,11 +15,11 @@ public class Friendship {
 
     @ManyToOne
     @JoinColumn(name = "user1_id", nullable = false)
-    private User user1;
+    private MyUser myUser1;
 
     @ManyToOne
     @JoinColumn(name = "user2_id", nullable = false)
-    private User user2;
+    private MyUser myUser2;
 
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;

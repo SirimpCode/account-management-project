@@ -1,7 +1,6 @@
 package com.github.accountmanagementproject.web.controller.authAccount;
 
-import com.github.accountmanagementproject.config.security.exception.ExceptionContextHolder;
-import com.github.accountmanagementproject.service.MakeResponseService;
+
 import com.github.accountmanagementproject.service.authAccount.SignUpLoginService;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
@@ -13,21 +12,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final MakeResponseService makeResponseService;
     private final SignUpLoginService signUpLoginService;
 
     @PostMapping("/sign-up")
@@ -49,11 +43,11 @@ public class AuthController {
     }
     @GetMapping("/testsuc")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomSuccessResponse successTest() throws IOException {
-        System.out.println("나가유"+ExceptionContextHolder.getExceptionMessage());
+    public CustomSuccessResponse successTest(@AuthenticationPrincipal String principal) throws IOException {
+
         //3번째 요소 데이터는 없어도됨
-        return new CustomSuccessResponse(makeResponseService.makeSuccessDetail(
-                HttpStatus.CREATED, "메세지")
+        return new CustomSuccessResponse(new CustomSuccessResponse.SuccessDetail(
+                HttpStatus.CREATED, principal)
         );
     }
     @GetMapping("/security-test")

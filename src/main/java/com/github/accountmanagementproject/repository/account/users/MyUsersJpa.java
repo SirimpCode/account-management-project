@@ -8,34 +8,34 @@ import java.util.Optional;
 
 
 @Repository
-public interface UsersJpa extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
-    Optional<User> findByPhoneNumber(String phoneNumber);
+public interface MyUsersJpa extends JpaRepository<MyUser, Integer> {
+    Optional<MyUser> findByEmail(String email);
+    Optional<MyUser> findByPhoneNumber(String phoneNumber);
 
 
     @Query(
             "SELECT u " +
-                    "FROM User u " +
+                    "FROM MyUser u " +
                     "JOIN FETCH u.roles r " +
                     "WHERE u.email = :email"
     )
-    Optional<User> findByEmailJoin(String email);
+    Optional<MyUser> findByEmailJoin(String email);
     @Query(
             "SELECT u " +
-                    "FROM User u " +
+                    "FROM MyUser u " +
                     "JOIN FETCH u.roles r " +
                     "WHERE u.phoneNumber = ?1"
     )
-    Optional<User> findByPhoneNumberJoin(String phoneNumber);
+    Optional<MyUser> findByPhoneNumberJoin(String phoneNumber);
 //
 //    @Query(
 //            "SELECT u " +
-//                    "FROM User u " +
+//                    "FROM MyUser u " +
 //                    "JOIN FETCH u.userRoles ur " +
 //                    "JOIN FETCH ur.roles " +
 //                    "WHERE u.userId = ?1"
 //    )
-//    Optional<User> findByIdJoin(Integer userId);
+//    Optional<MyUser> findByIdJoin(Integer userId);
 
 
 

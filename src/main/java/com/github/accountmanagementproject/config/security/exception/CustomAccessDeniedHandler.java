@@ -27,11 +27,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE+";charset=UTF-8");
 
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        boolean isAuth = !authorities.isEmpty();
         CustomErrorResponse errorResponse = new CustomErrorResponse(
                 new CustomErrorResponse.ErrorDetail(
                         HttpStatus.FORBIDDEN, accessDeniedException.getMessage(),
-                        isAuth?"접근 권한이 없습니다.":"계정에 권한이 설정되지 않았습니다.",String.valueOf(authorities))
+                        !authorities.isEmpty()?"접근 권한이 없습니다.":"계정에 권한이 설정되지 않았습니다.",String.valueOf(authorities))
         );
 
         String strResponse = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(errorResponse);

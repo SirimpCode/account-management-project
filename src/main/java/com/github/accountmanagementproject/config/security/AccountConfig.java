@@ -5,7 +5,9 @@ import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.repository.account.users.roles.RolesJpa;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -79,18 +81,16 @@ public class AccountConfig {
             throw new CustomBadRequestException("비밀번호와 비밀번호 확인이 같지 않습니다.",passwordConfirmError);
         }
 
+
         //성별 별 기본 프사 설정
-        if(request.getProfileImg() == null){
-            if(request.getGender()!=null){
-                if(request.getGender().equals("남성")||request.getGender().equals("여성")||request.getGender().equals("미정")){
-                    if(request.getGender().equals("남성")) request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/elderly-man-icon.png");
-                    else if (request.getGender().equals("여성")) request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/young-girl-icon.png");
-                    else request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-line-icon.png");
-                }else{
-                    throw new CustomBadRequestException("성별은 남성, 여성 또는 미정 이어야 합니다.", request.getGender());
-                }
-            }else request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-line-icon.png");
-        }
+        if(request.getGender()==null||request.getGender().equals("남성")||request.getGender().equals("여성")||request.getGender().equals("미정")){
+            if(request.getProfileImg() == null){
+                if(request.getGender()==null||request.getGender().equals("미정"))request.setProfileImg ("https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-line-icon.png");
+                else if(request.getGender().equals("남성")) request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/elderly-man-icon.png");
+                else request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/young-girl-icon.png");
+            }
+        } else throw new CustomBadRequestException("성별은 남성, 여성 또는 미정 이어야 합니다.", request.getGender());
+
 
     }
 }

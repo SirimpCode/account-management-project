@@ -1,0 +1,28 @@
+package com.github.accountmanagementproject.service.authAccount;
+
+import com.github.accountmanagementproject.repository.account.users.MyUser;
+import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.service.customExceptions.CustomNotFoundException;
+import com.github.accountmanagementproject.service.mappers.UserMapper;
+import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AccountService {
+    private final MyUsersJpa myUsersJpa;
+    public CustomSuccessResponse myInfoByEmail(String principal) {
+        MyUser myUser = myUsersJpa.findByEmailJoin(principal).orElseThrow(()->
+                new CustomNotFoundException("해당 토큰 정보의 계정이 존재하지 않습니다.",principal));
+
+        AccountDto accountDto = UserMapper.INSTANCE.myUserToAccountDto(myUser);
+
+        return new CustomSuccessResponse(new CustomSuccessResponse.SuccessDetail(HttpStatus.OK,
+                "유저 정보 조회 성공",
+                accountDto));
+
+    }
+}

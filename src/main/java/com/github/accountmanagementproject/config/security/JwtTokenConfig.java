@@ -1,11 +1,10 @@
 package com.github.accountmanagementproject.config.security;
 
-import com.github.accountmanagementproject.config.security.exception.ExceptionContextHolder;
+
 import com.github.accountmanagementproject.web.dto.account.JwtTokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,38 +58,16 @@ public class JwtTokenConfig {
 
     public Authentication getAuthentication(String accessToken) {
 
-        try {
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build()
                     .parseSignedClaims(accessToken);//검증은 여기서 내부적으로 진행됨
 
             Claims payload = claimsJws.getPayload();
+            if(payload.getSubject()==null) throw new NullPointerException("payload의 subject값이 null 입니다.");
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(payload.get("roles").toString().split(","))
-                            .map(role->new SimpleGrantedAuthority(role))
+                            .map(role -> new SimpleGrantedAuthority(role))
                             .toList();
 
             return new UsernamePasswordAuthenticationToken(payload.getSubject(), accessToken, authorities);
-
-        } catch (MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"토큰의 형식이 올바르지 않거나 지원되지 않는 형식입니다.");
-            return null;
-        } catch (ExpiredJwtException e){
-            System.out.println(e.getMessage());
-            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"만료된 토큰 입니다.");
-            return null;
-        } catch (SignatureException e){
-            System.out.println(e.getMessage());
-            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"변조된 토큰이거나, 잘못된 서명의 토큰 입니다.");
-            return null;
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            ExceptionContextHolder.setExceptionMessage(e.getMessage(),"확인되지 않은 오류");
-            return null;
-        }
-//        String email = Jwts.parser().setSigningKey(KEY).parseClaimsJws(jwtToken).getBody().getSubject();
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
 }
