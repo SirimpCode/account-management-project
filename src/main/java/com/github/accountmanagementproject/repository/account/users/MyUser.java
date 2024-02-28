@@ -4,6 +4,7 @@ import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
 import com.github.accountmanagementproject.service.mappers.converter.GenderConverter;
+import com.github.accountmanagementproject.service.mappers.converter.UserStatusConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,7 +58,7 @@ public class MyUser {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserStatusConverter.class)
     @Column(length = 10)
     private UserStatus status;
 

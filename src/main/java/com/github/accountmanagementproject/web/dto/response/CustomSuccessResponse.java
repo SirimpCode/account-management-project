@@ -13,18 +13,33 @@ public class CustomSuccessResponse {
     private SuccessDetail success;
     @Getter
     public static class SuccessDetail {
-        private final int code;
-        private final HttpStatus httpStatus;
-        private final String message;
+        private int code;
+        private HttpStatus httpStatus;
+        private String message;
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        private final Object responseData;
-        private final LocalDateTime timestamp;
-        public SuccessDetail(HttpStatus httpStatus, String message, Object... data){
-            this.code = httpStatus.value();
+        private Object responseData;
+        private LocalDateTime timestamp;
+
+        public SuccessDetail(){
+            this.httpStatus = HttpStatus.OK;
+        }
+
+        public SuccessDetail httpStatus(HttpStatus httpStatus){
             this.httpStatus = httpStatus;
+            return this;
+        }
+        public SuccessDetail message(String message){
             this.message = message;
-            this.responseData = data.length==1?data[0]:data;
+            return this;
+        }
+        public SuccessDetail responseData(Object data){
+            this.responseData = data;
+            return this;
+        }
+        public CustomSuccessResponse build(){
+            this.code = httpStatus.value();
             this.timestamp = LocalDateTime.now();
+            return new CustomSuccessResponse(this);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.config.security;
 
 
-import com.github.accountmanagementproject.web.dto.account.JwtTokenDTO;
+import com.github.accountmanagementproject.web.dto.account.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -28,7 +28,7 @@ public class JwtTokenConfig {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySource));
     }
 
-    public JwtTokenDTO createToken(Authentication authentication) {
+    public JwtToken createToken(Authentication authentication) {
         String roles = authentication.getAuthorities().stream()
                 .map(authority->authority.getAuthority())
                 .collect(Collectors.joining(","));
@@ -48,7 +48,7 @@ public class JwtTokenConfig {
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
 
-        return JwtTokenDTO.builder()
+        return JwtToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

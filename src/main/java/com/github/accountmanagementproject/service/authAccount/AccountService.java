@@ -14,15 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountService {
     private final MyUsersJpa myUsersJpa;
-    public CustomSuccessResponse myInfoByEmail(String principal) {
+    public AccountDto myInfoByEmail(String principal) {
         MyUser myUser = myUsersJpa.findByEmailJoin(principal).orElseThrow(()->
                 new CustomNotFoundException("해당 토큰 정보의 계정이 존재하지 않습니다.",principal));
-
         AccountDto accountDto = UserMapper.INSTANCE.myUserToAccountDto(myUser);
-
-        return new CustomSuccessResponse(new CustomSuccessResponse.SuccessDetail(HttpStatus.OK,
-                "유저 정보 조회 성공",
-                accountDto));
+        return UserMapper.INSTANCE.myUserToAccountDto(myUser);
 
     }
 }

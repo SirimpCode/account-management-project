@@ -2,6 +2,7 @@ package com.github.accountmanagementproject.config.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -27,17 +29,20 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE+";charset=UTF-8");
 
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        CustomErrorResponse errorResponse = new CustomErrorResponse(
-                new CustomErrorResponse.ErrorDetail(
-                        HttpStatus.FORBIDDEN, accessDeniedException.getMessage(),
-                        !authorities.isEmpty()?"접근 권한이 없습니다.":"계정에 권한이 설정되지 않았습니다.",String.valueOf(authorities))
-        );
+
+        CustomErrorResponse errorResponse = new CustomErrorResponse.ErrorDetail()
+                .httpStatus(HttpStatus.FORBIDDEN)
+                .systemMessage(accessDeniedException.getMessage())
+                .customMessage("접근 권한 없음")
+                .request(authorities.stream()
+                        .map(authority->authority.getAuthority())
+                        .map(roles-> RolesEnum.valueOf(roles).getKor())
+                        .collect(Collectors.joining(",")))
+                .build();
 
         String strResponse = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(errorResponse);
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(strResponse);
-        printWriter.flush();
-        printWriter.close();
+        response.getWriter().println(strResponse);
+
     }
 
 

@@ -9,14 +9,10 @@ import com.github.accountmanagementproject.service.authAccount.userDetailsServic
 import com.github.accountmanagementproject.service.customExceptions.*;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
-import com.github.accountmanagementproject.web.dto.account.JwtTokenDTO;
+import com.github.accountmanagementproject.web.dto.account.JwtToken;
 import com.github.accountmanagementproject.web.dto.account.LoginRequest;
-import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
-import org.hibernate.LazyInitializationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,8 +37,8 @@ public class SignUpLoginService {
     private final AuthenticationManager authenticationManager;
 
 
-    @Transactional(transactionManager = "jtm")
-    public CustomSuccessResponse signUp(AccountDto signUpRequest) {
+    @Transactional
+    public void signUp(AccountDto signUpRequest) {
 
         //필수입력값 요구사항 확인, 기본 프사설정 로직
         accountConfig.signUpChecker(signUpRequest);
@@ -65,18 +61,13 @@ public class SignUpLoginService {
             duplicateResponse.put("email", signUpRequest.getEmail());
             duplicateResponse.put("phoneNumber", signUpRequest.getPhoneNumber());
             duplicateResponse.put("nickname", signUpRequest.getNickname());
-            throw new DuplicateKeyException(e.getMessage(),"이메일, 핸드폰 번호, 닉네임 세 값중 중복 값이 있습니다. 중복 확인을 해주세요.", duplicateResponse);
+            throw new DuplicateKeyException(e.getMessage(),"이메일, 핸드폰 번호, 닉네임 세 값중 중복 값 발생", duplicateResponse);
         }catch (DateTimeException e){
-            throw new CustomBadRequestException(e.getMessage(), "요청 날짜 형식을 확인 해주세요. (ex. yyyy-MM-dd)", signUpRequest.getDateOfBirth());
+            throw new CustomBadRequestException(e.getMessage(), "호환되지 않는 날짜 형식 (ex. yyyy-MM-dd)", signUpRequest.getDateOfBirth());
         }
-
-
-        return new CustomSuccessResponse(
-                new CustomSuccessResponse.SuccessDetail(HttpStatus.CREATED, "회원가입에 성공 하였습니다.")
-        );
     }
 
-    public List<Object> loginResponseToken(LoginRequest loginRequest){
+    public JwtToken loginResponseToken(LoginRequest loginRequest){
         String emailOrPhoneNumber = loginRequest.getEmailOrPhoneNumber();
         String password = loginRequest.getPassword();
 
@@ -91,20 +82,15 @@ public class SignUpLoginService {
                 new UsernamePasswordAuthenticationToken(emailOrPhoneNumber,password)
         );
 
-        JwtTokenDTO jwtTokenDTO = jwtTokenConfig.createToken(authentication);
 
-        return Arrays.asList(jwtTokenDTO.getGrantType()+" "+jwtTokenDTO.getAccessToken(),new CustomSuccessResponse(
-                new CustomSuccessResponse.SuccessDetail(HttpStatus.OK, "로그인에 성공 하였습니다.", jwtTokenDTO)
-        ));
+        return jwtTokenConfig.createToken(authentication);
         }
         catch (BadCredentialsException e){
-            throw new CustomBadCredentialsException(e.getMessage(), "비밀번호가 틀렸습니다.", loginRequest.getPassword());
-        }catch (LazyInitializationException e){
-            throw new CustomNotAcceptException(e.getMessage(), "db 조회 실패", loginRequest.getEmailOrPhoneNumber());
+            throw new CustomBadCredentialsException(e.getMessage(), "비밀번호 오류", loginRequest.getPassword());
         }
     }
 
-    @Transactional(transactionManager = "jtm")
+    @Transactional
     public String securityTest(Integer userId) {
         CustomUserDetailService customUserDetailService = new CustomUserDetailService(myUsersJpa);
         MyUser myUser = myUsersJpa.findById(userId).orElseThrow(()->new CustomNotFoundException("으악",userId));

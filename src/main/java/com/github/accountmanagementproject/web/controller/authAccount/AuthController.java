@@ -4,6 +4,7 @@ package com.github.accountmanagementproject.web.controller.authAccount;
 import com.github.accountmanagementproject.service.authAccount.SignUpLoginService;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.account.JwtToken;
 import com.github.accountmanagementproject.web.dto.account.LoginRequest;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
@@ -26,14 +27,21 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody AccountDto accountDto){
-        CustomSuccessResponse signUpResponse = signUpLoginService.signUp(accountDto);
+        signUpLoginService.signUp(accountDto);
+        CustomSuccessResponse signUpResponse = new CustomSuccessResponse.SuccessDetail()
+                .message("회원가입 완료")
+                .httpStatus(HttpStatus.CREATED)
+                .build();
         return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
     }
     @PostMapping("/sign-in")
     public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
-        List<Object> tokenAndResponse = signUpLoginService.loginResponseToken(loginRequest);
-        httpServletResponse.setHeader("Authorization", tokenAndResponse.get(0).toString());
-        return (CustomSuccessResponse) tokenAndResponse.get(1);
+        JwtToken token = signUpLoginService.loginResponseToken(loginRequest);
+        httpServletResponse.setHeader("Authorization", token.getGrantType()+" "+token.getAccessToken());
+        return new CustomSuccessResponse.SuccessDetail()
+                .message("로그인 성공")
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 
 
@@ -46,9 +54,10 @@ public class AuthController {
     public CustomSuccessResponse successTest(@AuthenticationPrincipal String principal) throws IOException {
 
         //3번째 요소 데이터는 없어도됨
-        return new CustomSuccessResponse(new CustomSuccessResponse.SuccessDetail(
-                HttpStatus.CREATED, principal)
-        );
+        return new CustomSuccessResponse.SuccessDetail()
+                .message("테슽흐")
+                .httpStatus(HttpStatus.CREATED)
+                .build();
     }
     @GetMapping("/security-test")
     public String securityTest(@RequestParam(name = "user-id") Integer userId){

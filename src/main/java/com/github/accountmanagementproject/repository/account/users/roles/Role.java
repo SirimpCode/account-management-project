@@ -16,7 +16,7 @@ public class Role {
     @Column(name = "roles_id")
     private Integer rolesId;
 
-    @Enumerated(EnumType.STRING)
+
     @Convert(converter = RoleConverter.class)
     @Column(length = 4)
     private RolesEnum name;

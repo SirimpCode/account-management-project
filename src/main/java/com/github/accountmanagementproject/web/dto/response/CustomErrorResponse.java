@@ -15,22 +15,38 @@ public class CustomErrorResponse {
 
     @Getter
     public static class ErrorDetail {
-        private final int code;
-        private final HttpStatus httpStatus;
+        private int code;
+        private HttpStatus httpStatus;
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        private final String systemMessage;
-        private final String customMessage;
-        private final Object request;
+        private String systemMessage;
+        private String customMessage;
+        private Object request;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private final LocalDateTime timestamp;
+        private LocalDateTime timestamp;
 
-        public ErrorDetail(HttpStatus httpStatus, String systemMessage, String customMessage, Object request){
-            this.code = httpStatus.value();
+
+        public ErrorDetail httpStatus(HttpStatus httpStatus){
             this.httpStatus = httpStatus;
-            this.systemMessage = systemMessage;
-            this.customMessage = customMessage;
-            this.request = request;
-            this.timestamp = LocalDateTime.now();
+            return this;
         }
+        public ErrorDetail systemMessage(String systemMessage){
+            this.systemMessage = systemMessage;
+            return this;
+        }
+        public ErrorDetail customMessage(String customMessage){
+            this.customMessage = customMessage;
+            return this;
+        }
+        public ErrorDetail request(Object request){
+            this.request = request;
+            return this;
+        }
+
+        public CustomErrorResponse build(){
+            this.code = httpStatus.value();
+            this.timestamp = LocalDateTime.now();
+            return new CustomErrorResponse(this);
+        }
+
     }
 }
