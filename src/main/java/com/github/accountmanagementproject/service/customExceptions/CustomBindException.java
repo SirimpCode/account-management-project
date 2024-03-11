@@ -4,18 +4,23 @@ package com.github.accountmanagementproject.service.customExceptions;
 import lombok.Getter;
 
 @Getter
-public class CustomBindException extends RuntimeException{
-    private final String customMessage;
-    private final Object request;
+public class CustomBindException extends MakeRuntimeException{
 
-    public CustomBindException(String systemMessage,String customMessage, Object request) {
-        super(systemMessage);
-        this.customMessage = customMessage;
-        this.request = request;
+    private CustomBindException(ExceptionBuilder exceptionBuilder) {
+        super(exceptionBuilder);
     }
-    public CustomBindException(String customMessage, Object request){
-        this.customMessage = customMessage;
-        this.request = request;
+
+
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+
+        @Override
+        protected ExceptionBuilder self() {
+            return this;
+        }
+        @Override
+        public MakeRuntimeException build() {
+            return new CustomBindException(this);
+        }
     }
 
 }

@@ -3,17 +3,20 @@ package com.github.accountmanagementproject.service.customExceptions;
 import lombok.Getter;
 
 @Getter
-public class CustomAccessDenied extends RuntimeException{
-    private final String customMessage;
-    private final Object request;
+public class CustomAccessDenied extends MakeRuntimeException{
 
-    public CustomAccessDenied(String systemMessage,String customMessage, Object request) {
-        super(systemMessage);
-        this.customMessage = customMessage;
-        this.request = request;
+    private CustomAccessDenied(ExceptionBuilder exceptionBuilder) {
+        super(exceptionBuilder);
     }
-    public CustomAccessDenied(String customMessage, Object request){
-        this.customMessage = customMessage;
-        this.request = request;
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+        @Override
+        protected ExceptionBuilder self() {
+            return this;
+        }
+        @Override
+        public MakeRuntimeException build() {
+            return new CustomAccessDenied(this);
+        }
     }
+
 }

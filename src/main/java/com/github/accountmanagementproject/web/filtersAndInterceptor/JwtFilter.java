@@ -1,10 +1,9 @@
 package com.github.accountmanagementproject.web.filtersAndInterceptor;
-import com.github.accountmanagementproject.config.security.JwtTokenConfig;
+import com.github.accountmanagementproject.config.security.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private final JwtTokenConfig jwtTokenConfig;
+    private final JwtProvider jwtProvider;
     public static final String AUTH_EXCEPTION = "auth-exception";
 
 
@@ -37,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if(token!=null){
             try {
-                Authentication authentication = jwtTokenConfig.getAuthentication(token);
+                Authentication authentication = jwtProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }catch (Exception e){
                 request.setAttribute(AUTH_EXCEPTION, e);

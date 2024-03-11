@@ -3,17 +3,23 @@ package com.github.accountmanagementproject.service.customExceptions;
 import lombok.Getter;
 
 @Getter
-public class CustomNotAcceptException extends RuntimeException{
-    private final String customMessage;
-    private final Object request;
+public class CustomNotAcceptException extends MakeRuntimeException{
 
-    public CustomNotAcceptException(String systemMessage,String customMessage, Object request) {
-        super(systemMessage);
-        this.customMessage = customMessage;
-        this.request = request;
+    private CustomNotAcceptException(ExceptionBuilder exceptionBuilder) {
+        super(exceptionBuilder);
     }
-    public CustomNotAcceptException(String customMessage, Object request){
-        this.customMessage = customMessage;
-        this.request = request;
+
+
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+
+        @Override
+        protected ExceptionBuilder self() {
+            return this;
+        }
+        @Override
+        public MakeRuntimeException build() {
+            return new CustomNotAcceptException(this);
+        }
     }
+
 }

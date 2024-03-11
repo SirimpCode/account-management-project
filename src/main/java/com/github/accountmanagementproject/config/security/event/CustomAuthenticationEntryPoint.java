@@ -1,4 +1,4 @@
-package com.github.accountmanagementproject.config.security.exception;
+package com.github.accountmanagementproject.config.security.event;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.config.security;
 
 
-import com.github.accountmanagementproject.web.dto.account.JwtToken;
+import com.github.accountmanagementproject.web.dto.account.JwtDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -18,17 +18,17 @@ import java.util.stream.Collectors;
 
 
 @Component
-public class JwtTokenConfig {
+public class JwtProvider {
 
 
     private final SecretKey key;//= Jwts.SIG.HS256.key().build();  이건 랜덤키 자동생성
 
 
-    public JwtTokenConfig(@Value("${jwtpassword.source}")String keySource) {
+    public JwtProvider(@Value("${jwtpassword.source}")String keySource) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySource));
     }
 
-    public JwtToken createToken(Authentication authentication) {
+    public JwtDto createToken(Authentication authentication) {
         String roles = authentication.getAuthorities().stream()
                 .map(authority->authority.getAuthority())
                 .collect(Collectors.joining(","));
@@ -38,7 +38,7 @@ public class JwtTokenConfig {
                 .issuedAt(now)
                 .subject(authentication.getName())
                 .claim("roles", roles)
-                .expiration(new Date(now.getTime()+1000*60*60))
+                .expiration(new Date(now.getTime()+1000*60*5))
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
 
@@ -48,7 +48,7 @@ public class JwtTokenConfig {
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
 
-        return JwtToken.builder()
+        return JwtDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

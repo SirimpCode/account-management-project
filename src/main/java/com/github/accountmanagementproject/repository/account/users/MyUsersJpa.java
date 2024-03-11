@@ -1,6 +1,7 @@
 package com.github.accountmanagementproject.repository.account.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,15 @@ public interface MyUsersJpa extends JpaRepository<MyUser, Integer> {
                     "WHERE u.phoneNumber = ?1"
     )
     Optional<MyUser> findByPhoneNumberJoin(String phoneNumber);
+
+    @Modifying
+    @Query(
+            "UPDATE MyUser u " +
+                    "SET  u.failureCount = u.failureCount + 1 " +
+                    "WHERE u.email = :email OR u.phoneNumber = :email"
+    )
+    int updateFailureCountByEmail(String email);
+
 //
 //    @Query(
 //            "SELECT u " +

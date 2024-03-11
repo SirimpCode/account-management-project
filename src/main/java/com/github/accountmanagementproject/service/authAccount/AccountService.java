@@ -16,7 +16,10 @@ public class AccountService {
     private final MyUsersJpa myUsersJpa;
     public AccountDto myInfoByEmail(String principal) {
         MyUser myUser = myUsersJpa.findByEmailJoin(principal).orElseThrow(()->
-                new CustomNotFoundException("해당 토큰 정보의 계정이 존재하지 않습니다.",principal));
+                new CustomNotFoundException.ExceptionBuilder()
+                        .customMessage("해당 토큰 정보의 계정이 존재하지 않습니다.")
+                        .request(principal)
+                        .build());
         AccountDto accountDto = UserMapper.INSTANCE.myUserToAccountDto(myUser);
         return UserMapper.INSTANCE.myUserToAccountDto(myUser);
 

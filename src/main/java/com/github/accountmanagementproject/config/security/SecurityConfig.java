@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.config.security;
 
-import com.github.accountmanagementproject.config.security.exception.CustomAccessDeniedHandler;
-import com.github.accountmanagementproject.config.security.exception.CustomAuthenticationEntryPoint;
+import com.github.accountmanagementproject.config.security.event.CustomAccessDeniedHandler;
+import com.github.accountmanagementproject.config.security.event.CustomAuthenticationEntryPoint;
 import com.github.accountmanagementproject.web.filtersAndInterceptor.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ import java.util.List;
 //웹요청과 응답이 시큐리티 필터체인을 거치게 해줌
 @EnableWebSecurity
 public class SecurityConfig {
-    private final JwtTokenConfig jwtTokenConfig;
+    private final JwtProvider jwtProvider;
 
 
 
@@ -55,7 +55,7 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtTokenConfig), UsernamePasswordAuthenticationFilter.class)//인증이전 실행
+                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)//인증이전 실행
                 .build();
     }
 

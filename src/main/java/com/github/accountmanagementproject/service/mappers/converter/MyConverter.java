@@ -1,14 +1,7 @@
 package com.github.accountmanagementproject.service.mappers.converter;
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.github.accountmanagementproject.repository.account.users.enums.MyEnumInterface;
 import jakarta.persistence.AttributeConverter;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
 public abstract class MyConverter<T extends Enum<T> & MyEnumInterface> implements AttributeConverter<T, String>   {

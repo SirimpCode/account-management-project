@@ -3,17 +3,23 @@ package com.github.accountmanagementproject.service.customExceptions;
 import lombok.Getter;
 
 @Getter
-public class CustomBadRequestException extends RuntimeException{
-    private final String customMessage;
-    private final Object request;
+public class CustomBadRequestException extends MakeRuntimeException{
 
-    public CustomBadRequestException(String systemMessage, String customMessage, Object request) {
-        super(systemMessage);
-        this.customMessage = customMessage;
-        this.request = request;
+    private CustomBadRequestException(ExceptionBuilder exceptionBuilder) {
+        super(exceptionBuilder);
     }
-    public CustomBadRequestException(String customMessage, Object request){
-        this.customMessage = customMessage;
-        this.request = request;
+
+
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+
+        @Override
+        protected ExceptionBuilder self() {
+            return this;
+        }
+        @Override
+        public MakeRuntimeException build() {
+            return new CustomBadRequestException(this);
+        }
     }
+
 }
