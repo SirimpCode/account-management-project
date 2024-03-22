@@ -4,10 +4,8 @@ import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
 import com.github.accountmanagementproject.service.customExceptions.CustomNotFoundException;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
-import com.github.accountmanagementproject.web.dto.account.AccountDto;
-import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service

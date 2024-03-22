@@ -1,4 +1,4 @@
-package com.github.accountmanagementproject.web.dto.account;
+package com.github.accountmanagementproject.web.dto.accountAuth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

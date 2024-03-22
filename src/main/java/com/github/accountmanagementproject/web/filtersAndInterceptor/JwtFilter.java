@@ -1,5 +1,6 @@
 package com.github.accountmanagementproject.web.filtersAndInterceptor;
 import com.github.accountmanagementproject.config.security.JwtProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

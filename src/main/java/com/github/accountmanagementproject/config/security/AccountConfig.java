@@ -1,25 +1,18 @@
 package com.github.accountmanagementproject.config.security;
 
-import com.github.accountmanagementproject.config.security.event.TestEvent;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
 import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
-import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.repository.account.users.roles.RolesJpa;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.customExceptions.CustomNotFoundException;
-import com.github.accountmanagementproject.web.dto.account.AccountDto;
-import lombok.Getter;
+import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
@@ -100,15 +93,15 @@ public class AccountConfig {
         String password = request.getPassword();
 
         if(request.requiredNull()){
-            Map<String, String> nullResponse = new LinkedHashMap<>();
-            nullResponse.put("email", request.getEmail());
-            nullResponse.put("phoneNumber", request.getPhoneNumber());
-            nullResponse.put("nickname", request.getNickname());
-            nullResponse.put("password", request.getPassword());
-            nullResponse.put("passwordConfirm", request.getPasswordConfirm());
             throw new CustomBadRequestException.ExceptionBuilder()
                     .customMessage("필수 입력값 누락")
-                    .request(nullResponse)
+                    .request(Map.of(
+                            "email", request.getEmail(),
+                            "phoneNumber", request.getPhoneNumber(),
+                            "nickname", request.getNickname(),
+                            "password", request.getPassword(),
+                            "passwordConfirm", request.getPasswordConfirm()
+                    ))
                     .build();
         } else if(request.badEmailValue()){
             throw new CustomBadRequestException.ExceptionBuilder()
@@ -131,22 +124,20 @@ public class AccountConfig {
                     .request(password)
                     .build();
         } else if (request.differentPasswordConfirm()) {
-            Map<String, String> passwordConfirmError = new LinkedHashMap<>();
-            passwordConfirmError.put("password", password);
-            passwordConfirmError.put("passwordConfirm", request.getPasswordConfirm());
             throw new CustomBadRequestException.ExceptionBuilder()
                     .customMessage("서로 다른 비밀번호와 비밀번호 확인")
-                    .request(passwordConfirmError)
+                    .request(Map.of(
+                            "password", password,
+                            "passwordConfirm", request.getPasswordConfirm()
+                    ))
                     .build();
         }
-
         //성별 별 기본 프사 설정
         if(request.getProfileImg() == null){
             if(request.getGender()==null||request.getGender()==Gender.UNKNOWN)request.setProfileImg ("https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-line-icon.png");
             else if(request.getGender()==Gender.MALE) request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/elderly-man-icon.png");
             else request.setProfileImg("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/young-girl-icon.png");
         }
-
     }
 
 

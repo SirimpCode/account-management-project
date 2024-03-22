@@ -1,7 +1,6 @@
-package com.github.accountmanagementproject.web.dto.account;
+package com.github.accountmanagementproject.web.dto.accountAuth;
 
 
-import ch.qos.logback.core.pattern.SpacePadder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
