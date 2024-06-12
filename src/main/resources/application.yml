@@ -1,5 +1,5 @@
 jwtpassword:
-  source: ${JWT_CODE}
+  source: 03E59ECBFF209332DB0EF4003E10813F595CF3DCBFD8FF4E90220546400A22C2
 
 
 oauth:
@@ -18,7 +18,7 @@ spring:
   jpa:
     open-in-view: false #지연로딩 성능이슈로인해 false 기본값이 true 임
   datasource:
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    username: root
+    password: aftertime
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/account
