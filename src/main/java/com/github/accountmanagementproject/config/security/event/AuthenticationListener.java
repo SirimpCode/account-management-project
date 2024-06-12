@@ -4,7 +4,7 @@ import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadCredentialsException;
-import com.github.accountmanagementproject.web.dto.account.AuthFailureMessage;
+import com.github.accountmanagementproject.web.dto.accountAuth.AuthFailureMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;

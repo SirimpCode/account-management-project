@@ -1,15 +1,20 @@
 package com.github.accountmanagementproject.web.controller.authAccount;
 
 
+import com.github.accountmanagementproject.repository.redis.RedisTokenRepository;
 import com.github.accountmanagementproject.service.authAccount.SignUpLoginService;
 import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
-import com.github.accountmanagementproject.web.dto.account.AccountDto;
-import com.github.accountmanagementproject.web.dto.account.JwtDto;
-import com.github.accountmanagementproject.web.dto.account.LoginRequest;
+import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
+import com.github.accountmanagementproject.web.dto.accountAuth.LoginRequest;
+import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.jasypt.encryption.StringEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +27,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthController {
     private final SignUpLoginService signUpLoginService;
+    private final RedisTokenRepository redisTokenRepository;
+
+
+    @PostMapping("/testoken")
+    public String tokenTesttt(HttpServletRequest httpServletRequest){
+
+        return redisTokenRepository.deleteTest(httpServletRequest.getHeader("key"));
+    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody AccountDto accountDto){
@@ -33,24 +46,21 @@ public class AuthController {
         return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
     }
     @PostMapping("/sign-in")
-    public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
-        JwtDto token = signUpLoginService.loginResponseToken(loginRequest);
-        httpServletResponse.setHeader("Authorization", token.getGrantType()+" "+token.getAccessToken());
+    public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest){
+//        httpServletResponse.setHeader("Authorization", signUpLoginService.loginResponseToken(loginRequest));
         return new CustomSuccessResponse.SuccessDetail()
                 .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
-                .responseData(token)
+                .responseData(signUpLoginService.loginResponseToken(loginRequest))
                 .build();
     }
-
-    @PostMapping("/refresh-token")
-    public CustomSuccessResponse refreshToken(@RequestBody JwtDto jwtDto, HttpServletResponse httpServletResponse){
-        JwtDto newToken = signUpLoginService.refreshToken(jwtDto);
-        httpServletResponse.setHeader("Authorization", newToken.getGrantType()+" "+newToken.getAccessToken());
+    @PostMapping("/refresh")
+    public CustomSuccessResponse regenerateToken(@RequestBody TokenDto tokenDto){
+//        httpServletResponse.setHeader("Authorization", signUpLoginService.loginResponseToken(loginRequest));
         return new CustomSuccessResponse.SuccessDetail()
-                .message("토큰 재발급")
+                .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
-                .responseData(newToken)
+                .responseData(signUpLoginService.refreshTokenByTokenDto(tokenDto))
                 .build();
     }
 

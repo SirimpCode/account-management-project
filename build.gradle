@@ -41,6 +41,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //jasypt
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
 }
 

@@ -1,11 +1,15 @@
 jwtpassword:
-  source: ${JWT_CODE}
+  source: ENC(foTHOXMs3+XPmFWjU982ZSZl/HmV971ViWri+mqf/+s/EQ8cCb/0uNoIMOnIv52H/BI8X4+EIQojuAeuXCXB/7gzCKMj8Z6dOpR9asKKEOY=)
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
 
 
 oauth:
   kakao:
-    client-id: d7453d5d4fe1c096ca03c1ed009a03ff
-    secret: K5U5BQQ9UdpwJvlPC0lP8mWBGQxXTe85
+    client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
+    secret: ENC(tkjxfDY5EHsJlm4hRHqoyCRpnAMsSfUzFgEkC55ssu6VsSrkZts94USxxeYFlnlI)
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
@@ -19,7 +23,11 @@ spring:
     open-in-view: false #지연로딩 성능이슈로인해 false 기본값이 true 임
     show-sql: true
   datasource:
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    username: ENC(Ks/AJ8bjJITh7tfRcSMaZg==)
+    password: ENC(nki6d8ZoRQSeteS7d0bbOTdrtX/uvFDg)
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/account
+    url: ENC(34ItjdybRX8sNKlv04yxywZMul7oyuTDkUONZkuzeHLcriLZot+1JzozA0aB8iF5)
+  data:
+    redis:
+      host: localhost
+      port: 6379

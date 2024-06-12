@@ -1,11 +1,9 @@
 package com.github.accountmanagementproject.service.mappers;
 
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.service.mappers.converter.GenderConverter;
-import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
