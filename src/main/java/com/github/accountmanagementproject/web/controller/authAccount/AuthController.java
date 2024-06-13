@@ -27,14 +27,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthController {
     private final SignUpLoginService signUpLoginService;
-    private final RedisTokenRepository redisTokenRepository;
 
 
-    @PostMapping("/testoken")
-    public String tokenTesttt(HttpServletRequest httpServletRequest){
 
-        return redisTokenRepository.deleteTest(httpServletRequest.getHeader("key"));
-    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody AccountDto accountDto){
@@ -47,7 +42,6 @@ public class AuthController {
     }
     @PostMapping("/sign-in")
     public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest){
-//        httpServletResponse.setHeader("Authorization", signUpLoginService.loginResponseToken(loginRequest));
         return new CustomSuccessResponse.SuccessDetail()
                 .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
@@ -56,9 +50,8 @@ public class AuthController {
     }
     @PostMapping("/refresh")
     public CustomSuccessResponse regenerateToken(@RequestBody TokenDto tokenDto){
-//        httpServletResponse.setHeader("Authorization", signUpLoginService.loginResponseToken(loginRequest));
         return new CustomSuccessResponse.SuccessDetail()
-                .message("로그인 성공")
+                .message("토큰 재발급")
                 .httpStatus(HttpStatus.OK)
                 .responseData(signUpLoginService.refreshTokenByTokenDto(tokenDto))
                 .build();

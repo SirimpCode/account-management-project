@@ -6,13 +6,16 @@ import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
@@ -52,22 +55,23 @@ public class JwtProvider {
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
-    //리프레시토큰 생성
-    public String createNewRefreshToken() {//여기도수정
+    //새로운 리프레시 토큰 생성
+    public String createNewRefreshToken() {
         return createRefreshToken(new Date(new Date().getTime()+REFRESH_TOKEN_EXPIRATION));
     }
-    public String createRefreshToken(Date exp){//이부분 부터 수정해야됨
+
+    //만료시간 지정 리프레시 토큰 생성
+    public String createRefreshToken(Date exp){
         return Jwts.builder()
                 .issuedAt(new Date())
-                .expiration(exp)//나중에 유효시간도 숨기는게 좋음
+                .expiration(exp)
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
     //리프레시 토큰의 유효시간만큼 저장기간을 설정하고 레디스에 저장 이후 Dto 생성
     public TokenDto saveRefreshTokenAndCreateTokenDto(String accessToken, String refreshToken, Duration exp){
-        //getExpirationTime 으로 유효시간 가져오기
-        // 그전에 tokenParsing 으로 refreshToken 의 유효성검사와 파싱을 진행한다.
+
         redisTokenRepository.tokenSave(accessToken, refreshToken, exp);
 
         return TokenDto.builder()
@@ -88,35 +92,38 @@ public class JwtProvider {
             return new UsernamePasswordAuthenticationToken(payload.getSubject(), accessToken, roles);
     }
 
+    @Transactional
     public TokenDto tokenRefresh(String accessToken, String clientRefreshToken){
-            //테스트를위한 세이브 하나
-//            redisTokenRepository.tokenSave("eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDkxMzUwMDMsInN1YiI6ImFiYzJAYWJjLmNvbSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzA5MTM4NjAzfQ.didiQMVqUvwGP-N9OZdf2jwKnyaiMWocpWKI-ZOHKz0", "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTAzMjc0MDgsImV4cCI6MTcxMDQxMzgwOH0.OCW9wcdlo8g1vWsnIfA3S757HDg_VxNLEQHiR3H3NMo", Duration.ofMillis(REFRESH_TOKEN_EXPIRATION));
         //리프레시 토큰 유효성 검사와 파싱
         Jws<Claims> refreshTokenClaims = tokenParsing(clientRefreshToken);
         String dbRefreshToken = redisTokenRepository.getAndDeleteJwtEntity(accessToken);//가져오면서 지움
-        if(clientRefreshToken.equals(dbRefreshToken)){//사용자의 리프레시토큰과 db의 리프레시토큰 대조
-            //엑세스토큰 payload
-            String payloadStr = new String(Base64.getUrlDecoder().decode(accessToken.split("\\.")[1]));
-            //payload Map 형식으로 변환
-            Map<String, Object> payload = new BasicJsonParser().parseMap(payloadStr);
-            //새로운 액세스 토큰 생성
-            String newAccessToken = createNewAccessToken(payload.get("sub").toString(), payload.get("roles").toString());
-            // 리프레시 토큰 유효시간
-            Date refreshTokenExp = refreshTokenClaims.getPayload().getExpiration();
-            // 해당 유효시간으로 새로운 토큰 생성
-            String newRefreshToken = createRefreshToken(refreshTokenExp);
-            return saveRefreshTokenAndCreateTokenDto(newAccessToken, newRefreshToken,
-                    Duration.between(Instant.now(), refreshTokenExp.toInstant()));
+        //사용자의 리프레시토큰과 db의 리프레시토큰 대조
+        if(!clientRefreshToken.equals(dbRefreshToken)) throw new NoSuchElementException("Not Found Exception");
 
-        }else throw new RuntimeException("사용 불가능한 리프레시 토큰");
+        //payload 추출
+        Map<String, Object> payload = extractPayloadFromToken(accessToken);
+        //새로운 액세스 토큰 생성
+        String newAccessToken = createNewAccessToken(payload.get("sub").toString(), payload.get("roles").toString());
+        // 리프레시 토큰 유효시간
+        Date refreshTokenExp = refreshTokenClaims.getPayload().getExpiration();
+        // 해당 유효시간으로 새로운 토큰 생성
+        String newRefreshToken = createRefreshToken(refreshTokenExp);
+        return saveRefreshTokenAndCreateTokenDto(newAccessToken, newRefreshToken,
+                Duration.between(Instant.now(), refreshTokenExp.toInstant()));
 
+
+
+    }
+
+    private Map<String, Object> extractPayloadFromToken(String accessToken) {
+        //엑세스토큰 payload
+        String payloadStr = new String(Base64.getUrlDecoder().decode(accessToken.split("\\.")[1]));
+        //payload Map 형식으로 변환
+        return new BasicJsonParser().parseMap(payloadStr);
     }
 
     public Jws<Claims> tokenParsing(String token){
         return Jwts.parser().verifyWith(key).build()
                 .parseSignedClaims(token);
-    }
-    public Duration getExpirationTime(Claims refreshTokenClaims){
-        return Duration.between(Instant.now(), refreshTokenClaims.getExpiration().toInstant());
     }
 }

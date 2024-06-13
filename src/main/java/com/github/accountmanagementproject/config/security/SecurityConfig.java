@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/resources/**","/api/auth/*",
                                 "/error").permitAll()
 
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)//인증이전 실행
                 .build();

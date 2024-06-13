@@ -26,9 +26,7 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     //Swagger
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-    implementation 'io.springfox:springfox-swagger2:3.0.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     //env-hide
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     //mariadb
@@ -58,4 +56,7 @@ tasks.named('bootJar'){
     archivesBaseName = '프로젝트이름'
     archiveFileName = 'AccountManagementProject.jar'
     archiveVersion = "3.9.3"
+}
+clean {
+    delete file('./src/main/generated/'), file('./BuildFile')
 }

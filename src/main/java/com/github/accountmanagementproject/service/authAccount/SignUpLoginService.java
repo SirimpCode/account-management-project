@@ -9,6 +9,7 @@ import com.github.accountmanagementproject.service.mappers.UserMapper;
 import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
 import com.github.accountmanagementproject.web.dto.accountAuth.LoginRequest;
 import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.RedisConnectionFailureException;
@@ -17,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.net.ConnectException;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.util.*;
@@ -87,11 +86,16 @@ public class SignUpLoginService {
     public TokenDto refreshTokenByTokenDto(TokenDto tokenDto) {
         try{
             return jwtProvider.tokenRefresh(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        }catch (RedisConnectionFailureException e){
+            throw new CustomServerException.ExceptionBuilder()
+                    .systemMessage(e.getMessage())
+                    .customMessage("Redis 서버 연결 실패")
+                    .request(tokenDto)
+                    .build();
+        }catch (ExpiredJwtException | NoSuchElementException e){
             throw new CustomBadCredentialsException.ExceptionBuilder()
                     .systemMessage(e.getMessage())
-                    .customMessage("토큰 재발급 실패")
+                    .customMessage(e instanceof ExpiredJwtException ? "리프레시 토큰 만료" : "재발급 받을 수 없는 액세스 토큰")
                     .request(tokenDto)
                     .build();
         }
