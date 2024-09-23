@@ -1,7 +1,6 @@
 package com.github.accountmanagementproject.repository.account.users.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
 
 
 public enum RolesEnum implements MyEnumInterface{

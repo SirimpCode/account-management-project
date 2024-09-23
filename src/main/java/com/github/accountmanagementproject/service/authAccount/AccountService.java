@@ -24,7 +24,6 @@ public class AccountService {
                         .customMessage("해당 토큰 정보의 계정이 존재하지 않습니다.")
                         .request(principal)
                         .build());
-        AccountDto accountDto = UserMapper.INSTANCE.myUserToAccountDto(myUser);
         return UserMapper.INSTANCE.myUserToAccountDto(myUser);
 
     }

@@ -4,8 +4,10 @@ import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.service.customExceptions.*;
+import com.github.accountmanagementproject.service.customExceptions.CustomBadCredentialsException;
+import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
+import com.github.accountmanagementproject.service.customExceptions.CustomServerException;
+import com.github.accountmanagementproject.service.customExceptions.DuplicateKeyException;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
 import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
 import com.github.accountmanagementproject.web.dto.accountAuth.LoginRequest;
@@ -14,14 +16,17 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.RedisConnectionFailureException;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.DateTimeException;
 import java.time.Duration;
-import java.util.*;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
