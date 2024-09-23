@@ -74,11 +74,11 @@ public class MyUser {
     @Column(name = "failure_date")
     private LocalDateTime failureDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)//⬅️기본값이 lazy 이기 때문에 굳이 명시적으로 작성할 필요는 없음
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)//⬅️기본값이 lazy 이기 때문에 굳이 명시적으로 작성할 필요는 없음
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),//참조할 fk
             inverseJoinColumns = @JoinColumn(name = "role_id"))//상대 엔티티에서 참조할 fk
-    private Set<Role> roles = new HashSet<>();//널포인트익셉션 방지하기위해 빈 HashSet 적용
+    private Set<Role> roles;//널포인트익셉션 방지하기위해 빈 HashSet 적용
 
 
 

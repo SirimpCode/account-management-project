@@ -16,10 +16,10 @@ public enum UserStatus implements MyEnumInterface{
         this.description = description;
     }
 
-    @Override
+
     @JsonValue//outValue
     public String getValue() {
-        return this.getDescription();
+        return this.description;
     }
 
 }

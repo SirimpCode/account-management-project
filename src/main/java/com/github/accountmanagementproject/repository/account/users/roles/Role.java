@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "roles_id")
+    @Column(name = "role_id")
     private Integer rolesId;
 
 

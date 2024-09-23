@@ -1,9 +1,11 @@
 package com.github.accountmanagementproject.service.mappers.converter;
 import com.github.accountmanagementproject.repository.account.users.enums.MyEnumInterface;
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 import java.util.EnumSet;
 
+@Converter
 public abstract class MyConverter<T extends Enum<T> & MyEnumInterface> implements AttributeConverter<T, String>   {
 
     private final Class<T> targetEnumClass;

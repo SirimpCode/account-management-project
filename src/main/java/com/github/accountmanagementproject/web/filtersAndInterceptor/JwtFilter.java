@@ -50,6 +50,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override//필터를 적용시키지 않을 url true 값이 배출되면 필터는 실행되지 않는다.
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI().equals("/api/auth/sign-up")
-                ||request.getRequestURI().equals("/api/auth/sign-in");
+                ||request.getRequestURI().equals("/api/auth/login");
     }
 }

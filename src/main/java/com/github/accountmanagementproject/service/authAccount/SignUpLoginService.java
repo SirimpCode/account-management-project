@@ -4,6 +4,7 @@ import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.customExceptions.*;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
 import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
@@ -47,7 +48,7 @@ public class SignUpLoginService {
         //세이브 실행하면서 중복값 발생시 발생되는 익셉션 예외처리
         try {
             MyUser signUpMyUser = UserMapper.INSTANCE.accountDtoToMyUser(signUpRequest);
-            signUpMyUser.getRoles().add(accountConfig.getNormalUserRole());
+            signUpMyUser.setRoles(Set.of(accountConfig.getNormalUserRole()));
             myUsersJpa.save(signUpMyUser);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateKeyException.ExceptionBuilder()
@@ -100,5 +101,10 @@ public class SignUpLoginService {
                     .build();
         }
 
+    }
+
+    public void errorTest() {
+        MyUser user = myUsersJpa.findByEmail("abc@abc.com").orElseThrow();
+        myUsersJpa.delete(user);
     }
 }

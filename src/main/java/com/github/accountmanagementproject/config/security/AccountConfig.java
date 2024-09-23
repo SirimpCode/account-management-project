@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class AccountConfig {
         if(normalUserRole == null){
             normalUserRole = rolesJpa.findByName(RolesEnum.ROLE_USER);
         }
+        System.out.println(normalUserRole.getName());
         return normalUserRole;
     }
     public Role getAdminUserRole(){
@@ -43,6 +46,7 @@ public class AccountConfig {
         }
         return adminUserRole;
     }
+
 
 
     public MyUser findMyUserFetchJoin(String emailOrPhoneNumber){
@@ -153,4 +157,5 @@ public class AccountConfig {
         MyUser sucUser = findMyUser(principal);
         sucUser.loginValueSetting(false);
     }
+
 }

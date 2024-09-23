@@ -40,7 +40,7 @@ public class AuthController {
                 .build();
         return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
     }
-    @PostMapping("/sign-in")
+    @PostMapping("/login")
     public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest){
         return new CustomSuccessResponse.SuccessDetail()
                 .message("로그인 성공")
@@ -60,6 +60,7 @@ public class AuthController {
 
     @GetMapping("/testerr")
     public CustomErrorResponse errorTest(){
+        signUpLoginService.errorTest();
         throw new CustomBadRequestException.ExceptionBuilder()
                 .customMessage("메세지")
                 .systemMessage("시스템 메세지")

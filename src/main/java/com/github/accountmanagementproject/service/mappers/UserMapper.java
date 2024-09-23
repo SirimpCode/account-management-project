@@ -23,7 +23,7 @@ public interface UserMapper {
 //    @Mapping(target = "lastLogin", dateFormat = "yyyy-MM-dd HH:mm:ss")
     AccountDto myUserToAccountDto(MyUser myUser);
 
-    @Mapping(target = "dateOfBirth", dateFormat = "yyyy년 M월 d일")
+    @Mapping(target = "dateOfBirth", dateFormat = "yyyy-M-d")
     @Mapping(target = "roles", ignore = true)
     MyUser accountDtoToMyUser(AccountDto accountDto);
 
