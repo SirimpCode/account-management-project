@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class MyUser {
     private Integer userId;
 
     @Column(name = "social_id", unique = true)
-    private Integer socialId;
+    private BigInteger socialId;
 
     @Column(unique = true, nullable = false, length = 50)
     private String email;
@@ -74,7 +75,7 @@ public class MyUser {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),//참조할 fk
             inverseJoinColumns = @JoinColumn(name = "role_id"))//상대 엔티티에서 참조할 fk
-    private Set<Role> roles;//널포인트익셉션 방지하기위해 빈 HashSet 적용
+    private Set<Role> roles;
 
 
 

@@ -3,25 +3,24 @@ package com.github.accountmanagementproject.config.security;
 
 import com.github.accountmanagementproject.repository.redis.RedisTokenRepository;
 import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.BasicJsonParser;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-
 import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -32,7 +31,7 @@ public class JwtProvider {
 
 
     private static final long REFRESH_TOKEN_EXPIRATION = 1000*60*10;//테스트를 위해 10분
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000*60;//1분
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000*60*60;//60분
     public static String getTokenType(){
         return "Bearer";
     }

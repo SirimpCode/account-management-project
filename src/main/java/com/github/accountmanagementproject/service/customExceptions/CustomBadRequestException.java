@@ -5,20 +5,18 @@ import lombok.Getter;
 @Getter
 public class CustomBadRequestException extends MakeRuntimeException{
 
-    private CustomBadRequestException(ExceptionBuilder exceptionBuilder) {
+
+    protected CustomBadRequestException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
-
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
-
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomBadRequestException>{
+        public ExceptionBuilder() {
+            super(CustomBadRequestException.class);
+        }
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new CustomBadRequestException(this);
         }
     }
 

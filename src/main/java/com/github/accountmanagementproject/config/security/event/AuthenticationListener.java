@@ -19,7 +19,9 @@ public class AuthenticationListener {
 
     @EventListener
     public void handleBadCredentialsEvent(AuthenticationFailureBadCredentialsEvent event){
-        MyUser myUser = accountConfig.failureCounting(event.getAuthentication().getName());
+        event.getAuthentication().getDetails();
+//        MyUser myUser = accountConfig.failureCounting(event.getAuthentication().getName());
+        MyUser myUser = accountConfig.failureCounting();
         throw new CustomBadCredentialsException.ExceptionBuilder()
                 .systemMessage(myUser.getStatus() == UserStatus.LOCK?event.getException().getMessage()+" 계정이 잠깁니다."
                         :event.getException().getMessage())
@@ -27,6 +29,8 @@ public class AuthenticationListener {
                 .request(new AuthFailureMessage(myUser))
                 .build();
     }
+
+
     @EventListener
     public void handleAuthSuccessEvent(AuthenticationSuccessEvent event){
         accountConfig.loginSuccessEvent(event.getAuthentication().getName());

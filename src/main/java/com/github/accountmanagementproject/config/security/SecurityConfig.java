@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -49,11 +50,11 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/authorize-test").hasRole("ADMIN")
 
-                        .requestMatchers("/api/auth/auth-test").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/api/auth/auth-test", "/api/account/*").authenticated()
                         .requestMatchers("/resources/**","/api/auth/*",
-                                "/error").permitAll()
+                                "/error","/swagger-ui/**", "/v3/api-docs/**", "/amp-docs.html").permitAll()
 
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)//인증이전 실행
                 .build();

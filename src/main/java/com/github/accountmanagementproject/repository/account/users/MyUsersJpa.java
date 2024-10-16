@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 
@@ -37,6 +38,7 @@ public interface MyUsersJpa extends JpaRepository<MyUser, Integer> {
     )
     int updateFailureCountByEmail(String email);
 
+    MyUser findBySocialId(BigInteger socialId);
 //
 //    @Query(
 //            "SELECT u " +

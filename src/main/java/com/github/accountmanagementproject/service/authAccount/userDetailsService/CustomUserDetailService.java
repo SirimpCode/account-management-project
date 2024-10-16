@@ -2,8 +2,12 @@ package com.github.accountmanagementproject.service.authAccount.userDetailsServi
 
 import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.service.customExceptions.*;
+import com.github.accountmanagementproject.service.customExceptions.AccountLockedException;
+import com.github.accountmanagementproject.service.customExceptions.CustomAccessDenied;
 import com.github.accountmanagementproject.web.dto.accountAuth.AuthFailureMessage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,11 +24,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
     private final AccountConfig accountConfig;
+    private final HttpServletRequest request;
+
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String emailOrPhoneNumber) {
         MyUser myUser = accountConfig.findMyUserFetchJoin(emailOrPhoneNumber);
         checkLockedOrDisable(myUser);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("myUser", myUser);
 
         return User.builder()
                 .username(myUser.getEmail())

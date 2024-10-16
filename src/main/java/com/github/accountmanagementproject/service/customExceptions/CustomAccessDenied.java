@@ -5,17 +5,18 @@ import lombok.Getter;
 @Getter
 public class CustomAccessDenied extends MakeRuntimeException{
 
-    private CustomAccessDenied(ExceptionBuilder exceptionBuilder) {
+
+    protected CustomAccessDenied(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomAccessDenied>{
+        public ExceptionBuilder() {
+            super(CustomAccessDenied.class);
+        }
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new CustomAccessDenied(this);
         }
     }
 

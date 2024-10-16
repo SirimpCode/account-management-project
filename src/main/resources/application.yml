@@ -1,5 +1,4 @@
 jwtpassword:
-
   source: ENC(foTHOXMs3+XPmFWjU982ZSZl/HmV971ViWri+mqf/+s/EQ8cCb/0uNoIMOnIv52H/BI8X4+EIQojuAeuXCXB/7gzCKMj8Z6dOpR9asKKEOY=)
 
 jasypt:
@@ -37,3 +36,4 @@ springdoc:
   swagger-ui:
     path: /amp-docs.html
   version: 1.0.0
+

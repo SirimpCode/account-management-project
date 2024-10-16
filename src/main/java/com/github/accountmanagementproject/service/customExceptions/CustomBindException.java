@@ -6,20 +6,18 @@ import lombok.Getter;
 @Getter
 public class CustomBindException extends MakeRuntimeException{
 
-    private CustomBindException(ExceptionBuilder exceptionBuilder) {
+
+    protected CustomBindException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
-
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
-
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomBindException>{
+        public ExceptionBuilder() {
+            super(CustomBindException.class);
+        }
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new CustomBindException(this);
         }
     }
 

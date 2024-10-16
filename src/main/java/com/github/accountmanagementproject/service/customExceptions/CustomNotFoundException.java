@@ -5,20 +5,20 @@ import lombok.Getter;
 @Getter
 public class CustomNotFoundException extends MakeRuntimeException{
 
-    private CustomNotFoundException(ExceptionBuilder exceptionBuilder) {
+
+    protected CustomNotFoundException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomNotFoundException> {
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+        public ExceptionBuilder() {
+            super(CustomNotFoundException.class);
+        }
 
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new CustomNotFoundException(this);
         }
     }
 

@@ -4,20 +4,18 @@ package com.github.accountmanagementproject.service.customExceptions;
 
 public class AccountLockedException extends MakeRuntimeException{
 
-    private AccountLockedException(ExceptionBuilder exceptionBuilder) {
+
+    protected AccountLockedException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
-
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
-
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, AccountLockedException>{
+        public ExceptionBuilder() {
+            super(AccountLockedException.class);
+        }
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new AccountLockedException(this);
         }
     }
 

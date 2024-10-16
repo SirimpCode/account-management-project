@@ -43,10 +43,6 @@ public class SignUpLoginService {
 
     @Transactional
     public void signUp(AccountDto signUpRequest) {
-
-        //필수입력값 요구사항 확인, 기본 프사설정 로직
-        accountConfig.signUpChecker(signUpRequest);
-
         //비번 암호화
         signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 

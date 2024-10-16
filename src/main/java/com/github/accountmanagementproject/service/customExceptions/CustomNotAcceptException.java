@@ -5,20 +5,20 @@ import lombok.Getter;
 @Getter
 public class CustomNotAcceptException extends MakeRuntimeException{
 
-    private CustomNotAcceptException(ExceptionBuilder exceptionBuilder) {
+
+    protected CustomNotAcceptException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomNotAcceptException>{
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+        protected ExceptionBuilder() {
+            super(CustomNotAcceptException.class);
+        }
 
         @Override
         protected ExceptionBuilder self() {
             return this;
-        }
-        @Override
-        public MakeRuntimeException build() {
-            return new CustomNotAcceptException(this);
         }
     }
 

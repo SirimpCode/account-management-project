@@ -5,21 +5,20 @@ import lombok.Getter;
 @Getter
 public class DuplicateKeyException extends MakeRuntimeException{
 
-    private DuplicateKeyException(ExceptionBuilder exceptionBuilder) {
+    protected DuplicateKeyException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder>{
+    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, DuplicateKeyException> {
+
+        public ExceptionBuilder() {
+            super(DuplicateKeyException.class);
+        }
 
         @Override
         protected ExceptionBuilder self() {
             return this;
         }
-        @Override
-        public MakeRuntimeException build() {
-            return new DuplicateKeyException(this);
-        }
     }
-
 }

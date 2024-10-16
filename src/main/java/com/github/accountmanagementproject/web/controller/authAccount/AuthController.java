@@ -8,6 +8,7 @@ import com.github.accountmanagementproject.web.dto.accountAuth.LoginRequest;
 import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
     private final SignUpLoginService signUpLoginService;
 
 
 
-
+    @Override
     @PostMapping("/sign-up")
-    public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody AccountDto accountDto){
+    public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody @Valid AccountDto accountDto){
         signUpLoginService.signUp(accountDto);
         CustomSuccessResponse signUpResponse = new CustomSuccessResponse.SuccessDetail()
                 .message("회원가입 완료")
@@ -34,14 +35,18 @@ public class AuthController {
                 .build();
         return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
     }
+
+    @Override
     @PostMapping("/login")
-    public CustomSuccessResponse login(@RequestBody LoginRequest loginRequest){
+    public CustomSuccessResponse login(@RequestBody @Valid LoginRequest loginRequest){
         return new CustomSuccessResponse.SuccessDetail()
                 .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
                 .responseData(signUpLoginService.loginResponseToken(loginRequest))
                 .build();
     }
+
+    @Override
     @PostMapping("/refresh")
     public CustomSuccessResponse regenerateToken(@RequestBody TokenDto tokenDto){
         return new CustomSuccessResponse.SuccessDetail()
@@ -51,10 +56,9 @@ public class AuthController {
                 .build();
     }
 
-
     @GetMapping("/testerr")
-    public CustomErrorResponse errorTest(){
-        signUpLoginService.errorTest();
+    public CustomErrorResponse errorTest(@RequestParam(name = "test") int test){
+//        signUpLoginService.errorTest();
         throw new CustomBadRequestException.ExceptionBuilder()
                 .customMessage("메세지")
                 .systemMessage("시스템 메세지")

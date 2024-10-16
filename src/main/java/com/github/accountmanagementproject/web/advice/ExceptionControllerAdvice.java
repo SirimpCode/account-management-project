@@ -1,13 +1,18 @@
 package com.github.accountmanagementproject.web.advice;
+
 import com.github.accountmanagementproject.service.customExceptions.*;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.time.LocalDateTime;
-
+@Hidden
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
@@ -18,7 +23,7 @@ public class ExceptionControllerAdvice {
     }
     @ExceptionHandler(CustomBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST) //잘못된 요청
-    public CustomErrorResponse handleNotFoundException(CustomBadRequestException messageAndRequest) {
+    public CustomErrorResponse handleBadRequestException(CustomBadRequestException messageAndRequest) {
         return makeResponse(HttpStatus.BAD_REQUEST, messageAndRequest);
     }
 
@@ -58,10 +63,43 @@ public class ExceptionControllerAdvice {
         return makeResponse(HttpStatus.UNPROCESSABLE_ENTITY, messageAndRequest);
     }
 
-    @ExceptionHandler(CustomServerException.class)
+    @ExceptionHandler(CustomServerException.class) // 서버에러지만 예외처리가 필요할때
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CustomErrorResponse handleCustomServerException(CustomServerException messageAndRequest) {
         return makeResponse(HttpStatus.INTERNAL_SERVER_ERROR, messageAndRequest);
+    }
+
+    @ExceptionHandler(NotFoundSocialAccount.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public CustomErrorResponse handleNotFoundSocialAccount(NotFoundSocialAccount messageAndRequest) {
+        return makeResponse(HttpStatus.UNPROCESSABLE_ENTITY, messageAndRequest);
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})//Valid 익셉션 처리
+    public CustomErrorResponse handleValidException(Exception ex) {
+        if (ex instanceof MethodArgumentNotValidException validException) {
+            FieldError fieldError = validException.getBindingResult().getFieldError();
+            String fieldName = fieldError != null ? fieldError.getField() : "Unknown field";
+            Object fieldValue = fieldError != null ? fieldError.getRejectedValue() : "Unknown Value";
+            String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
+
+            return handleBadRequestException(new CustomBadRequestException.ExceptionBuilder()
+                    .customMessage(errorMessage)
+                    .systemMessage("유효성 검사 실패")
+                    .request(fieldName+" : "+fieldValue)
+                    .build());
+
+        } else if (ex instanceof MethodArgumentTypeMismatchException validException){
+
+            return handleBadRequestException(new CustomBadRequestException.ExceptionBuilder()
+                    .customMessage("잘못된 타입 전달")
+                    .systemMessage(validException.getMessage())
+                    .request(validException.getName() +"="+validException.getValue())
+                    .build());
+        }else return handleBadRequestException(new CustomBadRequestException.ExceptionBuilder()
+                .customMessage("잘못된 요청")
+                .systemMessage(ex.getMessage())
+                .build());
     }
 
     private CustomErrorResponse makeResponse(HttpStatus httpStatus, MakeRuntimeException exception){
