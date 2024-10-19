@@ -1,5 +1,7 @@
 //package com.github.accountmanagementproject.web.controller.authAccount;
 //
+//import com.github.accountmanagementproject.service.authAccount.oauth.SocialAuthenticationService;
+//import com.github.accountmanagementproject.web.dto.accountAuth.oauth.request.KakaoLoginParams;
 //import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 //import jakarta.servlet.http.HttpServletResponse;
 //import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@
 //    @PostMapping("/kakao")
 //    public CustomSuccessResponse loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
 //
-//        List<Object> tokenAndResponse = socialSignUpService.login(params);
+//        List<Object> tokenAndResponse = socialAuthenticationService.login(params);
 //        httpServletResponse.setHeader("Token", (String) tokenAndResponse.get(0));
 //        return (ResponseDto) tokenAndResponse.get(1);
 //

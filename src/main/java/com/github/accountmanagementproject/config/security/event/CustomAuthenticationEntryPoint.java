@@ -4,7 +4,7 @@ package com.github.accountmanagementproject.config.security.event;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
+import com.github.accountmanagementproject.web.dto.responseSystem.CustomErrorResponse;
 import com.github.accountmanagementproject.web.filtersAndInterceptor.JwtFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

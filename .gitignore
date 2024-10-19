@@ -37,4 +37,4 @@ out/
 .vscode/
 
 #자동 생성파일 제외
-./src/main/generated/
+src/main/generated/

@@ -49,9 +49,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a->a
 
                         .requestMatchers("/api/auth/authorize-test").hasRole("ADMIN")
-
                         .requestMatchers("/api/auth/auth-test", "/api/account/*").authenticated()
-                        .requestMatchers("/resources/**","/api/auth/*",
+                        .requestMatchers("/resources/**","/api/auth/*", "/api/email/*",
                                 "/error","/swagger-ui/**", "/v3/api-docs/**", "/amp-docs.html").permitAll()
 
                         .anyRequest().authenticated()

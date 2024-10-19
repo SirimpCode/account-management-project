@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; padding: 10px 0; background-color: #4CAF50; color: white; border-radius: 8px 8px 0 0;">
+        <h1 style="margin: 0;">이메일 인증</h1>
+    </div>
+    <div style="padding: 20px; text-align: center;">
+        <p style="font-size: 16px; line-height: 1.5; color: #333333;">안녕하세요,</p>
+        <p style="font-size: 16px; line-height: 1.5; color: #333333;">귀하의 계정을 확인하려면 아래 인증 코드를 입력하세요:</p>
+        <div style="font-size: 24px; font-weight: bold; color: #4CAF50; margin: 20px 0; background-color: #f9f9f9; padding: 10px; border-radius: 5px; display: inline-block;">{{verifyCode}}</div>
+        <p style="font-size: 16px; line-height: 1.5; color: #333333;">이 코드의 유효 기간은 10분입니다. 코드가 만료되기 전에 입력해주세요.</p>
+    </div>
+    <div style="text-align: center; padding: 20px; font-size: 12px; color: #888888;">
+        <p>이 메일은 Account-Management-Project에서 발송되었습니다.</p>
+        <p>문의 사항이 있으시면 <a href="mailto:{{email}}" style="color: #4CAF50; text-decoration: none;">{{email}}</a>으로 연락주세요.</p>
+    </div>
+</div>
+</body>
+</html>

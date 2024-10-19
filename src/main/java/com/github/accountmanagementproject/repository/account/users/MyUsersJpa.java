@@ -5,12 +5,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 
 @Repository
-public interface MyUsersJpa extends JpaRepository<MyUser, Integer> {
+public interface MyUsersJpa extends JpaRepository<MyUser, Integer>, MyUsersDaoCustom {
     Optional<MyUser> findByEmail(String email);
     Optional<MyUser> findByPhoneNumber(String phoneNumber);
 
@@ -38,7 +37,10 @@ public interface MyUsersJpa extends JpaRepository<MyUser, Integer> {
     )
     int updateFailureCountByEmail(String email);
 
-    MyUser findBySocialId(BigInteger socialId);
+
+
+    boolean existsByEmail(String email);
+
 //
 //    @Query(
 //            "SELECT u " +

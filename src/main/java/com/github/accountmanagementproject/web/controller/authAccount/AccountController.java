@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.web.controller.authAccount;
 
 import com.github.accountmanagementproject.service.authAccount.AccountService;
-import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import com.github.accountmanagementproject.web.dto.responseSystem.CustomSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

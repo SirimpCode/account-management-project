@@ -2,37 +2,39 @@ package com.github.accountmanagementproject.web.controller.authAccount;
 
 
 import com.github.accountmanagementproject.service.authAccount.SignUpLoginService;
-import com.github.accountmanagementproject.service.customExceptions.CustomBadRequestException;
-import com.github.accountmanagementproject.web.dto.accountAuth.AccountDto;
+import com.github.accountmanagementproject.service.authAccount.oauth.OAuthLoginService;
+import com.github.accountmanagementproject.web.dto.accountAuth.AccountInfoDto;
 import com.github.accountmanagementproject.web.dto.accountAuth.LoginRequest;
 import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
-import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
-import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import com.github.accountmanagementproject.web.dto.accountAuth.oauth.request.KakaoLoginParams;
+import com.github.accountmanagementproject.web.dto.accountAuth.oauth.request.NaverLoginParams;
+import com.github.accountmanagementproject.web.dto.accountAuth.oauth.request.OAuthLoginParams;
+import com.github.accountmanagementproject.web.dto.accountAuth.oauth.response.AuthResult;
+import com.github.accountmanagementproject.web.dto.accountAuth.oauth.response.OAuthSignUpDto;
+import com.github.accountmanagementproject.web.dto.responseSystem.CustomSuccessResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {
     private final SignUpLoginService signUpLoginService;
+    private final OAuthLoginService oAuthLoginService;
 
 
 
     @Override
     @PostMapping("/sign-up")
-    public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody @Valid AccountDto accountDto){
-        signUpLoginService.signUp(accountDto);
-        CustomSuccessResponse signUpResponse = new CustomSuccessResponse.SuccessDetail()
-                .message("회원가입 완료")
-                .httpStatus(HttpStatus.CREATED)
-                .build();
+    public ResponseEntity<CustomSuccessResponse> signUp(@RequestBody @Valid AccountInfoDto accountInfoDto){
+        signUpLoginService.signUp(accountInfoDto);
+        CustomSuccessResponse signUpResponse = createSignUpResponse();
         return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
     }
 
@@ -46,6 +48,7 @@ public class AuthController implements AuthControllerDocs {
                 .build();
     }
 
+
     @Override
     @PostMapping("/refresh")
     public CustomSuccessResponse regenerateToken(@RequestBody TokenDto tokenDto){
@@ -56,39 +59,41 @@ public class AuthController implements AuthControllerDocs {
                 .build();
     }
 
-    @GetMapping("/testerr")
-    public CustomErrorResponse errorTest(@RequestParam(name = "test") int test){
-//        signUpLoginService.errorTest();
-        throw new CustomBadRequestException.ExceptionBuilder()
-                .customMessage("메세지")
-                .systemMessage("시스템 메세지")
-                .request("요청값")
+    @PostMapping("/kakao")
+    public ResponseEntity<CustomSuccessResponse> loginKakao(@RequestBody KakaoLoginParams params) {
+        CustomSuccessResponse result = loginOAuth(params);
+        return new ResponseEntity<>(result, result.getSuccess().getHttpStatus());
+    }
+
+    @PostMapping("/naver")
+    public ResponseEntity<CustomSuccessResponse> loginNaver(@RequestBody NaverLoginParams params) {
+        CustomSuccessResponse result = loginOAuth(params);
+        return new ResponseEntity<>(result, result.getSuccess().getHttpStatus());
+    }
+
+    private CustomSuccessResponse loginOAuth(OAuthLoginParams params) {
+        AuthResult<?> result = oAuthLoginService.loginOrCreateTempAccount(params);
+        return new CustomSuccessResponse.SuccessDetail()
+                .message(result.getMessage())
+                .httpStatus(result.getHttpStatus())
+                .responseData(result.getResponse())
                 .build();
     }
-    @GetMapping("/testsuc")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CustomSuccessResponse successTest(@AuthenticationPrincipal String principal) throws IOException {
 
-        //3번째 요소 데이터는 없어도됨
+    @PostMapping("/oauth")
+    public ResponseEntity<CustomSuccessResponse> oAuthSignUp(@RequestBody @Valid OAuthSignUpDto oAuthSignUpDto) {
+        oAuthLoginService.signUp(oAuthSignUpDto);
+        CustomSuccessResponse signUpResponse = createSignUpResponse();
+        return new ResponseEntity<>(signUpResponse, signUpResponse.getSuccess().getHttpStatus());
+    }
+
+    private CustomSuccessResponse createSignUpResponse(){
         return new CustomSuccessResponse.SuccessDetail()
-                .message("테슽흐")
+                .message("회원가입 완료")
                 .httpStatus(HttpStatus.CREATED)
                 .build();
     }
-//    @GetMapping("/security-test")
-//    public String securityTest(@RequestParam(name = "user-id") Integer userId){
-//        return signUpLoginService.securityTest(userId);
-//    }
 
-    @GetMapping("/auth-test")
-    public String authTest(@AuthenticationPrincipal String customUserDetails){
 
-        return customUserDetails;
-    }
-
-    @GetMapping("authorize-test")
-    public String authorizeTest(@AuthenticationPrincipal String email){
-        return email;
-    }
 
 }

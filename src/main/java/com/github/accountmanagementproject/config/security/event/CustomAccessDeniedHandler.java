@@ -3,7 +3,7 @@ package com.github.accountmanagementproject.config.security.event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
-import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
+import com.github.accountmanagementproject.web.dto.responseSystem.CustomErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;

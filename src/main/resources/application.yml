@@ -13,6 +13,13 @@ oauth:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
       redirect-uri: http://localhost:8080/api/auth/kakao
+  naver:
+    client-id: ENC(ViBdn4cYnxMFSXi0rSs7mnrQBwlfRHzxJnXVbTw7YSE=)
+    secret: ENC(YEL+R3qWDgfscQvMgwa1yJN6x/NGOZeq)
+    url:
+      auth: https://nid.naver.com
+      api: https://openapi.naver.com
+
 
 spring:
   mvc:
@@ -29,6 +36,21 @@ spring:
     redis:
       host: localhost
       port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(tZCNtUD39C1X4xxr3+oP0HZ0q95nukRsjUP0oqK3jOw=)
+    password: ENC(yymAj4wB0P5Hy3w4p5kBeV7dImkHJWaYqBtHPX2C3EI=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+#              Identity Manager 서버가 SSL을 사용하여 SMTP와 통신하도록 지시합니다.
+
+
 
 springdoc:
   api-docs:

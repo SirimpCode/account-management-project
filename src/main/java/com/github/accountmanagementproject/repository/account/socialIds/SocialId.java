@@ -1,26 +1,37 @@
 package com.github.accountmanagementproject.repository.account.socialIds;
 
 import com.github.accountmanagementproject.repository.account.users.MyUser;
+import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "social_ids")
+@DynamicInsert
+@NoArgsConstructor
+@Getter
 public class SocialId {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tableId;
 
-    @ManyToOne
+   @EmbeddedId
+   private SocialIdPk socialIdPk;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private MyUser myUser;
 
-    @Column(unique = true, nullable = false)
-    private String socialId;
-
-    private boolean activeStatus;
-
     private LocalDateTime connectAt;
+
+
+    public SocialId(String socialId, OAuthProvider provider, MyUser myUser) {
+        this.socialIdPk = new SocialIdPk(socialId, provider);
+        this.myUser = myUser;
+    }
+    public void socialConnectSetting(){
+        this.connectAt = LocalDateTime.now();
+    }
 
 }

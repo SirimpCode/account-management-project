@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.controller.authAccount;
 
-import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import com.github.accountmanagementproject.web.dto.responseSystem.CustomSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -58,4 +58,5 @@ public interface AccountControllerDocs {
             )
     )
     CustomSuccessResponse getMyInfo(@AuthenticationPrincipal String principal);
+
 }

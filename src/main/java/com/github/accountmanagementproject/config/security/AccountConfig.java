@@ -32,58 +32,58 @@ public class AccountConfig {
 //        normalUserRole = rolesJpa.findByName("ROLE_USER");
 //    }
 
-    public Role getNormalUserRole(){
-        if(normalUserRole == null){
+    public Role getNormalUserRole() {
+        if (normalUserRole == null) {
             normalUserRole = rolesJpa.findByName(RolesEnum.ROLE_USER);
         }
-        System.out.println(normalUserRole.getName());
         return normalUserRole;
     }
-    public Role getAdminUserRole(){
-        if(adminUserRole == null){
+
+    public Role getAdminUserRole() {
+        if (adminUserRole == null) {
             adminUserRole = rolesJpa.findByName(RolesEnum.ROLE_ADMIN);
         }
         return adminUserRole;
     }
 
-    public MyUser findMyUserFetchJoin(String emailOrPhoneNumber){
-        if(emailOrPhoneNumber.matches("01\\d{9}")){
-            return myUsersJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
+
+    public MyUser findMyUserFetchJoin(String emailOrPhoneNumber) {
+        if (emailOrPhoneNumber.matches("01\\d{9}")) {
+            return myUsersJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 핸드폰 번호")
                             .request(emailOrPhoneNumber)
                             .build());
-        }else if (emailOrPhoneNumber.matches(".+@.+\\..+")){
-            return myUsersJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
+        } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
+            return myUsersJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 이메일")
                             .request(emailOrPhoneNumber)
                             .build());
-        }else throw new CustomBadRequestException.ExceptionBuilder()
-                .customMessage("잘못 입력된 식별자")
-                .request(emailOrPhoneNumber)
-                .build();
-    }
-    public MyUser findMyUser(String emailOrPhoneNumber){
-        if(emailOrPhoneNumber.matches("01\\d{9}")){
-            return myUsersJpa.findByPhoneNumber(emailOrPhoneNumber).orElseThrow(()->
-                    new CustomNotFoundException.ExceptionBuilder()
-                            .customMessage("가입되지 않은 핸드폰 번호")
-                            .request(emailOrPhoneNumber)
-                            .build());
-        }else if (emailOrPhoneNumber.matches(".+@.+\\..+")){
-            return myUsersJpa.findByEmail(emailOrPhoneNumber).orElseThrow(()->
-                    new CustomNotFoundException.ExceptionBuilder()
-                            .customMessage("가입되지 않은 이메일")
-                            .request(emailOrPhoneNumber)
-                            .build());
-        }else throw new CustomBadRequestException.ExceptionBuilder()
+        } else throw new CustomBadRequestException.ExceptionBuilder()
                 .customMessage("잘못 입력된 식별자")
                 .request(emailOrPhoneNumber)
                 .build();
     }
 
-
+    public MyUser findMyUser(String emailOrPhoneNumber) {
+        if (emailOrPhoneNumber.matches("01\\d{9}")) {
+            return myUsersJpa.findByPhoneNumber(emailOrPhoneNumber).orElseThrow(() ->
+                    new CustomNotFoundException.ExceptionBuilder()
+                            .customMessage("가입되지 않은 핸드폰 번호")
+                            .request(emailOrPhoneNumber)
+                            .build());
+        } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
+            return myUsersJpa.findByEmail(emailOrPhoneNumber).orElseThrow(() ->
+                    new CustomNotFoundException.ExceptionBuilder()
+                            .customMessage("가입되지 않은 이메일")
+                            .request(emailOrPhoneNumber)
+                            .build());
+        } else throw new CustomBadRequestException.ExceptionBuilder()
+                .customMessage("잘못 입력된 식별자")
+                .request(emailOrPhoneNumber)
+                .build();
+    }
 
 
     //회원가입시 사용되는 로직 모듈화
@@ -154,5 +154,8 @@ public class AccountConfig {
         MyUser sucUser = findMyUser(principal);
         sucUser.loginValueSetting(false);
     }
+
+
+
 
 }
