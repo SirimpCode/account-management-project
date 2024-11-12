@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.repository.account.users;
 
-import com.github.accountmanagementproject.repository.account.socialIds.QSocialId;
-import com.github.accountmanagementproject.repository.account.socialIds.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.socialids.QSocialId;
+import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,6 @@ public class MyUsersDaoCustomImpl implements MyUsersDaoCustom {
                 .where(qSocialId.socialIdPk.eq(socialIdPk))
                 .fetchOne();
 
-        return myUser==null ? Optional.empty() :
-                Optional.of(myUser);
+        return Optional.ofNullable(myUser);
     }
 }

@@ -1,12 +1,13 @@
 package com.github.accountmanagementproject.service.mappers;
 
-import com.github.accountmanagementproject.config.client.dto.userInfo.OAuthUserInfo;
-import com.github.accountmanagementproject.repository.account.socialIds.SocialId;
+import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
+import com.github.accountmanagementproject.repository.account.socialids.SocialId;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.web.dto.accountAuth.AccountInfoDto;
-import com.github.accountmanagementproject.web.dto.accountAuth.oauth.response.OAuthSignUpDto;
+import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
+import com.github.accountmanagementproject.web.dto.account.auth.response.MyInfoResponse;
+import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -22,11 +23,11 @@ public interface UserMapper {
     @Mapping(target = "gender", source = "myUser.gender")
     @Mapping(target = "dateOfBirth", dateFormat = "yyyy년 M월 d일")
     @Mapping(target = "lastLogin", dateFormat = "yyyy년 M월 d일 HH:mm:ss")
-    AccountInfoDto myUserToAccountDto(MyUser myUser);
+    MyInfoResponse myUserToAccountDto(MyUser myUser);
 
     @Mapping(target = "dateOfBirth", dateFormat = "yyyy-M-d")
     @Mapping(target = "roles", ignore = true)
-    MyUser accountDtoToMyUser(AccountInfoDto accountInfoDto);
+    MyUser accountDtoToMyUser(SignUpRequest signUpRequest);
 
     @Named("getMyRoles")
     default Set<RolesEnum> myRoles(Set<Role> roles){

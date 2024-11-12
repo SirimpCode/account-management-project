@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.web.advice;
 
-import com.github.accountmanagementproject.service.customExceptions.*;
-import com.github.accountmanagementproject.web.dto.responseSystem.CustomErrorResponse;
+import com.github.accountmanagementproject.service.exceptions.*;
+import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

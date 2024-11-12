@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.config.security;
 
 
 import com.github.accountmanagementproject.repository.redis.RedisRepository;
-import com.github.accountmanagementproject.web.dto.accountAuth.TokenDto;
+import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

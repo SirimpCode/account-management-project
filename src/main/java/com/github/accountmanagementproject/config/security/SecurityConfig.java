@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.config.security;
 
 import com.github.accountmanagementproject.config.security.event.CustomAccessDeniedHandler;
 import com.github.accountmanagementproject.config.security.event.CustomAuthenticationEntryPoint;
-import com.github.accountmanagementproject.web.filtersAndInterceptor.JwtFilter;
+import com.github.accountmanagementproject.web.filters.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

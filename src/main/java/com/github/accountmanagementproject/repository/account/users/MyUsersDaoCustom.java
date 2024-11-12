@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.repository.account.users;
 
-import com.github.accountmanagementproject.repository.account.socialIds.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
 
 import java.util.Optional;
 

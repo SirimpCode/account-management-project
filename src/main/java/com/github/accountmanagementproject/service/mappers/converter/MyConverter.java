@@ -15,18 +15,18 @@ public abstract class MyConverter<T extends Enum<T> & MyEnumInterface> implement
     }
 
 
-    @Override//null 인경우 여기로 안옴
+    @Override//null 인 경우 jpa 가 호출 안함
     public String convertToDatabaseColumn(T myEnum) {
         return myEnum.getValue();
     }
 
     @Override
     public T convertToEntityAttribute(String myEnumName) {
-        return myEnumName==null ? null : EnumValueToEnum(myEnumName, targetEnumClass);
+        return myEnumName==null ? null : EnumValueToEnum(myEnumName);
     }
 
-    public static <T extends Enum<T> & MyEnumInterface> T EnumValueToEnum(String value, Class<T> enumClass){
-        for(T myEnum : EnumSet.allOf(enumClass)){
+    public T EnumValueToEnum(String value){
+        for(T myEnum : EnumSet.allOf(this.targetEnumClass)){
             if(myEnum.getValue().equals(value)) return myEnum;
         }
         return null;

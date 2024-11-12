@@ -1,12 +1,12 @@
 package com.github.accountmanagementproject.repository.account.users;
 
-import com.github.accountmanagementproject.repository.account.socialIds.SocialId;
+import com.github.accountmanagementproject.repository.account.socialids.SocialId;
 import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.mappers.converter.GenderConverter;
 import com.github.accountmanagementproject.service.mappers.converter.UserStatusConverter;
-import com.github.accountmanagementproject.web.dto.accountAuth.oauth.response.OAuthSignUpDto;
+import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -96,6 +96,9 @@ public class MyUser {
     }
     public boolean isCredentialsExpired(){
         return false;
+    }
+    public boolean isEnabled(){
+        return this.status == UserStatus.NORMAL;
     }
     public boolean isUnlockTime(){
         return this.failureDate != null

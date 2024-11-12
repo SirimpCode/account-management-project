@@ -64,7 +64,7 @@ tasks.named('test') {
 
 tasks.named('bootJar'){
     mainClass = 'com.github.accountmanagementproject.AccountManagementProjectApplication'
-    destinationDirectory = file("./BuildFile")
+    destinationDirectory = file("./buildFile")
     archivesBaseName = '프로젝트이름'
     archiveFileName = 'AccountManagementProject.jar'
     archiveVersion = "3.9.3"

@@ -6,14 +6,7 @@ jasypt:
     password: ${JASYPT_PASSWORD}
 
 
-oauth:
-  kakao:
-    client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
-    secret: ENC(tkjxfDY5EHsJlm4hRHqoyCRpnAMsSfUzFgEkC55ssu6VsSrkZts94USxxeYFlnlI)
-    url:
-      auth: https://kauth.kakao.com
-      api: https://kapi.kakao.com
-      redirect-uri: http://localhost:8080/api/auth/kakao
+
 
 spring:
   mvc:
