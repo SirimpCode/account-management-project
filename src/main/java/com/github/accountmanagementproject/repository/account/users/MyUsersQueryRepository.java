@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface MyUsersDaoCustom {
 
-    Optional<MyUser> findBySocialIdPk(SocialIdPk socialIdPk);
+    Optional<MyUser> findBySocialIdPkNormalOrTemp(SocialIdPk socialIdPk);
 }
