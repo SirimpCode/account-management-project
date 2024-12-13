@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "socialId", "provider" })
 @NoArgsConstructor
 @Getter
 @AllArgsConstructor

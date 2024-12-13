@@ -1,10 +1,10 @@
 package com.github.accountmanagementproject.config.security;
 
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.repository.account.users.roles.RolesJpa;
+import com.github.accountmanagementproject.repository.account.users.roles.RolesRepository;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomNotFoundException;
 import jakarta.persistence.EntityManager;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class AccountConfig {
-    private final RolesJpa rolesJpa;
-    private final MyUsersJpa myUsersJpa;
+    private final RolesRepository rolesRepository;
+    private final MyUsersRepository myUsersRepository;
     private final EntityManager entityManager;
     private final HttpSession httpSession;
 
@@ -34,14 +34,14 @@ public class AccountConfig {
 
     public Role getNormalUserRole() {
         if (normalUserRole == null) {
-            normalUserRole = rolesJpa.findByName(RolesEnum.ROLE_USER);
+            normalUserRole = new Role(2);
         }
         return normalUserRole;
     }
 
     public Role getAdminUserRole() {
         if (adminUserRole == null) {
-            adminUserRole = rolesJpa.findByName(RolesEnum.ROLE_ADMIN);
+            adminUserRole = new Role(1);
         }
         return adminUserRole;
     }
@@ -49,13 +49,13 @@ public class AccountConfig {
 
     public MyUser findMyUserFetchJoin(String emailOrPhoneNumber) {
         if (emailOrPhoneNumber.matches("01\\d{9}")) {
-            return myUsersJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(() ->
+            return myUsersRepository.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 핸드폰 번호")
                             .request(emailOrPhoneNumber)
                             .build());
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
-            return myUsersJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(() ->
+            return myUsersRepository.findByEmailJoin(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 이메일")
                             .request(emailOrPhoneNumber)
@@ -68,13 +68,13 @@ public class AccountConfig {
 
     public MyUser findMyUser(String emailOrPhoneNumber) {
         if (emailOrPhoneNumber.matches("01\\d{9}")) {
-            return myUsersJpa.findByPhoneNumber(emailOrPhoneNumber).orElseThrow(() ->
+            return myUsersRepository.findByPhoneNumber(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 핸드폰 번호")
                             .request(emailOrPhoneNumber)
                             .build());
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
-            return myUsersJpa.findByEmail(emailOrPhoneNumber).orElseThrow(() ->
+            return myUsersRepository.findByEmail(emailOrPhoneNumber).orElseThrow(() ->
                     new CustomNotFoundException.ExceptionBuilder()
                             .customMessage("가입되지 않은 이메일")
                             .request(emailOrPhoneNumber)

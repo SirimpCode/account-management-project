@@ -5,12 +5,14 @@ import com.github.accountmanagementproject.repository.account.users.enums.RolesE
 import com.github.accountmanagementproject.service.mappers.converter.RoleConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Getter
 @Entity
 @Table(name = "roles")
+@NoArgsConstructor
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
@@ -24,5 +26,8 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<MyUser> myUsers;
 
+    public Role(Integer id) {
+        this.rolesId = id;
+    }
 }
 

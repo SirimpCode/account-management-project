@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.service.account;
 
-import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
 import com.github.accountmanagementproject.repository.redis.RedisRepository;
 import com.github.accountmanagementproject.service.exceptions.CustomServerException;
 import jakarta.mail.MessagingException;
@@ -23,14 +23,14 @@ import java.util.Random;
 public class EmailVerifyService {
 
     private final JavaMailSender mailSender;
-    private final MyUsersJpa myUsersJpa;
+    private final MyUsersRepository myUsersRepository;
     private final RedisRepository redisRepository;
     @Value("${spring.mail.username}")
     private String from;
 
     //중복 확인
     public boolean duplicateCheckEmail(String email) {
-        return !myUsersJpa.existsByEmail(email);
+        return !myUsersRepository.existsByEmail(email);
     }
 
     //메일 발송

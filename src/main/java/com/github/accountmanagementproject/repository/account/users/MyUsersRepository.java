@@ -9,7 +9,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface MyUsersJpa extends JpaRepository<MyUser, Integer>, MyUsersDaoCustom {
+public interface MyUsersRepository extends JpaRepository<MyUser, Integer>, MyUsersQueryRepository {
     Optional<MyUser> findByEmail(String email);
     Optional<MyUser> findByPhoneNumber(String phoneNumber);
 
@@ -40,19 +40,5 @@ public interface MyUsersJpa extends JpaRepository<MyUser, Integer>, MyUsersDaoCu
 
 
     boolean existsByEmail(String email);
-
-//
-//    @Query(
-//            "SELECT u " +
-//                    "FROM MyUser u " +
-//                    "JOIN FETCH u.userRoles ur " +
-//                    "JOIN FETCH ur.roles " +
-//                    "WHERE u.userId = ?1"
-//    )
-//    Optional<MyUser> findByIdJoin(Integer userId);
-
-
-
-
 
 }

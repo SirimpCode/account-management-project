@@ -3,7 +3,7 @@ package com.github.accountmanagementproject.service.account.auth;
 import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
 import com.github.accountmanagementproject.service.exceptions.CustomBadCredentialsException;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomServerException;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SignUpLoginService {
 
-    private final MyUsersJpa myUsersJpa;
+    private final MyUsersRepository myUsersRepository;
     private final AccountConfig accountConfig;
     private final JwtProvider jwtProvider;
 
@@ -47,7 +47,7 @@ public class SignUpLoginService {
         try {
             MyUser signUpMyUser = UserMapper.INSTANCE.accountDtoToMyUser(signUpRequest);
             signUpMyUser.setRoles(Set.of(accountConfig.getNormalUserRole()));
-            myUsersJpa.save(signUpMyUser);
+            myUsersRepository.save(signUpMyUser);
         }catch (DateTimeException e){
             throw new CustomBadRequestException.ExceptionBuilder()
                     .systemMessage(e.getMessage())
@@ -96,7 +96,7 @@ public class SignUpLoginService {
     }
 
     public void errorTest() {
-        MyUser user = myUsersJpa.findByEmail("abc@abc.com").orElseThrow();
-        myUsersJpa.delete(user);
+        MyUser user = myUsersRepository.findByEmail("abc@abc.com").orElseThrow();
+        myUsersRepository.delete(user);
     }
 }

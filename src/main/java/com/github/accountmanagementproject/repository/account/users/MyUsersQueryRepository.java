@@ -4,7 +4,7 @@ import com.github.accountmanagementproject.repository.account.socialids.SocialId
 
 import java.util.Optional;
 
-public interface MyUsersDaoCustom {
+public interface MyUsersQueryRepository {
 
-    Optional<MyUser> findBySocialIdPk(SocialIdPk socialIdPk);
+    Optional<MyUser> findBySocialIdPkOrUserEmail(SocialIdPk socialIdPk, String email);
 }

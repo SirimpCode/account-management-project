@@ -1,6 +1,10 @@
 package com.github.accountmanagementproject.web.controller.account.auth;
 
 
+import com.github.accountmanagementproject.repository.account.users.enums.Gender;
+import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
+import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.account.auth.SignUpLoginService;
 import com.github.accountmanagementproject.service.account.oauth.OAuthLoginService;
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
@@ -12,14 +16,13 @@ import com.github.accountmanagementproject.web.dto.account.oauth.request.OAuthLo
 import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -92,6 +95,22 @@ public class AuthController implements AuthControllerDocs {
                 .message("회원가입 완료")
                 .httpStatus(HttpStatus.CREATED)
                 .build();
+    }
+
+    @GetMapping("/tt")
+    public CustomSuccessResponse tt(@Parameter(schema = @Schema(type = "string", example = "카카오")) @RequestParam OAuthProvider provider){
+        return new CustomSuccessResponse.SuccessDetail()
+                .responseData(provider).build();
+    }
+    @GetMapping("/ttt")
+    public CustomSuccessResponse ttt(@Parameter(schema = @Schema(type = "string", example = "카카오")) @RequestParam Gender gender){
+        return new CustomSuccessResponse.SuccessDetail()
+                .responseData(gender).build();
+    }
+    @GetMapping("/tttt")
+    public CustomSuccessResponse tttt(@Parameter(schema = @Schema(type = "string", example = "카카오")) @RequestParam RolesEnum role){
+        return new CustomSuccessResponse.SuccessDetail()
+                .responseData(role).build();
     }
 
 

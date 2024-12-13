@@ -5,9 +5,10 @@ import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.socialids.SocialId;
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdsJpa;
+import com.github.accountmanagementproject.repository.account.socialids.SocialIdsRepository;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersJpa;
+import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
+import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomNotFoundException;
 import com.github.accountmanagementproject.service.exceptions.CustomServerException;
@@ -31,24 +32,35 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OAuthLoginService {
-    private final MyUsersJpa myUsersJpa;
-    private final SocialIdsJpa socialIdsJpa;
-    private final AccountConfig accountConfig;
+    private final MyUsersRepository myUsersRepository;
+    private final SocialIdsRepository socialIdsRepository;
     private final OAuthClientManager oAuthClientManager;
     private final JwtProvider jwtProvider;
 
     @Transactional
     public AuthResult<?> loginOrCreateTempAccount(OAuthLoginParams params) {
-
         //소셜 서버에 요청해서 사용자 정보 받아오기
         OAuthUserInfo oAuthUserInfo = oAuthClientManager.request(params);
-        //DB에서 사용자 정보 찾기
-        Optional<MyUser> myUserOptional = myUsersJpa.findBySocialIdPk(new SocialIdPk(oAuthUserInfo.getSocialId(),oAuthUserInfo.getOAuthProvider()));
-        //DB에 사용자 정보가 없으면 임시 회원가입 진행
-        MyUser myUser = myUserOptional.orElseGet(() -> processSignUp(oAuthUserInfo));
+        SocialIdPk socialIdPk = new SocialIdPk(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider());
+        //DB 에서 소셜 사용자 정보 찾기
+        MyUser requestUser = myUsersRepository.findBySocialIdPkOrUserEmail(socialIdPk, oAuthUserInfo.getEmail())
+                .orElseGet(() -> processTempSignUp(oAuthUserInfo));//없으면 임시 회원가입 진행
+        //필요에 따라 유저 정보에 소셜 ID 설정
+        requestUserSetSocialId(requestUser, socialIdPk);
         //로그인 또는 회원가입 응답 생성
-        return myUserOptional.isPresent() & !myUser.isDisabled() ? createOAuthLoginResponse(myUser) : createOAuthSignUpResponse(oAuthUserInfo);
+        return requestUser.isEnabled() ? createOAuthLoginResponse(requestUser) : createOAuthSignUpResponse(oAuthUserInfo);
 
+    }
+
+    private void requestUserSetSocialId(MyUser requestUser, SocialIdPk socialIdPk) {
+        boolean hasSocialIdPk = requestUser.getSocialIds().stream()
+                .map(SocialId::getSocialIdPk)
+                .anyMatch(pk -> pk.equals(socialIdPk));
+        if (!hasSocialIdPk) {
+            SocialId newSocialId = SocialId.ofSocialIdPkAndMyUser(socialIdPk, requestUser);
+            if (requestUser.getSocialIds() == null) requestUser.setSocialIds(Set.of(newSocialId));
+            else requestUser.getSocialIds().add(newSocialId);
+        }
     }
 
     private AuthResult<OAuthSignUpDto> createOAuthSignUpResponse(OAuthUserInfo oAuthUserInfo) {
@@ -84,14 +96,14 @@ public class OAuthLoginService {
         }
     }
 
-    private MyUser processSignUp(OAuthUserInfo oAuthUserInfo) {
+    private MyUser processTempSignUp(OAuthUserInfo oAuthUserInfo) {
         MyUser newUser = UserMapper.INSTANCE.oAuthInfoResponseToMyUser(oAuthUserInfo);
-        newUser.setRoles(Set.of(accountConfig.getNormalUserRole()));
-        return myUsersJpa.save(newUser);
+        newUser.setRoles(Set.of(new Role(2)));
+        return myUsersRepository.save(newUser);
     }
 
     private SocialId validationAndFindSocialId(OAuthSignUpDto oAuthSignUpDto) {
-        SocialId socialId = socialIdsJpa.findBySocialIdPkJoinMyUser(new SocialIdPk(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))
+        SocialId socialId = socialIdsRepository.findBySocialIdPkJoinMyUser(new SocialIdPk(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))
                 .orElseThrow(() -> new CustomNotFoundException.ExceptionBuilder()
                         .customMessage("임시 계정이 존재하지 않습니다.")
                         .request("oAuthSignUpDto")
@@ -118,5 +130,9 @@ public class OAuthLoginService {
                     .request(oAuthSignUpDto.getDateOfBirth())
                     .build();
         }
+    }
+
+    private enum LoginResult {
+        NEW, EMAIL, COMPLETED
     }
 }

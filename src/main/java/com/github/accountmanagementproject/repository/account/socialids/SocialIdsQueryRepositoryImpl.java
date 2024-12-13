@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 @RequiredArgsConstructor
-public class SocialIdsDaoCustomImpl implements SocialIdsDaoCustom {
+public class SocialIdsQueryRepositoryImpl implements SocialIdsQueryRepository {
     private final JPAQueryFactory queryFactory;
 
 

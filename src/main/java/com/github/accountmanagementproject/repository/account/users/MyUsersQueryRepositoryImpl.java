@@ -1,0 +1,41 @@
+package com.github.accountmanagementproject.repository.account.users;
+
+import com.github.accountmanagementproject.repository.account.socialids.QSocialId;
+import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+
+@RequiredArgsConstructor
+public class MyUsersQueryRepositoryImpl implements MyUsersQueryRepository {
+    private final JPAQueryFactory queryFactory;
+    private final QMyUser qMyUser = QMyUser.myUser;
+
+    @Override
+    public Optional<MyUser> findBySocialIdPkOrUserEmail(SocialIdPk socialIdPk, String email) {
+        QSocialId qSocialId = QSocialId.socialId;
+        List<MyUser> myUserList = queryFactory.select(qMyUser)
+                .from(qMyUser)
+                .leftJoin(qMyUser.socialIds, qSocialId).fetchJoin()
+                .where(qSocialId.socialIdPk.eq(socialIdPk).or(qMyUser.email.eq(email)))
+                .fetch();
+        MyUser response = singleOutAUser(myUserList,socialIdPk);
+        return Optional.ofNullable(response);
+    }
+
+    /**만약 소셜아이디로 가입이 되어있지만 해당 계정의 소셜이메일로 다른계정이 가입되어있을경우
+     * 여러 계정중 소셜아이디의 계정으로 로그인 시도. 또는 소셜아이디는 찾을 수 없지만 소셜이메일과 같은 계정이 존재할 경우엔
+     * 그냥 해당계정으로 로그인시도 (상위 메서드에서 소셜아이디를 추가 해줌)
+     */
+    private MyUser singleOutAUser(List<MyUser> myUserList, SocialIdPk socialIdPk){
+        return myUserList.isEmpty() ? null :
+                myUserList.size() == 1 ? myUserList.get(0) :
+                        myUserList.stream().filter(user ->
+                                        user.getSocialIds().stream().anyMatch(id->id.getSocialIdPk().equals(socialIdPk)))
+                                .findFirst().orElse(null);
+    }
+}

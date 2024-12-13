@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -36,7 +37,6 @@ public class MyUser {
 
     @Column(name = "phone_number", unique = true, nullable = false, length = 15)
     private String phoneNumber;
-
 
     @Column(nullable = false)
     private String password;

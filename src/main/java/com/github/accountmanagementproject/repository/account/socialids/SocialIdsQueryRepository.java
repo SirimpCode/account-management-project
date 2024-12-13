@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.repository.account.socialids;
 
 import java.util.Optional;
 
-public interface SocialIdsDaoCustom {
+public interface SocialIdsQueryRepository {
 
     Optional<SocialId> findBySocialIdPkJoinMyUser(SocialIdPk socialIdPk);
 }

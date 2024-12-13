@@ -2,6 +2,7 @@ package com.github.accountmanagementproject.repository.account.users.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 @Getter
 @AllArgsConstructor
