@@ -2,8 +2,6 @@ package com.github.accountmanagementproject.repository.account.users;
 
 import com.github.accountmanagementproject.repository.account.socialids.QSocialId;
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
-import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +12,6 @@ import java.util.Optional;
 public class MyUsersQueryRepositoryImpl implements MyUsersQueryRepository {
     private final JPAQueryFactory queryFactory;
     private final QMyUser qMyUser = QMyUser.myUser;
-
     @Override
     public Optional<MyUser> findBySocialIdPkOrUserEmail(SocialIdPk socialIdPk, String email) {
         QSocialId qSocialId = QSocialId.socialId;
