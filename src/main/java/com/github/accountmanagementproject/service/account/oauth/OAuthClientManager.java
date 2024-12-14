@@ -34,7 +34,7 @@ public class OAuthClientManager {
         }catch (HttpClientErrorException ex){
             throw new CustomBadRequestException.ExceptionBuilder()
                     .systemMessage(ex.getMessage())
-                    .customMessage("전달된 code가 만료되었습니다.")
+                    .customMessage("잘못된 소셜 인증 코드")
                     .request(params.makeBody().getFirst("code"))
                     .build();
         }

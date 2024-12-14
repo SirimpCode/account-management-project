@@ -2,6 +2,8 @@ package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.Getter;
 
@@ -11,18 +13,13 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoUserInfo implements OAuthUserInfo {
     private String id;
-
-    @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
-
-    @JsonProperty("connected_at")
     private LocalDateTime connectedAt;
-
-    @JsonProperty("synched_at")
     private LocalDateTime synchedAt;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class KakaoAccount {
         private KakaoProfile profile;
         private String email;
@@ -30,9 +27,9 @@ public class KakaoUserInfo implements OAuthUserInfo {
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class KakaoProfile {
         private String nickname;
-        @JsonProperty("profile_image_url")
         private String profileImageUrl;
     }
 

@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.config.client.oauth;
 
-import com.github.accountmanagementproject.config.client.oauth.dto.tokens.NaverTokens;
+import com.github.accountmanagementproject.config.client.oauth.dto.tokens.GoogleTokens;
 import com.github.accountmanagementproject.config.client.oauth.dto.tokens.OAuthTokens;
-import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.NaverUserInfo;
+import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.GoogleUserInfo;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.AccessLevel;
@@ -14,47 +14,45 @@ import org.springframework.web.client.RestTemplate;
 
 @Getter(value = AccessLevel.PROTECTED)
 @Component
-public class NaverApiClient extends OAuthApiClient {
-
+public class GoogleApiClient extends OAuthApiClient{
     private final String grantType = "authorization_code";
-    private final String authEndPoint = "/oauth2.0/token";
-    private final String apiEndPoint = "/v1/nid/me";
-    @Value("${oauth.naver.url.auth}")
+    private final String authEndPoint = "/token";
+    private final String apiEndPoint = "/oauth2/v3/userinfo";
+
+
+    @Value("${oauth.google.url.auth}")
     private String authUrl;
 
-    @Value("${oauth.naver.url.api}")
+    @Value("${oauth.google.url.api}")
     private String apiUrl;
 
-    @Value("${oauth.naver.client-id}")
+    @Value("${oauth.google.client-id}")
     private String clientId;
-
-    @Value("${oauth.naver.secret}")
+    @Value("${oauth.google.secret}")
     private String clientSecret;
 
-    public NaverApiClient(RestTemplate restTemplate) {
+    public GoogleApiClient(RestTemplate restTemplate) {
         super(restTemplate);
     }
 
 
     @Override
-    public OAuthProvider oAuthProvider(){
-        return OAuthProvider.NAVER;
+    public OAuthProvider oAuthProvider() {
+        return OAuthProvider.GOOGLE;
     }
-
 
     @Override
     protected MultiValueMap<String, String> makeRequestBody(MultiValueMap<String, String> beingCreatedBody) {
         return beingCreatedBody;
     }
 
-
     @Override
-    protected Class<NaverTokens> getTokenClass() {
-        return NaverTokens.class;
+    protected Class<GoogleTokens> getTokenClass() {
+        return GoogleTokens.class;
     }
 
     @Override
-    protected Class<NaverUserInfo> getUserInfoClass() {
-        return NaverUserInfo.class;
+    protected Class<GoogleUserInfo> getUserInfoClass() {
+        return GoogleUserInfo.class;
     }
 }

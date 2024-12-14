@@ -10,6 +10,7 @@ import com.github.accountmanagementproject.service.account.oauth.OAuthLoginServi
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
+import com.github.accountmanagementproject.web.dto.account.oauth.request.GoogleLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.KakaoLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.NaverLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.OAuthLoginParams;
@@ -73,6 +74,11 @@ public class AuthController implements AuthControllerDocs {
         CustomSuccessResponse result = loginOAuth(params);
         return new ResponseEntity<>(result, result.getSuccess().getHttpStatus());
     }
+    @PostMapping("/google")
+    public ResponseEntity<CustomSuccessResponse> loginGoogle(@RequestBody GoogleLoginParams params) {
+        CustomSuccessResponse result = loginOAuth(params);
+        return new ResponseEntity<>(result, result.getSuccess().getHttpStatus());
+    }
 
     private CustomSuccessResponse loginOAuth(OAuthLoginParams params) {
         AuthResult<?> result = oAuthLoginService.loginOrCreateTempAccount(params);
@@ -82,6 +88,7 @@ public class AuthController implements AuthControllerDocs {
                 .responseData(result.getResponse())
                 .build();
     }
+
 
     @PostMapping("/oauth")
     public ResponseEntity<CustomSuccessResponse> oAuthSignUp(@RequestBody @Valid OAuthSignUpDto oAuthSignUpDto) {

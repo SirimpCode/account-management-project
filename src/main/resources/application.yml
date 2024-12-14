@@ -12,14 +12,19 @@ oauth:
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
-      redirect-uri: http://localhost:8080/api/auth/kakao
   naver:
     client-id: ENC(ViBdn4cYnxMFSXi0rSs7mnrQBwlfRHzxJnXVbTw7YSE=)
     secret: ENC(YEL+R3qWDgfscQvMgwa1yJN6x/NGOZeq)
     url:
       auth: https://nid.naver.com
       api: https://openapi.naver.com
-
+  google:
+    client-id: ENC(mzDZ4QLHZGLE7tSHF+igoC6/R75cvYzak/LV5Vunh4B4m2vO7suGI244yBiNnNsaLJjVVh1ta+6m8IrSDczrPpFHOVdVBV3xoynq2XQolYEFmcXDOp97Tg==)
+    secret: ENC(6Eg+GrGrf5DLIOcLZVQfB3s8+mbEH+GOECrTjSBJqYH5cdQzr3kMJLf1oCnLfuFn)
+    url:
+      auth: https://oauth2.googleapis.com
+      api: https://www.googleapis.com
+      redirect-uri: http://localhost:3000/auth
 
 spring:
   mvc:

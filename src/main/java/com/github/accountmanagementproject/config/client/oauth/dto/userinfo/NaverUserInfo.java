@@ -2,6 +2,8 @@ package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.Getter;
 
@@ -9,18 +11,18 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NaverUserInfo implements OAuthUserInfo {
 
-    @JsonProperty("response")
     private Response response;
+    private String message;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class Response {
         private String email;
         private String nickname;
         private String name;
 
         private String id;
-        @JsonProperty("profile_image")
         private String profileImage;
     }
 
