@@ -7,4 +7,8 @@ import java.util.Optional;
 public interface MyUsersQueryRepository {
 
     Optional<MyUser> findBySocialIdPkOrUserEmail(SocialIdPk socialIdPk, String email);
+
+    Optional<MyUser> findByEmailOrPhoneNumber(String emailOrPhoneNumber);
+
+    void updateFailureCountByEmail(MyUser failUser);
 }

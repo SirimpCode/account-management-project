@@ -1,13 +1,13 @@
 package com.github.accountmanagementproject.service.account.oauth;
 
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
-import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.socialids.SocialId;
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdsRepository;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
+import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomNotFoundException;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,9 +35,15 @@ public class OAuthLoginService {
     private final SocialIdsRepository socialIdsRepository;
     private final OAuthClientManager oAuthClientManager;
     private final JwtProvider jwtProvider;
+    private final OAuthCodeManager oAuthCodeManager;
+
+    public String getAuthorizationUrl(OAuthProvider oAuthProvider, String redirectUri) {
+        return oAuthCodeManager.getAuthorizationUrl(oAuthProvider, redirectUri);
+    }
+
 
     @Transactional
-    public AuthResult<?> loginOrCreateTempAccount(OAuthLoginParams params) {
+    public AuthResult loginOrCreateTempAccount(OAuthLoginParams params) {
         //소셜 서버에 요청해서 사용자 정보 받아오기
         OAuthUserInfo oAuthUserInfo = oAuthClientManager.request(params);
         SocialIdPk socialIdPk = new SocialIdPk(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider());
@@ -63,16 +68,17 @@ public class OAuthLoginService {
         }
     }
 
-    private AuthResult<OAuthSignUpDto> createOAuthSignUpResponse(OAuthUserInfo oAuthUserInfo) {
-        return AuthResult.<OAuthSignUpDto>builder()
-                .response( UserMapper.INSTANCE.oAuthUserInfoToOAuthSignUpDto(oAuthUserInfo) )
+    private AuthResult createOAuthSignUpResponse(OAuthUserInfo oAuthUserInfo) {
+        return AuthResult.builder()
+                .response(UserMapper.INSTANCE.oAuthUserInfoToOAuthSignUpDto(oAuthUserInfo))
                 .message("임시 계정 생성")
                 .httpStatus(HttpStatus.CREATED)
                 .build();
     }
-    private AuthResult<TokenDto> createOAuthLoginResponse(MyUser myUser) {
-        return AuthResult.<TokenDto>builder()
-                .response( createTokenAndSave(myUser) )
+
+    private AuthResult createOAuthLoginResponse(MyUser myUser) {
+        return AuthResult.builder()
+                .response(createTokenAndSave(myUser))
                 .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
                 .build();
@@ -89,7 +95,7 @@ public class OAuthLoginService {
             myUser.loginValueSetting(false);
             return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
         } catch (RedisConnectionFailureException e) {
-            throw new CustomServerException.ExceptionBuilder()
+            throw CustomServerException.of()
                     .systemMessage(e.getMessage())
                     .customMessage("Redis 서버 연결 실패")
                     .build();
@@ -104,13 +110,13 @@ public class OAuthLoginService {
 
     private SocialId validationAndFindSocialId(OAuthSignUpDto oAuthSignUpDto) {
         SocialId socialId = socialIdsRepository.findBySocialIdPkJoinMyUser(new SocialIdPk(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))
-                .orElseThrow(() -> new CustomNotFoundException.ExceptionBuilder()
+                .orElseThrow(() -> CustomNotFoundException.of()
                         .customMessage("임시 계정이 존재하지 않습니다.")
                         .request("oAuthSignUpDto")
                         .systemMessage("NotFoundException")
                         .build());
-        if( socialId.getMyUser().isEnabled() )
-            throw new CustomBadRequestException.ExceptionBuilder()
+        if (socialId.getMyUser().isEnabled())
+            throw CustomBadRequestException.of()
                     .customMessage("이미 가입된 계정입니다.")
                     .request("oAuthSignUpDto")
                     .build();
@@ -124,7 +130,7 @@ public class OAuthLoginService {
             socialId.socialConnectSetting();
             socialId.getMyUser().oAuthSignUpSetting(oAuthSignUpDto);
         } catch (DateTimeException e) {
-            throw new CustomBadRequestException.ExceptionBuilder()
+            throw CustomBadRequestException.of()
                     .systemMessage(e.getMessage())
                     .customMessage("호환되지 않는 날짜 형식 (ex. yyyy-M-d)")
                     .request(oAuthSignUpDto.getDateOfBirth())
@@ -132,7 +138,4 @@ public class OAuthLoginService {
         }
     }
 
-    private enum LoginResult {
-        NEW, EMAIL, COMPLETED
-    }
 }

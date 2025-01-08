@@ -9,15 +9,18 @@ public class CustomNotFoundException extends MakeRuntimeException{
     protected CustomNotFoundException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
+    public static of of() {
+        return new of();
+    }
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomNotFoundException> {
+    public static class of extends MakeRuntimeException.ExceptionBuilder<of, CustomNotFoundException> {
 
-        public ExceptionBuilder() {
+        public of() {
             super(CustomNotFoundException.class);
         }
 
         @Override
-        protected ExceptionBuilder self() {
+        protected of self() {
             return this;
         }
     }

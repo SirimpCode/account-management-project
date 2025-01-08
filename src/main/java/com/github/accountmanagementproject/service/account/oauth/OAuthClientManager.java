@@ -25,17 +25,18 @@ public class OAuthClientManager {
         );//key 값에 oAuthProvider 메서드를 호출하여 OAuthProvider 값을 넣어주고 value 값에는 OAuthApiClient 인스턴스 자체를 값으로 사용
     }
 
-    public OAuthUserInfo request(OAuthLoginParams params) {
+    public OAuthUserInfo request(OAuthLoginParams params)  {
         //get요청으로 받아온 OAuthProvider에 해당하는 클라이언트를 가져온다.
         OAuthApiClient client = clients.get(params.oAuthProvider());
         try {
             String accessToken = client.requestAccessToken(params);
             return client.requestOauthInfo(accessToken);
         }catch (HttpClientErrorException ex){
-            throw new CustomBadRequestException.ExceptionBuilder()
-                    .systemMessage(ex.getMessage())
+
+            throw CustomBadRequestException.of()
+                    .systemMessage(ex.getResponseBodyAsString())
                     .customMessage("잘못된 소셜 인증 코드")
-                    .request(params.makeBody().getFirst("code"))
+                    .request(params.getAuthorizationCode())
                     .build();
         }
     }

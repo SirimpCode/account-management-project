@@ -12,4 +12,5 @@ public interface OAuthUserInfo {
     String getNickname();
     String getProfileImg();
     OAuthProvider getOAuthProvider();
+    void setEmail(String email);
 }

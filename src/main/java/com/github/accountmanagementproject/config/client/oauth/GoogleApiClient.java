@@ -1,9 +1,7 @@
 package com.github.accountmanagementproject.config.client.oauth;
 
 import com.github.accountmanagementproject.config.client.oauth.dto.tokens.GoogleTokens;
-import com.github.accountmanagementproject.config.client.oauth.dto.tokens.OAuthTokens;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.GoogleUserInfo;
-import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +38,8 @@ public class GoogleApiClient extends OAuthApiClient{
     public OAuthProvider oAuthProvider() {
         return OAuthProvider.GOOGLE;
     }
+
+
 
     @Override
     protected MultiValueMap<String, String> makeRequestBody(MultiValueMap<String, String> beingCreatedBody) {

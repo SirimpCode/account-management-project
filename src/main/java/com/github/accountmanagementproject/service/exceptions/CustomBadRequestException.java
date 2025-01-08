@@ -9,13 +9,16 @@ public class CustomBadRequestException extends MakeRuntimeException{
     protected CustomBadRequestException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
+    public static of of() {
+        return new of();
+    }
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomBadRequestException>{
-        public ExceptionBuilder() {
+    public static class of extends MakeRuntimeException.ExceptionBuilder<of, CustomBadRequestException>{
+        public of() {
             super(CustomBadRequestException.class);
         }
         @Override
-        protected ExceptionBuilder self() {
+        protected of self() {
             return this;
         }
     }

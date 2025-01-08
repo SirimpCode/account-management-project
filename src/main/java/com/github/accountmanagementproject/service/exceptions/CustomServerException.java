@@ -5,13 +5,16 @@ public class CustomServerException  extends MakeRuntimeException{
     protected CustomServerException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
+    public static of of() {
+        return new of();
+    }
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomServerException>{
-        public ExceptionBuilder() {
+    public static class of extends MakeRuntimeException.ExceptionBuilder<of, CustomServerException>{
+        public of() {
             super(CustomServerException.class);
         }
         @Override
-        protected ExceptionBuilder self() {
+        protected of self() {
             return this;
         }
     }

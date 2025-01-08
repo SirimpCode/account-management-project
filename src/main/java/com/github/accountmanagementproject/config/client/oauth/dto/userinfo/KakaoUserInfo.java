@@ -1,7 +1,6 @@
 package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
@@ -35,26 +34,31 @@ public class KakaoUserInfo implements OAuthUserInfo {
 
     @Override
     public String getEmail() {
-        return kakaoAccount.email;
+        return this.kakaoAccount.email;
     }
 
     @Override
     public String getNickname() {
-        return kakaoAccount.profile.nickname;
+        return this.kakaoAccount.profile.nickname;
     }
 
     @Override
     public String getSocialId() {
-        return id;
+        return this.id;
     }
 
     @Override
     public String getProfileImg() {
-        return kakaoAccount.profile.getProfileImageUrl();
+        return this.kakaoAccount.profile.getProfileImageUrl();
     }
 
     @Override
     public OAuthProvider getOAuthProvider() {
         return OAuthProvider.KAKAO;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.kakaoAccount.email = email;
     }
 }

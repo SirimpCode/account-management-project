@@ -10,12 +10,16 @@ public class CustomAccessDenied extends MakeRuntimeException{
         super(exceptionBuilder);
     }
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomAccessDenied>{
-        public ExceptionBuilder() {
+    public static of of() {
+        return new of();
+    }
+
+    public static class of extends MakeRuntimeException.ExceptionBuilder<of, CustomAccessDenied>{
+        public of() {
             super(CustomAccessDenied.class);
         }
         @Override
-        protected ExceptionBuilder self() {
+        protected of self() {
             return this;
         }
     }

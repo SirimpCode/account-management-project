@@ -99,7 +99,7 @@ public class ExceptionControllerAdvice {
             );
         } else {
             return handleCustomServerException(
-                    new CustomServerException.ExceptionBuilder()
+                    new CustomServerException.of()
                             .systemMessage(ex.getMessage())
                             .customMessage("데이터 무결성 위반")
                             .build()
@@ -160,14 +160,14 @@ public class ExceptionControllerAdvice {
         Object fieldValue = fieldError != null ? fieldError.getRejectedValue() : "Unknown Value";
         String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
 
-        return new CustomBadRequestException.ExceptionBuilder()
+        return new CustomBadRequestException.of()
                 .customMessage(errorMessage)
                 .systemMessage("유효성 검사 실패")
                 .request(fieldName+" : "+fieldValue)
                 .build();
     }
     private CustomBadRequestException typeMismatchToBadRequestException(MethodArgumentTypeMismatchException validException){
-        return new CustomBadRequestException.ExceptionBuilder()
+        return new CustomBadRequestException.of()
                 .customMessage("잘못된 타입 전달")
                 .systemMessage(validException.getMessage())
                 .request(validException.getName() +"="+validException.getValue())
@@ -177,7 +177,7 @@ public class ExceptionControllerAdvice {
 
 
     private CustomBadRequestException genericExToBadRequestException(Exception ex) {
-        return new CustomBadRequestException.ExceptionBuilder()
+        return new CustomBadRequestException.of()
                 .customMessage("잘못된 요청")
                 .systemMessage(ex.getMessage())
                 .build();
@@ -186,7 +186,7 @@ public class ExceptionControllerAdvice {
         String message = extractConstraintViolationMessage(ex);
         String request = extractRequestFieldAndValue(ex);
 
-        return new CustomBadRequestException.ExceptionBuilder()
+        return new CustomBadRequestException.of()
                 .customMessage("잘못된 요청")
                 .systemMessage(message)
                 .request(request)

@@ -8,13 +8,16 @@ public class AccountLockedException extends MakeRuntimeException{
     protected AccountLockedException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
+    public static of of() {
+        return new of();
+    }
 
-    public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, AccountLockedException>{
-        public ExceptionBuilder() {
+    public static class of extends MakeRuntimeException.ExceptionBuilder<of, AccountLockedException>{
+        public of() {
             super(AccountLockedException.class);
         }
         @Override
-        protected ExceptionBuilder self() {
+        protected of self() {
             return this;
         }
     }

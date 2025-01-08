@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OAuthSignUpDto extends AccountParent {
+public class OAuthSignUpDto extends AccountParent implements OAuthDtoInterface{
     @NotBlank(message = "소셜 식별자 값은 필수입니다.")
     @Schema(description = "소셜 아이디", example = "Z9Vp6uyQ1S03CtxKHCnFS80KItHrRxIuwWse12EIupw")
     private String socialId;

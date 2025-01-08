@@ -2,11 +2,10 @@ package com.github.accountmanagementproject.repository.account.users.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Getter
 public enum OAuthProvider implements MyEnumInterface{
-    KAKAO("카카오"), NAVER("네이버"), GOOGLE("구글");
+    KAKAO("카카오"), NAVER("네이버"), GOOGLE("구글"), GITHUB("깃허브");
     private final String value;
 }

@@ -11,12 +11,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -92,7 +95,8 @@ public class MyUser {
         return this.status == UserStatus.WITHDRAWAL || this.status == UserStatus.TEMP;
     }
     public boolean isExpired(){
-        return lastLogin != null && this.lastLogin.isBefore(LocalDateTime.now().minusMonths(3));
+        if(lastLogin == null) return this.createdAt.isBefore(LocalDateTime.now().minusMonths(3));
+        return this.lastLogin.isBefore(LocalDateTime.now().minusMonths(3));
     }
     public boolean isCredentialsExpired(){
         return false;
@@ -133,6 +137,12 @@ public class MyUser {
         this.gender = oAuthSignUpDto.getGender();
         if(oAuthSignUpDto.getDateOfBirth() != null)
             this.dateOfBirth = LocalDate.parse(oAuthSignUpDto.getDateOfBirth(), DateTimeFormatter.ofPattern("yyyy-M-d"));
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.getRoles().stream()
+                .map(roles->new SimpleGrantedAuthority(roles.getName().name()))
+                .collect(Collectors.toSet());
     }
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {

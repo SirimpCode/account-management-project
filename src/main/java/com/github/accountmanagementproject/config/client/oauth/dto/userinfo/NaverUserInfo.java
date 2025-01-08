@@ -1,7 +1,6 @@
 package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
@@ -28,26 +27,31 @@ public class NaverUserInfo implements OAuthUserInfo {
 
     @Override
     public String getSocialId() {
-        return response.id;
+        return this.response.id;
     }
 
     @Override
     public String getEmail() {
-        return response.email;
+        return this.response.email;
     }
 
     @Override
     public String getNickname() {
-        return response.nickname;
+        return this.response.nickname;
     }
 
     @Override
     public String getProfileImg() {
-        return response.profileImage;
+        return this.response.profileImage;
     }
 
     @Override
     public OAuthProvider getOAuthProvider() {
         return OAuthProvider.NAVER;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.response.email = email;
     }
 }

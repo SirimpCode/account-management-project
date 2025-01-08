@@ -1,20 +1,18 @@
 package com.github.accountmanagementproject.web.dto.account.oauth.request;
 
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class NaverLoginParams implements OAuthLoginParams {
 
     private String authorizationCode;
     private String state;
-
     @Override
     public OAuthProvider oAuthProvider() {
         return OAuthProvider.NAVER;
@@ -27,4 +25,5 @@ public class NaverLoginParams implements OAuthLoginParams {
         body.add("state", state);
         return body;
     }
+
 }

@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/auth-test", "/api/account/*").authenticated()
                         .requestMatchers("/resources/**","/api/auth/*", "/api/email/*",
                                 "/error","/swagger-ui/**", "/v3/api-docs/**", "/amp-docs.html").permitAll()
-
+                        .requestMatchers("/api/oauth/**").anonymous()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)//인증이전 실행
@@ -62,7 +62,7 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         //set과 add의 차이 add는 하나씩추가 set은 통째로 설정
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:*"));
         //응답에 노출되는 헤더
         corsConfiguration.addExposedHeader("Authorization");
         //요청에 허용되는 헤더

@@ -37,4 +37,9 @@ public class GoogleUserInfo implements OAuthUserInfo{
     public OAuthProvider getOAuthProvider() {
         return OAuthProvider.GOOGLE;
     }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

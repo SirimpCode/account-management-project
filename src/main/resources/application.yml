@@ -15,6 +15,7 @@ oauth:
   naver:
     client-id: ENC(ViBdn4cYnxMFSXi0rSs7mnrQBwlfRHzxJnXVbTw7YSE=)
     secret: ENC(YEL+R3qWDgfscQvMgwa1yJN6x/NGOZeq)
+    state: ENC(5cNSEo96ZrDeGqfLU66WKNy/PfH/2+sD/w/LWGa9OuY=)
     url:
       auth: https://nid.naver.com
       api: https://openapi.naver.com
@@ -22,11 +23,20 @@ oauth:
     client-id: ENC(mzDZ4QLHZGLE7tSHF+igoC6/R75cvYzak/LV5Vunh4B4m2vO7suGI244yBiNnNsaLJjVVh1ta+6m8IrSDczrPpFHOVdVBV3xoynq2XQolYEFmcXDOp97Tg==)
     secret: ENC(6Eg+GrGrf5DLIOcLZVQfB3s8+mbEH+GOECrTjSBJqYH5cdQzr3kMJLf1oCnLfuFn)
     url:
+      code: https://accounts.google.com
       auth: https://oauth2.googleapis.com
       api: https://www.googleapis.com
-      redirect-uri: http://localhost:3000/auth
+  github:
+    client-id: ENC(TluAC7FBfDgVndgxZ7x8gB25K1QoMmYODppYplYHNVw=)
+    secret: ENC(2RlxgY5Hwf+y1U0fkRGq+I56tcY5B/PYC47tNvTaVdnzFfCg2AoGvCKfSS2QWNWQN0cnscn1zwc=)
+    url:
+      auth: https://github.com
+      api: https://api.github.com
 
 spring:
+  server-url:
+    base: ENC(jcQz/miV3NteeW9ol3WEBOiyk7XMhNUrgI85BiccZS06lgWmhKTh9Q==)
+    https: ENC(UgOQzgA9vlSBT4BkHQ4ju00cP/JOzt7fNdVhLqAkc+c=)
   mvc:
     path match:
       matching-strategy: ant_path_matcher #와일드카드사용해서 매칭전략 스웨거도 필요함

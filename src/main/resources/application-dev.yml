@@ -1,26 +1,10 @@
-jwtpassword:
-  source: ENC(foTHOXMs3+XPmFWjU982ZSZl/HmV971ViWri+mqf/+s/EQ8cCb/0uNoIMOnIv52H/BI8X4+EIQojuAeuXCXB/7gzCKMj8Z6dOpR9asKKEOY=)
-
-jasypt:
-  encryptor:
-    password: ${JASYPT_PASSWORD}
-
-
-
-
 spring:
-  mvc:
-    path match:
-      matching-strategy: ant_path_matcher #와일드카드사용해서 매칭전략 스웨거도 필요함
   jpa:
-    open-in-view: false #지연로딩 성능이슈로인해 false 기본값이 true 임
     show-sql: true
+  server-url:
+    base: http://localhost:8080
   datasource:
-    username: ENC(Ks/AJ8bjJITh7tfRcSMaZg==)
-    password: ENC(nki6d8ZoRQSeteS7d0bbOTdrtX/uvFDg)
+    username: ENC(GVbs+MiVH/NjLAeYsmfmkA==)
+    password: ENC(t/FyDozQWnSPjnOPHcGU2WhhhAbjFFO8)
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(34ItjdybRX8sNKlv04yxywZMul7oyuTDkUONZkuzeHLcriLZot+1JzozA0aB8iF5)
-  data:
-    redis:
-      host: localhost
-      port: 6379
+    url: ENC(XGqG4WoIpWIOoPuDRSPBsoan9Re0s1M3xIQxo0k0O3Jb1aLKqPR6G+diG72hvacfBlRt5b7s134=)

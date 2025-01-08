@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 
 @Builder
 @Getter
-public class AuthResult<T> {
-    private T response;
+public class AuthResult {
+    private OAuthDtoInterface response;
     private HttpStatus httpStatus;
     private String message;
 }

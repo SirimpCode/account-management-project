@@ -25,7 +25,6 @@ public class CustomErrorResponse {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime timestamp;
 
-
         public ErrorDetail httpStatus(HttpStatus httpStatus){
             this.httpStatus = httpStatus;
             return this;

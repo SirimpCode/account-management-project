@@ -14,6 +14,7 @@ public abstract class MakeRuntimeException extends RuntimeException {
         this.request = exceptionBuilder.request;
     }
 
+
     // 제네릭 T: 예외 빌더 타입, E: 예외 클래스 타입
     public abstract static class ExceptionBuilder<T extends ExceptionBuilder<T, E>, E extends MakeRuntimeException> {
         private String systemMessage;
@@ -21,9 +22,10 @@ public abstract class MakeRuntimeException extends RuntimeException {
         private Object request;
         private final Class<E> exceptionClass;
 
-        protected ExceptionBuilder(Class<E> exceptionClass) {
+        public ExceptionBuilder(Class<E> exceptionClass) {
             this.exceptionClass = exceptionClass;
         }
+
 
         public T systemMessage(String systemMessage) {
             this.systemMessage = systemMessage;
@@ -47,7 +49,7 @@ public abstract class MakeRuntimeException extends RuntimeException {
             try {
                 return exceptionClass.getDeclaredConstructor(ExceptionBuilder.class).newInstance(this);
             } catch (Exception e) {
-                throw new CustomServerException.ExceptionBuilder().customMessage("Failed to create exception instance")
+                throw CustomServerException.of().customMessage("Failed to create exception instance")
                         .systemMessage(e.getMessage())
                         .build();
             }

@@ -2,9 +2,7 @@ package com.github.accountmanagementproject.config.security;
 
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
-import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.repository.account.users.roles.RolesRepository;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomNotFoundException;
 import jakarta.persistence.EntityManager;
@@ -16,15 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class AccountConfig {
-    private final RolesRepository rolesRepository;
     private final MyUsersRepository myUsersRepository;
     private final EntityManager entityManager;
     private final HttpSession httpSession;
 
 
-    //일반유저롤 자주 호출되서 싱글톤적용
     private static Role normalUserRole;
-
     private static Role adminUserRole;
 
 //    @PostConstruct
@@ -50,17 +45,17 @@ public class AccountConfig {
     public MyUser findMyUserFetchJoin(String emailOrPhoneNumber) {
         if (emailOrPhoneNumber.matches("01\\d{9}")) {
             return myUsersRepository.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(() ->
-                    new CustomNotFoundException.ExceptionBuilder()
+                    CustomNotFoundException.of()
                             .customMessage("가입되지 않은 핸드폰 번호")
                             .request(emailOrPhoneNumber)
                             .build());
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
             return myUsersRepository.findByEmailJoin(emailOrPhoneNumber).orElseThrow(() ->
-                    new CustomNotFoundException.ExceptionBuilder()
+                    CustomNotFoundException.of()
                             .customMessage("가입되지 않은 이메일")
                             .request(emailOrPhoneNumber)
                             .build());
-        } else throw new CustomBadRequestException.ExceptionBuilder()
+        } else throw CustomBadRequestException.of()
                 .customMessage("잘못 입력된 식별자")
                 .request(emailOrPhoneNumber)
                 .build();
@@ -69,17 +64,17 @@ public class AccountConfig {
     public MyUser findMyUser(String emailOrPhoneNumber) {
         if (emailOrPhoneNumber.matches("01\\d{9}")) {
             return myUsersRepository.findByPhoneNumber(emailOrPhoneNumber).orElseThrow(() ->
-                    new CustomNotFoundException.ExceptionBuilder()
+                    CustomNotFoundException.of()
                             .customMessage("가입되지 않은 핸드폰 번호")
                             .request(emailOrPhoneNumber)
                             .build());
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
             return myUsersRepository.findByEmail(emailOrPhoneNumber).orElseThrow(() ->
-                    new CustomNotFoundException.ExceptionBuilder()
+                    CustomNotFoundException.of()
                             .customMessage("가입되지 않은 이메일")
                             .request(emailOrPhoneNumber)
                             .build());
-        } else throw new CustomBadRequestException.ExceptionBuilder()
+        } else throw CustomBadRequestException.of()
                 .customMessage("잘못 입력된 식별자")
                 .request(emailOrPhoneNumber)
                 .build();
@@ -139,23 +134,17 @@ public class AccountConfig {
 
 
     @Transactional
-    public MyUser failureCounting() {
-        MyUser failUser = (MyUser) httpSession.getAttribute("myUser");
-//        MyUser failUser = findMyUser(principal);
-        if (failUser != null) {
-            failUser = entityManager.find(MyUser.class, failUser.getUserId());
-            failUser.loginValueSetting(true);
-        }
+    public MyUser failureCounting(MyUser failUser) {
+        failUser.loginValueSetting(true);
+        myUsersRepository.updateFailureCountByEmail(failUser);
         return failUser;
     }
 
     @Transactional
-    public void loginSuccessEvent(String principal) {
-        MyUser sucUser = findMyUser(principal);
+    public void loginSuccessEvent(MyUser sucUser) {
         sucUser.loginValueSetting(false);
+        myUsersRepository.updateFailureCountByEmail(sucUser);
     }
-
-
 
 
 }

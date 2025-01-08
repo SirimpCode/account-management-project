@@ -1,6 +1,7 @@
 package com.github.accountmanagementproject.web.dto.account.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthDtoInterface;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TokenDto {
+public class TokenDto implements OAuthDtoInterface {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotBlank(message = "토큰 타입은 필수 입니다.")
     @Schema(description = "토큰 타입", example = "Bearer")

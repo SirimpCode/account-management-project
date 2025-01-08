@@ -7,7 +7,8 @@ plugins {
 
 group = 'com.github'
 version = '0.0.1-SNAPSHOT'
-def queryDslVersion = "6.9"
+def mapStructVersion = "1.6.3"
+def queryDslVersion = "6.10.1"
 def generatedDir = "./src/main/generated"
 def buildDir = "./building"
 
@@ -36,8 +37,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     //Mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
     //Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     //env-hide

@@ -4,6 +4,7 @@ import com.github.accountmanagementproject.config.security.AccountConfig;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
+import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.exceptions.CustomBadCredentialsException;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.service.exceptions.CustomServerException;
@@ -43,13 +44,13 @@ public class SignUpLoginService {
         //비번 암호화
         signUpRequest.passwordReplace(passwordEncoder.encode(signUpRequest.getPassword()));
 
+        MyUser signUpMyUser = UserMapper.INSTANCE.accountDtoToMyUser(signUpRequest);
+        signUpMyUser.setRoles(Set.of(new Role(2)));
         //세이브 실행하면서 중복값 발생시 발생되는 익셉션 예외처리
         try {
-            MyUser signUpMyUser = UserMapper.INSTANCE.accountDtoToMyUser(signUpRequest);
-            signUpMyUser.setRoles(Set.of(accountConfig.getNormalUserRole()));
             myUsersRepository.save(signUpMyUser);
-        }catch (DateTimeException e){
-            throw new CustomBadRequestException.ExceptionBuilder()
+        } catch (DateTimeException e) {
+            throw CustomBadRequestException.of()
                     .systemMessage(e.getMessage())
                     .customMessage("호환되지 않는 날짜 형식 (ex. yyyy-M-d)")
                     .request(signUpRequest.getDateOfBirth())
@@ -69,7 +70,7 @@ public class SignUpLoginService {
         try {
             return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
         } catch (RedisConnectionFailureException e) {
-            throw new CustomServerException.ExceptionBuilder()
+            throw CustomServerException.of()
                     .systemMessage(e.getMessage())
                     .customMessage("Redis 서버 연결 실패")
                     .build();
@@ -77,16 +78,16 @@ public class SignUpLoginService {
     }
 
     public TokenDto refreshTokenByTokenDto(TokenDto tokenDto) {
-        try{
+        try {
             return jwtProvider.tokenRefresh(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        }catch (RedisConnectionFailureException e){
-            throw new CustomServerException.ExceptionBuilder()
+        } catch (RedisConnectionFailureException e) {
+            throw CustomServerException.of()
                     .systemMessage(e.getMessage())
                     .customMessage("Redis 서버 연결 실패")
                     .request(tokenDto)
                     .build();
-        }catch (ExpiredJwtException | NoSuchElementException e){
-            throw new CustomBadCredentialsException.ExceptionBuilder()
+        } catch (ExpiredJwtException | NoSuchElementException e) {
+            throw CustomBadCredentialsException.of()
                     .systemMessage(e.getMessage())
                     .customMessage(e instanceof ExpiredJwtException ? "리프레시 토큰 만료" : "재발급 받을 수 없는 액세스 토큰")
                     .request(tokenDto)

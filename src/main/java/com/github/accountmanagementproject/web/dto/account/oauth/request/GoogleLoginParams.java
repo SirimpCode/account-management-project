@@ -1,22 +1,21 @@
 package com.github.accountmanagementproject.web.dto.account.oauth.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class GoogleLoginParams implements OAuthLoginParams{
     private String authorizationCode;
     private String redirectUri;
+
     @Override
     public OAuthProvider oAuthProvider() {
         return OAuthProvider.GOOGLE;

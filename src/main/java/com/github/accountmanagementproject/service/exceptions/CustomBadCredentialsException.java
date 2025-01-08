@@ -5,14 +5,21 @@ import lombok.Getter;
 @Getter
 public class CustomBadCredentialsException extends MakeRuntimeException{
 
+
     protected CustomBadCredentialsException(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
 
+    public static ExceptionBuilder of() {
+        return new ExceptionBuilder();
+    }
+
     public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, CustomBadCredentialsException>{
-        public ExceptionBuilder() {
+
+        protected ExceptionBuilder() {
             super(CustomBadCredentialsException.class);
         }
+
         @Override
         protected ExceptionBuilder self() {
             return this;

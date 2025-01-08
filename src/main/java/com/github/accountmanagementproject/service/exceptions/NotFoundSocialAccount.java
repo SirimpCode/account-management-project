@@ -9,7 +9,9 @@ public class NotFoundSocialAccount extends MakeRuntimeException{
     protected NotFoundSocialAccount(MakeRuntimeException.ExceptionBuilder<?, ?> exceptionBuilder) {
         super(exceptionBuilder);
     }
-
+    public static ExceptionBuilder of() {
+        return new ExceptionBuilder();
+    }
 
     public static class ExceptionBuilder extends MakeRuntimeException.ExceptionBuilder<ExceptionBuilder, NotFoundSocialAccount>{
 

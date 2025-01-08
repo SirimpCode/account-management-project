@@ -34,7 +34,7 @@ public class EmailVerifyService {
     }
 
     //메일 발송
-    public void sendVerifyCodeToEmail(String to){
+    public void sendVerifyCodeToEmail(String to) {
         String verifyCode = String.valueOf(generateRandomNumber());
         try {
             //html 파일 읽기
@@ -57,19 +57,19 @@ public class EmailVerifyService {
             //레디스 저장 (유효 기간 10분)
             redisRepository.save(to, verifyCode, Duration.ofMinutes(10));
         } catch (MessagingException e) {
-            throw new CustomServerException.ExceptionBuilder()
+            throw CustomServerException.of()
                     .customMessage("Failed to send email")
                     .systemMessage(e.getMessage())
                     .request(to)
                     .build();
         } catch (IOException e) {
-            throw new CustomServerException.ExceptionBuilder()
+            throw CustomServerException.of()
                     .customMessage("Failed read html file")
                     .systemMessage(e.getMessage())
                     .request(to)
                     .build();
-        }catch (Exception e){
-            throw new CustomServerException.ExceptionBuilder()
+        } catch (Exception e) {
+            throw CustomServerException.of()
                     .customMessage("Server Error")
                     .systemMessage(e.getMessage())
                     .request(to)
@@ -77,6 +77,7 @@ public class EmailVerifyService {
         }
 
     }
+
     //랜덤 코드 생성
     private int generateRandomNumber() {
         Random random = new Random();
@@ -86,7 +87,7 @@ public class EmailVerifyService {
     //이메일 인증
     public boolean verifyEmail(String email, String code) {
         String verifyCode = redisRepository.getValue(email);
-        if(verifyCode == null){
+        if (verifyCode == null) {
             return false;
         }
         return verifyCode.equals(code);
