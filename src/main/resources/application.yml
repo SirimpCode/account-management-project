@@ -5,6 +5,14 @@ jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
 
+logging:
+  level:
+    org:
+      apache:
+        coyote:
+          http11:
+            Http11Processor: debug
+
 oauth:
   kakao:
     client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
