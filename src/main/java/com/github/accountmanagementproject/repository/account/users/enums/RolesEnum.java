@@ -2,11 +2,11 @@ package com.github.accountmanagementproject.repository.account.users.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 @Getter
 @AllArgsConstructor
 public enum RolesEnum implements MyEnumInterface{
+    ROLE_SUPER_USER("슈퍼유저"),
     ROLE_ADMIN("운영자"),
     ROLE_USER("유저");
 
