@@ -2,7 +2,7 @@ spring:
   jpa:
     show-sql: true
   server-url:
-    base: http://localhost:8080
+    base: ENC(WMGDs3gvS53Dzb0fQ2jTkMyUePXQGwYCnGoI12JgkAk=)
   datasource:
     username: ENC(GVbs+MiVH/NjLAeYsmfmkA==)
     password: ENC(t/FyDozQWnSPjnOPHcGU2WhhhAbjFFO8)
