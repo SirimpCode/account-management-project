@@ -13,9 +13,10 @@ public class ServerUrlFields {
     private int port;
     public static ServerUrlFields fromRequest(HttpServletRequest request){
         String forwardedProto = request.getHeader("X-Forwarded-Proto");
+        boolean isHttps = "https".equalsIgnoreCase(forwardedProto);
         return new ServerUrlFields(
-                "https".equalsIgnoreCase(forwardedProto) ? "https" : "http",
+                isHttps ? "https" : "http",
                 request.getServerName(),
-                request.getServerPort());
+                isHttps? 443 : request.getServerPort());
     }
 }
