@@ -10,7 +10,9 @@ public class ServerBaseUrlConfig {
     @Bean
     public Function<ServerUrlFields, String> requestBaseUrlProvider() {
         return fields -> {
+
             String scheme = fields.getScheme();   // "http" 또는 "https"
+            System.out.println("찍힘 : "+scheme);
             String serverName = fields.getServerName(); // "localhost" 또는 "sirimp.kro.kr"
             int serverPort = fields.getPort(); // 8080 또는 443 등
 
