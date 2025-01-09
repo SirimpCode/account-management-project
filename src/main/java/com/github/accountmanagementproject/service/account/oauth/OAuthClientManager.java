@@ -30,13 +30,15 @@ public class OAuthClientManager {
         OAuthApiClient client = clients.get(params.oAuthProvider());
         try {
             String accessToken = client.requestAccessToken(params);
+            System.out.println("accessToken = " + accessToken);
             return client.requestOauthInfo(accessToken);
         }catch (HttpClientErrorException ex){
-
+            System.out.println("실패 했다."+ex.getMessage()+"\n"+ex.getResponseBodyAsString());
             throw CustomBadRequestException.of()
-                    .systemMessage(ex.getResponseBodyAsString())
+                    .systemMessage(ex.getMessage())
                     .customMessage("잘못된 소셜 인증 코드")
-                    .request(params.getAuthorizationCode())
+                    .request(Map.of("code", params.getAuthorizationCode(),
+                            "responseBody", ex.getResponseBodyAsString()))
                     .build();
         }
     }
