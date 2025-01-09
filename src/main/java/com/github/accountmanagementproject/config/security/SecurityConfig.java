@@ -1,5 +1,6 @@
 package com.github.accountmanagementproject.config.security;
 
+import com.github.accountmanagementproject.config.properties.server.ServerUrlProperties;
 import com.github.accountmanagementproject.config.security.event.CustomAccessDeniedHandler;
 import com.github.accountmanagementproject.config.security.event.CustomAuthenticationEntryPoint;
 import com.github.accountmanagementproject.web.filters.JwtFilter;
@@ -27,6 +28,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
+    private final ServerUrlProperties serverUrl;
 
 
 
@@ -62,7 +64,7 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         //set과 add의 차이 add는 하나씩추가 set은 통째로 설정
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:*"));
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:*", serverUrl.getHttps()));
         //응답에 노출되는 헤더
         corsConfiguration.addExposedHeader("Authorization");
         //요청에 허용되는 헤더
