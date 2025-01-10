@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface OAuthControllerDocs {
 
     @Operation(summary = "OAuth 인증 Url 리다이렉션 (백 테스트용)", description = "소셜 공급자에 코드 발급 요청을 위한 URL로 이동 시키기")
-    ResponseEntity<Void> requestOAuthCodeUrlRedirect(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider, HttpServletRequest httpServletRequest);
+    void requestOAuthCodeUrlRedirect(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider, HttpServletRequest httpServletRequest, HttpServletResponse response);
 
 
     @Operation(summary = "OAuth 인증 요청 (백에서 처리)", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
