@@ -33,7 +33,7 @@ public class OAuthController implements OAuthControllerDocs {
     @Override
     @GetMapping("/{provider}/callback")//백에서 처리
     public ResponseEntity<String> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
-        System.out.println("컨트롤러단 테스트 2 "+ httpServletRequest.getRequestURI());
+        System.out.println("컨트롤러단 테스트 2 "+ httpServletRequest.getServerName());
 
         OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
         OAuthLoginParams requestParams = createRequestParams(codeParams, provider);
