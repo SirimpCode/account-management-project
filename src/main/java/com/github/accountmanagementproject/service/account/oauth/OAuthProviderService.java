@@ -36,6 +36,7 @@ public class OAuthProviderService {
         String baseUrl = getRequestBaseUrl(httpServletRequest);
 
         try {
+            System.out.println("포스트요청 한번실행");
             return restTemplate.postForEntity(baseUrl+loginApiUri, requestParams, String.class);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity

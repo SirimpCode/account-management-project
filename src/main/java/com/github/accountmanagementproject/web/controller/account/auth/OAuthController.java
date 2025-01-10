@@ -58,6 +58,7 @@ public class OAuthController implements OAuthControllerDocs {
 
     @GetMapping("/{provider}")
     public CustomSuccessResponse<String> getProviderAuthUrl(@PathVariable OAuthProvider provider, @RequestParam String redirectUri) {
+        System.out.println("실행 몇번되나 테스트");
         return CustomSuccessResponse.ofOk("인증 URL 생성 성공", oAuthLoginService.getAuthorizationUrl(provider,redirectUri));
     }
 
