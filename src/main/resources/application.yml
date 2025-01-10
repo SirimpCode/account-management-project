@@ -38,7 +38,7 @@ oauth:
 
 spring:
   server-url:
-    base: ENC(jcQz/miV3NteeW9ol3WEBOiyk7XMhNUrgI85BiccZS06lgWmhKTh9Q==)
+    base: ENC(VmBH8Y1Ms1G/Wds8GwMzAbjlEdiL5a4xihBQtiu4u9yfA99hzeZtlA==)
     https: ENC(UgOQzgA9vlSBT4BkHQ4ju00cP/JOzt7fNdVhLqAkc+c=)
   mvc:
     path match:
