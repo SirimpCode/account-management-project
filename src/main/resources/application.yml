@@ -5,6 +5,9 @@ jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
 
+server: # nginx 환경을 위한 설정 포워딩 되기전 정보들을 받아옴
+  forward-headers-strategy: framework
+
 oauth:
   kakao:
     client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
