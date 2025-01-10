@@ -3,20 +3,17 @@ package com.github.accountmanagementproject.web.controller.account.auth;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import com.github.accountmanagementproject.service.account.oauth.OAuthLoginService;
 import com.github.accountmanagementproject.service.account.oauth.OAuthProviderService;
-import com.github.accountmanagementproject.service.exceptions.CustomBindException;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.*;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/oauth")
@@ -25,26 +22,14 @@ public class OAuthController implements OAuthControllerDocs {
     private final OAuthProviderService oAuthProviderService;
     private final OAuthLoginService oAuthLoginService;
 
-    //    @GetMapping("/{provider}/test")
-//    public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
-//        System.out.println("컨트롤러단 테스트 1");
-//        return ResponseEntity.status(HttpStatus.FOUND)
-//                .header(HttpHeaders.LOCATION, oAuthProviderService.getOAuthLoginPageUrl(provider, httpServletRequest))
-//                .build();
-//    }
-    @GetMapping("/{provider}/test")
-    public void requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        @GetMapping("/{provider}/test")
+    public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
         System.out.println("컨트롤러단 테스트 1");
-        String redirectUrl = oAuthProviderService.getOAuthLoginPageUrl(provider, httpServletRequest);
-        try {
-            response.sendRedirect(redirectUrl);
-        } catch (IOException e) {
-            throw CustomBindException.of()
-                    .systemMessage(e.getMessage())
-                    .customMessage("리다이렉트 실패")
-                    .build();
-        }
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, oAuthProviderService.getOAuthLoginPageUrl(provider, httpServletRequest))
+                .build();
     }
+
 
 
     @Override
