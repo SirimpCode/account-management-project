@@ -24,6 +24,7 @@ public class OAuthController implements OAuthControllerDocs {
 
     @GetMapping("/{provider}/test")
     public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
+        System.out.println("컨트롤러단 테스트 1");
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, oAuthProviderService.getOAuthLoginPageUrl(provider, httpServletRequest))
                 .build();
@@ -32,6 +33,7 @@ public class OAuthController implements OAuthControllerDocs {
     @Override
     @GetMapping("/{provider}/callback")//백에서 처리
     public ResponseEntity<String> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
+        System.out.println("컨트롤러단 테스트 2 "+ httpServletRequest.getRequestURI());
 
         OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
         OAuthLoginParams requestParams = createRequestParams(codeParams, provider);
