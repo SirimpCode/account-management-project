@@ -27,7 +27,7 @@ public class OAuthProviderService {
     public String getOAuthLoginPageUrl(OAuthProvider oAuthProvider, HttpServletRequest httpServletRequest) {
         String baseUrl = getRequestBaseUrl(httpServletRequest);
         String redirectUrl = baseUrl + redirectApiUri+oAuthProvider.name().toLowerCase()+"/callback";
-
+        System.out.println("1. 반환되는 리다이렉트 URL : "+redirectUrl);
         return oAuthCodeManager.getAuthorizationUrl(oAuthProvider, redirectUrl);
     }
 
@@ -36,7 +36,7 @@ public class OAuthProviderService {
         String baseUrl = getRequestBaseUrl(httpServletRequest);
 
         try {
-            System.out.println("포스트요청 한번실행");
+            System.out.println("2. 포스트요청 한번실행 "+ baseUrl+loginApiUri);
             return restTemplate.postForEntity(baseUrl+loginApiUri, requestParams, String.class);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity
