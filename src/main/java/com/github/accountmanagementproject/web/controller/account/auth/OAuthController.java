@@ -22,7 +22,7 @@ public class OAuthController implements OAuthControllerDocs {
     private final OAuthProviderService oAuthProviderService;
     private final OAuthLoginService oAuthLoginService;
 
-        @GetMapping("/{provider}/test")
+    @GetMapping("/{provider}/test")
     public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
         System.out.println("컨트롤러단 테스트 1");
         return ResponseEntity.status(HttpStatus.FOUND)
@@ -31,16 +31,22 @@ public class OAuthController implements OAuthControllerDocs {
     }
 
 
-
     @Override
-    @GetMapping("/{provider}/callback")//백에서 처리
-    public ResponseEntity<String> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
-        System.out.println("컨트롤러단 테스트 2 " + httpServletRequest.getScheme()+"://"+httpServletRequest.getServerName());
+    @GetMapping("/{provider}/callback")//백에서 Post 요청 api 메서드 호출해서 처리
+    public ResponseEntity<CustomSuccessResponse<AuthResult>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
+        System.out.println("컨트롤러단 테스트 2 " + httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName());
 
         OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
-        OAuthLoginParams requestParams = createRequestParams(codeParams, provider);
+        return test(codeParams, provider);
+    }
 
-        return oAuthProviderService.requestOAuthLogin(provider, requestParams, httpServletRequest);
+    private ResponseEntity<CustomSuccessResponse<AuthResult>> test(OAuthCodeParams params, OAuthProvider provider) {
+        return switch (provider) {
+            case KAKAO -> loginKakao(KakaoLoginParams.of(params.getCode()));
+            case NAVER -> loginNaver(NaverLoginParams.of(params.getCode(), params.getState()));
+            case GOOGLE -> loginGoogle(GoogleLoginParams.of(params.getCode(), params.getRedirectUri()));
+            case GITHUB -> loginGithub(GithubLoginParams.of(params.getCode()));
+        };
     }
 
 
@@ -50,15 +56,6 @@ public class OAuthController implements OAuthControllerDocs {
                 request.getParameter("state"),
                 request.getRequestURL().toString()
         );
-    }
-
-    private OAuthLoginParams createRequestParams(OAuthCodeParams params, OAuthProvider provider) {
-        return switch (provider) {
-            case KAKAO -> KakaoLoginParams.of(params.getCode());
-            case NAVER -> NaverLoginParams.of(params.getCode(), params.getState());
-            case GOOGLE -> GoogleLoginParams.of(params.getCode(), params.getRedirectUri());
-            case GITHUB -> GithubLoginParams.of(params.getCode());
-        };
     }
 
     @GetMapping("/{provider}")
@@ -108,6 +105,7 @@ public class OAuthController implements OAuthControllerDocs {
                 .status(signUpResponse.getHttpStatus())
                 .body(signUpResponse);
     }
-
-
 }
+
+
+

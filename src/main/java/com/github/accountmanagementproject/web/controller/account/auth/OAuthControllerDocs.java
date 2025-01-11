@@ -27,7 +27,7 @@ public interface OAuthControllerDocs {
 
 
     @Operation(summary = "OAuth 인증 요청 (백에서 처리)", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
-    ResponseEntity<String> oAuthRequest(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider,
+    ResponseEntity<CustomSuccessResponse<AuthResult>> oAuthRequest(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider,
                                        HttpServletRequest httpServletRequest);
 //    @Operation(summary = "카카오 OAuth 인증 요청", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
 //    CustomSuccessResponse kakaoOAuthRequest(KakaoLoginParams params);
