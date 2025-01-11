@@ -8,3 +8,9 @@ spring:
     password: ENC(t/FyDozQWnSPjnOPHcGU2WhhhAbjFFO8)
     driver-class-name: org.mariadb.jdbc.Driver
     url: ENC(mJEFGiv1qB9rTD8zKtHWuVsMu+w8OLXuthoo7dsMCa5Pmu1Zeew0iZgv7ZopK4Gf5Dl/O2JV9BI=)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000
+

@@ -54,6 +54,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+      password: ENC(fuN37Be6K3qdIEggPy++iwek4+8xRtaT)
+      timeout: 3000
   mail:
     host: smtp.gmail.com
     port: 587
