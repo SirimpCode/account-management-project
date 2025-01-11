@@ -52,7 +52,7 @@ spring:
     url: ENC(34ItjdybRX8sNKlv04yxywZMul7oyuTDkUONZkuzeHLcriLZot+1JzozA0aB8iF5)
   data:
     redis:
-      host: localhost
+      host: ENC(2KttGDhIqstDjAAlx8vBaqFuBHJdodRA)
       port: 6379
       password: ENC(fuN37Be6K3qdIEggPy++iwek4+8xRtaT)
       timeout: 3000

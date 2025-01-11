@@ -71,7 +71,7 @@ public class SignUpLoginService {
             return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()
-                    .systemMessage(e.getMessage())
+                    .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
                     .customMessage("Redis 서버 연결 실패")
                     .build();
         }
@@ -82,7 +82,7 @@ public class SignUpLoginService {
             return jwtProvider.tokenRefresh(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()
-                    .systemMessage(e.getMessage())
+                    .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
                     .customMessage("Redis 서버 연결 실패")
                     .request(tokenDto)
                     .build();

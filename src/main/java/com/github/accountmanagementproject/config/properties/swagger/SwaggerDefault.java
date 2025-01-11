@@ -22,7 +22,7 @@ public class SwaggerDefault extends SwaggerProperties {
                 .url(serverUrlProperties.getHttps())
                 .description("HTTPS Production Server");
         Server baseServer = new Server()
-                .url(serverUrlProperties.getBase())
+                .url("http://localhost:8080")
                 .description("HTTP Base Server");
         return List.of(httpsServer, baseServer);
     }
