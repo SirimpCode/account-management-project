@@ -3,7 +3,7 @@ package com.github.accountmanagementproject.web.controller.account.auth;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.KakaoLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.NaverLoginParams;
-import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
+import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthDtoInterface;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +27,8 @@ public interface OAuthControllerDocs {
 
 
     @Operation(summary = "OAuth 인증 요청 (백에서 처리)", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
-    ResponseEntity<CustomSuccessResponse<AuthResult>> oAuthRequest(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider,
-                                       HttpServletRequest httpServletRequest);
+    ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> oAuthRequest(@Parameter(schema = @Schema(type = "string", example = "kakao")) OAuthProvider provider,
+                                                                          HttpServletRequest httpServletRequest);
 //    @Operation(summary = "카카오 OAuth 인증 요청", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
 //    CustomSuccessResponse kakaoOAuthRequest(KakaoLoginParams params);
 //    @Operation(summary = "구글 OAuth 인증 요청", description = "인증에 필요한 code, state 등을 받아서 인증 진행")
@@ -97,7 +97,7 @@ public interface OAuthControllerDocs {
                                        }
                                      }"""))
     )
-    ResponseEntity<CustomSuccessResponse<AuthResult>> loginKakao(@RequestBody KakaoLoginParams params);
+    ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginKakao(@RequestBody KakaoLoginParams params);
 
 
     @Operation(summary = "네이버 로그인", description = "code값, state값을 받아 네이버 로그인 진행<br>" +
@@ -160,7 +160,7 @@ public interface OAuthControllerDocs {
                                        }
                                      }"""))
     )
-    ResponseEntity<CustomSuccessResponse<AuthResult>> loginNaver(@RequestBody NaverLoginParams params);
+    ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginNaver(@RequestBody NaverLoginParams params);
 
     @Operation(summary = "소셜 로그인 회원가입", description = "소셜 로그인 회원가입에 필요한 정보들을 입력 받아 가입 진행")
     @ApiResponse(responseCode = "201", description = "회원 가입 성공",

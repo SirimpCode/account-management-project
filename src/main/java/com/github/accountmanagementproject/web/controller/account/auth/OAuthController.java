@@ -5,6 +5,7 @@ import com.github.accountmanagementproject.service.account.oauth.OAuthLoginServi
 import com.github.accountmanagementproject.service.account.oauth.OAuthProviderService;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.*;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
+import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthDtoInterface;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,14 +34,14 @@ public class OAuthController implements OAuthControllerDocs {
 
     @Override
     @GetMapping("/{provider}/callback")//백에서 Post 요청 api 메서드 호출해서 처리
-    public ResponseEntity<CustomSuccessResponse<AuthResult>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
         System.out.println("컨트롤러단 테스트 2 " + httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName());
 
         OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
         return sendLoginRequestsPerRequest(codeParams, provider);
     }
 
-    private ResponseEntity<CustomSuccessResponse<AuthResult>> sendLoginRequestsPerRequest(OAuthCodeParams params, OAuthProvider provider) {
+    private ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> sendLoginRequestsPerRequest(OAuthCodeParams params, OAuthProvider provider) {
         return switch (provider) {
             case KAKAO -> loginKakao(KakaoLoginParams.of(params.getCode()));
             case NAVER -> loginNaver(NaverLoginParams.of(params.getCode(), params.getState()));
@@ -65,29 +66,29 @@ public class OAuthController implements OAuthControllerDocs {
     }
 
     @PostMapping("/kakao")
-    public ResponseEntity<CustomSuccessResponse<AuthResult>> loginKakao(@RequestBody KakaoLoginParams params) {
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginKakao(@RequestBody KakaoLoginParams params) {
         return loginOAuth(params);
     }
 
     @PostMapping("/naver")
-    public ResponseEntity<CustomSuccessResponse<AuthResult>> loginNaver(@RequestBody NaverLoginParams params) {
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginNaver(@RequestBody NaverLoginParams params) {
         return loginOAuth(params);
     }
 
     @PostMapping("/google")
-    public ResponseEntity<CustomSuccessResponse<AuthResult>> loginGoogle(@RequestBody GoogleLoginParams params) {
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginGoogle(@RequestBody GoogleLoginParams params) {
         return loginOAuth(params);
     }
 
     @PostMapping("/github")
-    public ResponseEntity<CustomSuccessResponse<AuthResult>> loginGithub(@RequestBody GithubLoginParams params) {
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginGithub(@RequestBody GithubLoginParams params) {
         return loginOAuth(params);
     }
 
-    private ResponseEntity<CustomSuccessResponse<AuthResult>> loginOAuth(OAuthLoginParams params) {
+    private ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginOAuth(OAuthLoginParams params) {
         AuthResult result = oAuthLoginService.loginOrCreateTempAccount(params);
-        CustomSuccessResponse<AuthResult> response = CustomSuccessResponse
-                .of(result.getHttpStatus(), "로그인 성공", result);
+        CustomSuccessResponse<OAuthDtoInterface> response = CustomSuccessResponse
+                .of(result.getHttpStatus(), result.getMessage(), result.getResponse());
 
         return ResponseEntity
                 .status(response.getHttpStatus())
