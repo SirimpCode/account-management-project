@@ -22,7 +22,7 @@ public class OAuthController implements OAuthControllerDocs {
     private final OAuthProviderService oAuthProviderService;
     private final OAuthLoginService oAuthLoginService;
 
-    @GetMapping("/{provider}/test")
+    @GetMapping("/{provider}/test")//테스트용 oAuthRequest 로 리다이렉션됨
     public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
         System.out.println("컨트롤러단 테스트 1");
         return ResponseEntity.status(HttpStatus.FOUND)
@@ -37,10 +37,10 @@ public class OAuthController implements OAuthControllerDocs {
         System.out.println("컨트롤러단 테스트 2 " + httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName());
 
         OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
-        return test(codeParams, provider);
+        return sendLoginRequestsPerRequest(codeParams, provider);
     }
 
-    private ResponseEntity<CustomSuccessResponse<AuthResult>> test(OAuthCodeParams params, OAuthProvider provider) {
+    private ResponseEntity<CustomSuccessResponse<AuthResult>> sendLoginRequestsPerRequest(OAuthCodeParams params, OAuthProvider provider) {
         return switch (provider) {
             case KAKAO -> loginKakao(KakaoLoginParams.of(params.getCode()));
             case NAVER -> loginNaver(NaverLoginParams.of(params.getCode(), params.getState()));
