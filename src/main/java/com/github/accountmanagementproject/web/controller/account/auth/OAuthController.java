@@ -34,34 +34,20 @@ public class OAuthController implements OAuthControllerDocs {
 
     @Override
     @GetMapping("/{provider}/callback")//백에서 Post 요청 api 메서드 호출해서 처리
-    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
-        System.out.println("컨트롤러단 테스트 2 " + httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName());
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest request) {
+        System.out.println("컨트롤러단 테스트 2 " + request.getScheme() + "://" + request.getServerName());
 
-        OAuthCodeParams codeParams = createCodeParams(httpServletRequest);
-        return sendLoginRequestsPerRequest(codeParams, provider);
-    }
-
-    private ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> sendLoginRequestsPerRequest(OAuthCodeParams params, OAuthProvider provider) {
-        return switch (provider) {
-            case KAKAO -> loginKakao(KakaoLoginParams.of(params.getCode()));
-            case NAVER -> loginNaver(NaverLoginParams.of(params.getCode(), params.getState()));
-            case GOOGLE -> loginGoogle(GoogleLoginParams.of(params.getCode(), params.getRedirectUri()));
-            case GITHUB -> loginGithub(GithubLoginParams.of(params.getCode()));
-        };
-    }
-
-
-    private OAuthCodeParams createCodeParams(HttpServletRequest request) {
-        return OAuthCodeParams.of(
+        OAuthCodeParams codeParams = OAuthCodeParams.of(
                 request.getParameter("code"),
                 request.getParameter("state"),
                 request.getRequestURL().toString()
         );
+
+        return loginOAuth( OAuthLoginParams.fromCodeParams(codeParams,provider) );
     }
 
     @GetMapping("/{provider}")
     public CustomSuccessResponse<String> getProviderAuthUrl(@PathVariable OAuthProvider provider, @RequestParam String redirectUri) {
-        System.out.println("실행 몇번되나 테스트");
         return CustomSuccessResponse.ofOk("인증 URL 생성 성공", oAuthLoginService.getAuthorizationUrl(provider, redirectUri));
     }
 
@@ -93,7 +79,6 @@ public class OAuthController implements OAuthControllerDocs {
         return ResponseEntity
                 .status(response.getHttpStatus())
                 .body(response);
-
     }
 
 
