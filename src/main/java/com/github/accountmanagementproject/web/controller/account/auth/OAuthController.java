@@ -23,6 +23,8 @@ public class OAuthController implements OAuthControllerDocs {
     private final OAuthProviderService oAuthProviderService;
     private final OAuthLoginService oAuthLoginService;
 
+
+
     @GetMapping("/{provider}/test")//테스트용 oAuthRequest 로 리다이렉션됨
     public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
         System.out.println("컨트롤러단 테스트 1");

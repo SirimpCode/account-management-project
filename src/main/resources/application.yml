@@ -69,6 +69,19 @@ spring:
           starttls:
             enable: true
 #              Identity Manager 서버가 SSL을 사용하여 SMTP와 통신하도록 지시합니다.
+  #Azure Storage
+  cloud:
+    azure:
+      storage:
+        blob:
+          account-name: ENC(HiT+IBORPiwqKzYwQV0o6DH+1duylcfE)
+          endpoint: ENC(C78EFNTuLvWRMdEwZH0wBIWNwy+2Gv6tolA8FuQIorKbj/DLnejxgHFo+m3K7mA1vOgpH6qbzZw=)
+          container-name: ENC(Om/tL1UkZeID7JV485q78yoMs+anZKWIpVnuyKk6ows=)
+          account-key: ENC(IEF+SGj5CerQwGtID1jTCgS8qX4ryydLr8ApRwx5ZNlrO0s5BrKZDTzJHimRnPmWR5HihTxAzLh+54PQZeiVdv5Sqc8r/S2Ss1IT04XW+vwBeBckR15jPYAfphQmknyZE2K3UvCNvSM=)
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 
 
