@@ -52,7 +52,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/authorize-test").hasRole("ADMIN")
                         .requestMatchers("/api/auth/auth-test", "/api/account/*").authenticated()
-                        .requestMatchers("/resources/**","/api/auth/*", "/api/email/*",
+                        .requestMatchers("/","/index.html","/resources/**","/api/auth/*", "/api/email/*",
                                 "/error","/swagger-ui/**", "/v3/api-docs/**", "/amp-docs.html").permitAll()
                         .requestMatchers("/api/oauth/**").anonymous()
                         .anyRequest().authenticated()

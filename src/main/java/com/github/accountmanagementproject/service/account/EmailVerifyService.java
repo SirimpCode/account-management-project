@@ -38,7 +38,7 @@ public class EmailVerifyService {
         String verifyCode = String.valueOf(generateRandomNumber());
         try {
             //html 파일 읽기
-            String htmlContent = Files.readString(Paths.get("src/main/resources/MailTemplate.html"));
+            String htmlContent = Files.readString(Paths.get("src/main/resources/static/MailTemplate.html"));
             // 플레이스홀더 {{verifyCode}}를 실제 인증 코드로 치환
             htmlContent = htmlContent.replace("{{verifyCode}}", verifyCode);
             htmlContent = htmlContent.replace("{{email}}", from);

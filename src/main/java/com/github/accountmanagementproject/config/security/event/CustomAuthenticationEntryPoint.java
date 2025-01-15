@@ -27,7 +27,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE+";charset=UTF-8");
-
         Object exception = request.getAttribute(JwtFilter.AUTH_EXCEPTION);
 
         String[] makeStr = new String[3];
