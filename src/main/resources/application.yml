@@ -9,6 +9,10 @@ server: # nginx 환경을 위한 설정 포워딩 되기전 정보들을 받아�
   forward-headers-strategy: native
 
 oauth:
+  network:
+    client-id: 0xc34a5b113c3ef25066c79e6eede396a923589472
+    secret: 0x469d768bd4b91ec9edc32cdf88de682ea280947e773023d5414959af6e436be7
+    auth: https://oauth.network
   kakao:
     client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
     secret: ENC(tkjxfDY5EHsJlm4hRHqoyCRpnAMsSfUzFgEkC55ssu6VsSrkZts94USxxeYFlnlI)
@@ -38,7 +42,7 @@ oauth:
 
 spring:
   server-url:
-    base: ENC(VmBH8Y1Ms1G/Wds8GwMzAbjlEdiL5a4xihBQtiu4u9yfA99hzeZtlA==)
+    base: ENC(rfDPUVWHEmyfF7eyRscC4D9oHmIplV102ozloablxig=)
     https: ENC(UgOQzgA9vlSBT4BkHQ4ju00cP/JOzt7fNdVhLqAkc+c=)
   mvc:
     path match:
@@ -74,10 +78,10 @@ spring:
     azure:
       storage:
         blob:
-          account-name: ENC(HiT+IBORPiwqKzYwQV0o6DH+1duylcfE)
-          endpoint: ENC(C78EFNTuLvWRMdEwZH0wBIWNwy+2Gv6tolA8FuQIorKbj/DLnejxgHFo+m3K7mA1vOgpH6qbzZw=)
-          container-name: ENC(Om/tL1UkZeID7JV485q78yoMs+anZKWIpVnuyKk6ows=)
-          account-key: ENC(IEF+SGj5CerQwGtID1jTCgS8qX4ryydLr8ApRwx5ZNlrO0s5BrKZDTzJHimRnPmWR5HihTxAzLh+54PQZeiVdv5Sqc8r/S2Ss1IT04XW+vwBeBckR15jPYAfphQmknyZE2K3UvCNvSM=)
+          account-name: ENC(ghJS3NTt63EZYlsKyrG5M0Ev/wEBJVCTBhkbV2zqX8g=)
+          endpoint: ENC(/U5pUyzsYaSXLjk5az1BoOAkyhZ5gFoO8YBj16X39LDVtSQTVL6iu0vbY6QlL+qi1SJn2QNNitqJOhbwaALAfw==)
+          container-name: ENC(OJDq6SjjcuPgPZyh4roq6Jepm/aVix15TWOZo4rBUjj45bI//srFew==)
+          account-key: ENC(x2zXPfjLV25ErhcJ1PZ+45XvQrPtyCC3E5WoPftyWsvYKWom//84nNHqEzvdoiMFEgkdWhkrpOu3EVkbfq4PyEMqEKaNvzK/4wA8Ug75j+BTJIwvpDQlNPQBZgvVk+oIp4/NeX+M8Ro=)
   servlet:
     multipart:
       max-file-size: 10MB

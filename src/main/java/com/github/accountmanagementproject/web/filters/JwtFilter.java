@@ -18,14 +18,15 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     public static final String AUTH_EXCEPTION = "auth-exception";
+    public static final String AUTH_HEADER_NAME = "Authorization";
 
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
-
-        String token = StringUtils.hasText(request.getHeader("Authorization"))
-                &&request.getHeader("Authorization").startsWith("Bearer ")
-                ?request.getHeader("Authorization").split(" ")[1].trim()
+        String authToken = request.getHeader(AUTH_HEADER_NAME);
+        String token = StringUtils.hasText(authToken)
+                &&authToken.startsWith("Bearer ")
+                ?authToken.split(" ")[1].trim()
                 :null;
 
         //옵셔널 사용하는 방법과 3항연산자중 취향에 따라 선택 외부 메서드로 빼는 경우도 있음.
