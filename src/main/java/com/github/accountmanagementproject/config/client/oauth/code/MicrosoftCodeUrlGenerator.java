@@ -7,17 +7,17 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
-public class GithubCodeUrlGenerator extends OAuthCodeUrlGenerator {
-    @Value( "${oauth.github.client-id}")
-    private String clientId;
-    @Value( "${oauth.github.url.auth}")
-    private String authUrl;
+public class MicrosoftCodeUrlGenerator extends OAuthCodeUrlGenerator {
 
+    @Value("${oauth.microsoft.url.auth}")
+    private String authUrl;
+    @Value("${oauth.microsoft.client-id}")
+    private String clientId;
 
 
     @Override
     public OAuthProvider oAuthProvider() {
-        return OAuthProvider.GITHUB;
+        return OAuthProvider.MICROSOFT;
     }
 
     @Override
@@ -25,12 +25,14 @@ public class GithubCodeUrlGenerator extends OAuthCodeUrlGenerator {
         return UriComponentsBuilder.newInstance()
                 .queryParam("client_id", this.clientId)
                 .queryParam("redirect_uri", redirectUrl)
-                .queryParam("scope", "user")
+                .queryParam("response_type", "code")
+                .queryParam("scope", "openid profile email User.Read offline_access")
                 .build();
     }
 
+
     @Override
     protected String baseAuthCodeUrl() {
-        return this.authUrl+"/login/oauth/authorize";
+        return this.authUrl+"/consumers/oauth2/v2.0/authorize";
     }
 }

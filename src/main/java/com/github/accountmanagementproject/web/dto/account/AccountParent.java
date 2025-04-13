@@ -25,7 +25,6 @@ public abstract class AccountParent {
     @Schema(description = "닉네임", example = "이브라히모비치",  minLength = 2, maxLength = 8)
     private String nickname;
 
-    @NotBlank(message = "핸드폰 번호는 필수 입니다.")
     @Pattern(regexp = "01\\d{9}", message = "핸드폰 번호는 01로 시작하며 11자리 숫자여야 합니다.")
     @Schema(description = "핸드폰 번호", example = "01012345678", pattern = "01\\d{9}", minLength = 11, maxLength = 11)
     private String phoneNumber;

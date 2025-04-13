@@ -16,7 +16,7 @@ public class KakaoCodeUrlGenerator extends OAuthCodeUrlGenerator {
 
     @Override
     protected String baseAuthCodeUrl() {
-        return authUrl + "/oauth/authorize";
+        return this.authUrl + "/oauth/authorize";
     }
 
     @Override
@@ -28,7 +28,7 @@ public class KakaoCodeUrlGenerator extends OAuthCodeUrlGenerator {
     protected UriComponents getParam(String redirectUrl) {
 //        String redirectUrl = super.getApiBaseUrl() + "/kakao";
         return UriComponentsBuilder.newInstance()
-                .queryParam("client_id", clientId)
+                .queryParam("client_id", this.clientId)
                 .queryParam("redirect_uri", redirectUrl)
                 .queryParam("response_type", "code")
                 .build();

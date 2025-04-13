@@ -59,9 +59,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     private String resolveCustomErrorMessage(Exception resolvedException) {
-        if (resolvedException == null) {
-            return DEFAULT_ERROR_MESSAGE;
-        }
+        if (resolvedException == null) return DEFAULT_ERROR_MESSAGE;
         return EXCEPTION_MESSAGES.getOrDefault(resolvedException.getClass(), DEFAULT_ERROR_MESSAGE);
 
     }

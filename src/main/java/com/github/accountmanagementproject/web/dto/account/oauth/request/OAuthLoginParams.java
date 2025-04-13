@@ -14,6 +14,9 @@ public interface OAuthLoginParams {
             case NAVER -> NaverLoginParams.of(params.getCode(), params.getState());
             case GOOGLE -> GoogleLoginParams.of(params.getCode(), params.getRedirectUri());
             case GITHUB -> GithubLoginParams.of(params.getCode());
+            case FACEBOOK -> FacebookLoginParams.of(params.getCode(), params.getRedirectUri());
+            case TWITTER -> TwitterLoginParams.of(params.getCode(), params.getState(), params.getRedirectUri());
+            case MICROSOFT -> MicrosoftLoginParams.of(params.getCode(), params.getRedirectUri());
         };
     }
 }

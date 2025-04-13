@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Getter(value = AccessLevel.PROTECTED)
@@ -40,11 +39,6 @@ public class GoogleApiClient extends OAuthApiClient{
     }
 
 
-
-    @Override
-    protected MultiValueMap<String, String> makeRequestBody(MultiValueMap<String, String> beingCreatedBody) {
-        return beingCreatedBody;
-    }
 
     @Override
     protected Class<GoogleTokens> getTokenClass() {

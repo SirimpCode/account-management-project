@@ -9,10 +9,24 @@ server: # nginx 환경을 위한 설정 포워딩 되기전 정보들을 받아�
   forward-headers-strategy: native
 
 oauth:
-  network:
-    client-id: 0xc34a5b113c3ef25066c79e6eede396a923589472
-    secret: 0x469d768bd4b91ec9edc32cdf88de682ea280947e773023d5414959af6e436be7
-    auth: https://oauth.network
+  microsoft:
+    client-id: ENC(rjiKRyqXBeKynTgatKnOn/mBdAbdYswntEs0uWueeEomcTUV8jjjqhRqh4X3SEYA)
+    secret: ENC(xTAFfwdopNu+2NgSOFiriOyYvjIO7ILkMXbbEuxjtsxjecGOqlBKE8P5qYxPbk46PE6PKyAdztI=)
+    url:
+      auth: https://login.microsoftonline.com
+      api: https://graph.microsoft.com
+  twitter:
+    client-id: ENC(vPOdhl1ySRUQoELKRLLUlGqWKZmd3l9CIR5lv1EXZrkjBbX/0CiWjEZCDzsYxmEa)
+    secret: ENC(RwcySflxwrM1umCt+l3rNgAp9ExuHcfLgr6/xEyyp6KRqM75TpLEhxBRwG+pqnKbZwAbzmpB/f0ojtM+iApkrA==)
+    url:
+      code: https://x.com
+      api: https://api.x.com
+  facebook:
+    client-id: ENC(GZh9OTPMvU+NlvDg64hR3XHqj08cCPUEoZ32eaOP3Lw=)
+    secret: ENC(VXz37rV6dg31uXj6tVfZjRn7YWD68DDAM2vZ7SB5X6thJnKZE99ECBabstuTZdCC)
+    url:
+      code: https://www.facebook.com
+      api: https://graph.facebook.com
   kakao:
     client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
     secret: ENC(tkjxfDY5EHsJlm4hRHqoyCRpnAMsSfUzFgEkC55ssu6VsSrkZts94USxxeYFlnlI)
@@ -54,6 +68,8 @@ spring:
     password: ENC(nki6d8ZoRQSeteS7d0bbOTdrtX/uvFDg)
     driver-class-name: org.mariadb.jdbc.Driver
     url: ENC(34ItjdybRX8sNKlv04yxywZMul7oyuTDkUONZkuzeHLcriLZot+1JzozA0aB8iF5)
+    hikari:
+      max-lifetime: 177000 # 177초 RDS wait_timeout 180초 보다 짧게 설정
   data:
     redis:
       host: ENC(2KttGDhIqstDjAAlx8vBaqFuBHJdodRA)

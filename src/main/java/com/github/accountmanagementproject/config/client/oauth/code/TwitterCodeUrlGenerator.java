@@ -6,31 +6,35 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 @Component
-public class GithubCodeUrlGenerator extends OAuthCodeUrlGenerator {
-    @Value( "${oauth.github.client-id}")
+public class TwitterCodeUrlGenerator extends OAuthCodeUrlGenerator {
+    @Value("${oauth.twitter.client-id}")
     private String clientId;
-    @Value( "${oauth.github.url.auth}")
-    private String authUrl;
-
-
+    @Value("${oauth.twitter.url.code}")
+    private String codeUrl;
 
     @Override
     public OAuthProvider oAuthProvider() {
-        return OAuthProvider.GITHUB;
+        return OAuthProvider.TWITTER;
     }
 
     @Override
     protected UriComponents getParam(String redirectUrl) {
         return UriComponentsBuilder.newInstance()
                 .queryParam("client_id", this.clientId)
+                .queryParam("state", UUID.randomUUID())
                 .queryParam("redirect_uri", redirectUrl)
-                .queryParam("scope", "user")
+                .queryParam("response_type", "code")
+                .queryParam("scope", "tweet.read users.read follows.read offline.access")
+                .queryParam("code_challenge", "challenge")
+                .queryParam("code_challenge_method", "plain")
                 .build();
     }
 
     @Override
     protected String baseAuthCodeUrl() {
-        return this.authUrl+"/login/oauth/authorize";
+        return this.codeUrl + "/i/oauth2/authorize";
     }
 }

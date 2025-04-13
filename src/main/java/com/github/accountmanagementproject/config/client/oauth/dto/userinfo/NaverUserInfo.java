@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.Getter;
-
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NaverUserInfo implements OAuthUserInfo {
@@ -50,8 +49,4 @@ public class NaverUserInfo implements OAuthUserInfo {
         return OAuthProvider.NAVER;
     }
 
-    @Override
-    public void setEmail(String email) {
-        this.response.email = email;
-    }
 }

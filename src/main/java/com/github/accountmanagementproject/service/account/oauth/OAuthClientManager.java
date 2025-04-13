@@ -1,6 +1,7 @@
 package com.github.accountmanagementproject.service.account.oauth;
 
 import com.github.accountmanagementproject.config.client.oauth.OAuthApiClient;
+import com.github.accountmanagementproject.config.client.oauth.dto.tokens.OAuthTokens;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
@@ -29,11 +30,9 @@ public class OAuthClientManager {
         //get요청으로 받아온 OAuthProvider에 해당하는 클라이언트를 가져온다.
         OAuthApiClient client = clients.get(params.oAuthProvider());
         try {
-            String accessToken = client.requestAccessToken(params);
-            System.out.println("accessToken = " + accessToken);
-            return client.requestOauthInfo(accessToken);
+            OAuthTokens tokens = client.requestAccessToken(params);
+            return client.requestOauthInfo(tokens);
         }catch (HttpClientErrorException ex){
-            System.out.println("실패 했다."+ex.getMessage()+"\n"+ex.getResponseBodyAsString());
             throw CustomBadRequestException.of()
                     .systemMessage(ex.getMessage())
                     .customMessage("잘못된 소셜 인증 코드")

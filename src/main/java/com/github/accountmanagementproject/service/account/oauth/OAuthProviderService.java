@@ -18,7 +18,6 @@ public class OAuthProviderService {
     public String getOAuthLoginPageUrl(OAuthProvider oAuthProvider, HttpServletRequest httpServletRequest) {
         String baseUrl = getRequestBaseUrl(httpServletRequest);
         String redirectUrl = baseUrl + "/api/oauth/" +oAuthProvider.name().toLowerCase()+"/callback";
-        System.out.println("1. 반환되는 리다이렉트 URL : "+redirectUrl);
         return oAuthCodeManager.getAuthorizationUrl(oAuthProvider, redirectUrl);
     }
 

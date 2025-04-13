@@ -6,25 +6,26 @@ import lombok.Getter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class GoogleLoginParams implements OAuthLoginParams{
+public class TwitterLoginParams implements OAuthLoginParams {
     private String authorizationCode;
+    private String state;
     private String redirectUri;
+
+
 
     @Override
     public OAuthProvider oAuthProvider() {
-        return OAuthProvider.GOOGLE;
+        return OAuthProvider.TWITTER;
     }
 
     @Override
     public MultiValueMap<String, String> makeBody() {
-        String decodedCode = URLDecoder.decode(authorizationCode, StandardCharsets.UTF_8);
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("code", decodedCode);
+        body.add("code", authorizationCode);
         body.add("redirect_uri", redirectUri);
+        body.add("code_verifier", "challenge");
         return body;
     }
 

@@ -7,6 +7,7 @@ import com.github.accountmanagementproject.repository.account.socialids.SocialId
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdsRepository;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
+import com.github.accountmanagementproject.repository.account.users.enums.Gender;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
@@ -50,10 +51,17 @@ public class OAuthLoginService {
         //DB 에서 소셜 사용자 정보 찾기
         MyUser requestUser = myUsersRepository.findBySocialIdPkOrUserEmail(socialIdPk, oAuthUserInfo.getEmail())
                 .orElseGet(() -> processTempSignUp(oAuthUserInfo));//없으면 임시 회원가입 진행
-        //필요에 따라 유저 정보에 소셜 ID 설정
+        //필요에 따라 유저 정보에 소셜 ID, 프로필이미지 설정
         requestUserSetSocialId(requestUser, socialIdPk);
+        updateProfileImgFromOAuthInfo(oAuthUserInfo, requestUser);
+
         //로그인 또는 회원가입 응답 생성
         return requestUser.isEnabled() ? createOAuthLoginResponse(requestUser) : createOAuthSignUpResponse(oAuthUserInfo);
+    }
+
+    private void updateProfileImgFromOAuthInfo(OAuthUserInfo userInfo, MyUser requestUser) {
+        if (userInfo.getProfileImg() != null && Gender.isDefaultProfileImg(requestUser.getProfileImg()))
+            requestUser.setProfileImg( userInfo.getProfileImg() );
 
     }
 
@@ -107,6 +115,7 @@ public class OAuthLoginService {
         newUser.setRoles(Set.of(new Role(2)));
         return myUsersRepository.save(newUser);
     }
+
 
     private SocialId validationAndFindSocialId(OAuthSignUpDto oAuthSignUpDto) {
         SocialId socialId = socialIdsRepository.findBySocialIdPkJoinMyUser(new SocialIdPk(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))

@@ -27,7 +27,6 @@ public class OAuthController implements OAuthControllerDocs {
 
     @GetMapping("/{provider}/test")//테스트용 oAuthRequest 로 리다이렉션됨
     public ResponseEntity<Void> requestOAuthCodeUrlRedirect(@PathVariable OAuthProvider provider, HttpServletRequest httpServletRequest) {
-        System.out.println("컨트롤러단 테스트 1");
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, oAuthProviderService.getOAuthLoginPageUrl(provider, httpServletRequest))
                 .build();
@@ -37,7 +36,6 @@ public class OAuthController implements OAuthControllerDocs {
     @Override
     @GetMapping("/{provider}/callback")//백에서 Post 요청 api 메서드 호출해서 처리
     public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> oAuthRequest(@PathVariable OAuthProvider provider, HttpServletRequest request) {
-        System.out.println("컨트롤러단 테스트 2 " + request.getScheme() + "://" + request.getServerName());
 
         OAuthCodeParams codeParams = OAuthCodeParams.of(
                 request.getParameter("code"),
