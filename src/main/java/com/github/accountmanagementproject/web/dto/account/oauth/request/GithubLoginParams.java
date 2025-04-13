@@ -3,12 +3,10 @@ package com.github.accountmanagementproject.web.dto.account.oauth.request;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 public class GithubLoginParams implements OAuthLoginParams{
     private String authorizationCode;

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -47,25 +46,30 @@ public class GithubApiClient extends OAuthApiClient {
     public OAuthProvider oAuthProvider() {
         return OAuthProvider.GITHUB;
     }
-
+    @Override
+    protected OAuthUserInfo requestUserInfo(HttpEntity<?> request, String url) {
+        OAuthUserInfo userInfo = super.requestUserInfo(request, url);
+        if(userInfo.getEmail()==null)//공개 이메일이 없는경우 이메일 api 따로 호출
+            return getPrivatePrimaryEmail(request, userInfo);
+        return userInfo;
+    }
 
     private String getPrivateEmailApiUrl() {
-        return apiUrl+apiEndPoint+"/emails";
+        return this.apiUrl+this.apiEndPoint+"/emails";
     }
-    @Override
-    protected String getPrivatePrimaryEmail(RestTemplate restTemplate, HttpEntity<?> request){
-        GithubEmail[] githubEmails = restTemplate.exchange(
+
+    protected OAuthUserInfo getPrivatePrimaryEmail(HttpEntity<?> request, OAuthUserInfo userInfo){
+        GithubEmail[] githubEmails = super.getRestTemplate().exchange(
                 this.getPrivateEmailApiUrl(), HttpMethod.GET, request, GithubEmail[].class
         ).getBody();
-        if(githubEmails==null) return UUID.randomUUID().toString();
-        return Arrays.stream(githubEmails).filter(GithubEmail::isPrimary).map(GithubEmail::getEmail).findAny().orElseThrow();
+        if(githubEmails==null)
+            return userInfo.updateEmailReturnThis(UUID.randomUUID().toString());
+
+        String primaryEmail = Arrays.stream(githubEmails).filter(GithubEmail::isPrimary).map(GithubEmail::getEmail).findAny().orElseThrow();
+        return userInfo.updateEmailReturnThis(primaryEmail);
 
     }
 
-    @Override
-    protected MultiValueMap<String, String> makeRequestBody(MultiValueMap<String, String> beingCreatedBody) {
-        return beingCreatedBody;
-    }
 
 
     @Override

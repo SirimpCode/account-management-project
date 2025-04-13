@@ -27,7 +27,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
-        CustomErrorResponse errorResponse = new CustomErrorResponse.ErrorDetail()
+        CustomErrorResponse<String> errorResponse = CustomErrorResponse.<String>builder()
                 .httpStatus(HttpStatus.FORBIDDEN)
                 .systemMessage(accessDeniedException.getMessage())
                 .customMessage("접근 권한 없음")

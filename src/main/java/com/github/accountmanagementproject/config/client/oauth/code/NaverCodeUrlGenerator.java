@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 @Component
 public class NaverCodeUrlGenerator extends OAuthCodeUrlGenerator {
     @Value( "${oauth.naver.client-id}")
@@ -22,10 +24,9 @@ public class NaverCodeUrlGenerator extends OAuthCodeUrlGenerator {
 
     @Override
     protected UriComponents getParam(String redirectUrl) {
-//        String redirectUrl = super.getApiBaseUrl() + "/naver";
         return UriComponentsBuilder.newInstance()
-                .queryParam("client_id", clientId)
-                .queryParam("state", state)
+                .queryParam("client_id", this.clientId)
+                .queryParam("state", UUID.randomUUID())
                 .queryParam("redirect_uri", redirectUrl)
                 .queryParam("response_type", "code")
                 .build();
@@ -33,6 +34,6 @@ public class NaverCodeUrlGenerator extends OAuthCodeUrlGenerator {
 
     @Override
     protected String baseAuthCodeUrl() {
-        return authUrl + "/oauth2.0/authorize";
+        return this.authUrl + "/oauth2.0/authorize";
     }
 }

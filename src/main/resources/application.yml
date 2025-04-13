@@ -9,6 +9,24 @@ server: # nginx 환경을 위한 설정 포워딩 되기전 정보들을 받아�
   forward-headers-strategy: native
 
 oauth:
+  microsoft:
+    client-id: ENC(rjiKRyqXBeKynTgatKnOn/mBdAbdYswntEs0uWueeEomcTUV8jjjqhRqh4X3SEYA)
+    secret: ENC(xTAFfwdopNu+2NgSOFiriOyYvjIO7ILkMXbbEuxjtsxjecGOqlBKE8P5qYxPbk46PE6PKyAdztI=)
+    url:
+      auth: https://login.microsoftonline.com
+      api: https://graph.microsoft.com
+  twitter:
+    client-id: ENC(vPOdhl1ySRUQoELKRLLUlGqWKZmd3l9CIR5lv1EXZrkjBbX/0CiWjEZCDzsYxmEa)
+    secret: ENC(RwcySflxwrM1umCt+l3rNgAp9ExuHcfLgr6/xEyyp6KRqM75TpLEhxBRwG+pqnKbZwAbzmpB/f0ojtM+iApkrA==)
+    url:
+      code: https://x.com
+      api: https://api.x.com
+  facebook:
+    client-id: ENC(GZh9OTPMvU+NlvDg64hR3XHqj08cCPUEoZ32eaOP3Lw=)
+    secret: ENC(VXz37rV6dg31uXj6tVfZjRn7YWD68DDAM2vZ7SB5X6thJnKZE99ECBabstuTZdCC)
+    url:
+      code: https://www.facebook.com
+      api: https://graph.facebook.com
   kakao:
     client-id: ENC(dGY5idd3p5BT7SmM3jAzcOUtcHM6HNAEuE6unhGyusOBtwmbWGRD/j2GHjuNr+AK)
     secret: ENC(tkjxfDY5EHsJlm4hRHqoyCRpnAMsSfUzFgEkC55ssu6VsSrkZts94USxxeYFlnlI)
@@ -38,7 +56,7 @@ oauth:
 
 spring:
   server-url:
-    base: ENC(VmBH8Y1Ms1G/Wds8GwMzAbjlEdiL5a4xihBQtiu4u9yfA99hzeZtlA==)
+    base: ENC(rfDPUVWHEmyfF7eyRscC4D9oHmIplV102ozloablxig=)
     https: ENC(UgOQzgA9vlSBT4BkHQ4ju00cP/JOzt7fNdVhLqAkc+c=)
   mvc:
     path match:
@@ -50,6 +68,8 @@ spring:
     password: ENC(nki6d8ZoRQSeteS7d0bbOTdrtX/uvFDg)
     driver-class-name: org.mariadb.jdbc.Driver
     url: ENC(34ItjdybRX8sNKlv04yxywZMul7oyuTDkUONZkuzeHLcriLZot+1JzozA0aB8iF5)
+    hikari:
+      max-lifetime: 177000 # 177초 RDS wait_timeout 180초 보다 짧게 설정
   data:
     redis:
       host: ENC(2KttGDhIqstDjAAlx8vBaqFuBHJdodRA)
@@ -74,10 +94,10 @@ spring:
     azure:
       storage:
         blob:
-          account-name: ENC(HiT+IBORPiwqKzYwQV0o6DH+1duylcfE)
-          endpoint: ENC(C78EFNTuLvWRMdEwZH0wBIWNwy+2Gv6tolA8FuQIorKbj/DLnejxgHFo+m3K7mA1vOgpH6qbzZw=)
-          container-name: ENC(Om/tL1UkZeID7JV485q78yoMs+anZKWIpVnuyKk6ows=)
-          account-key: ENC(IEF+SGj5CerQwGtID1jTCgS8qX4ryydLr8ApRwx5ZNlrO0s5BrKZDTzJHimRnPmWR5HihTxAzLh+54PQZeiVdv5Sqc8r/S2Ss1IT04XW+vwBeBckR15jPYAfphQmknyZE2K3UvCNvSM=)
+          account-name: ENC(ghJS3NTt63EZYlsKyrG5M0Ev/wEBJVCTBhkbV2zqX8g=)
+          endpoint: ENC(/U5pUyzsYaSXLjk5az1BoOAkyhZ5gFoO8YBj16X39LDVtSQTVL6iu0vbY6QlL+qi1SJn2QNNitqJOhbwaALAfw==)
+          container-name: ENC(OJDq6SjjcuPgPZyh4roq6Jepm/aVix15TWOZo4rBUjj45bI//srFew==)
+          account-key: ENC(x2zXPfjLV25ErhcJ1PZ+45XvQrPtyCC3E5WoPftyWsvYKWom//84nNHqEzvdoiMFEgkdWhkrpOu3EVkbfq4PyEMqEKaNvzK/4wA8Ug75j+BTJIwvpDQlNPQBZgvVk+oIp4/NeX+M8Ro=)
   servlet:
     multipart:
       max-file-size: 10MB

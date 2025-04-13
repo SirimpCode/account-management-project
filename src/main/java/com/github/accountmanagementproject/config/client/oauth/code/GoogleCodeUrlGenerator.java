@@ -22,7 +22,7 @@ public class GoogleCodeUrlGenerator extends OAuthCodeUrlGenerator {
     @Override
     protected UriComponents getParam(String redirectUrl) {
         return UriComponentsBuilder.newInstance()
-                .queryParam("client_id", clientId)
+                .queryParam("client_id", this.clientId)
                 .queryParam("redirect_uri", redirectUrl)
                 .queryParam("response_type", "code")
                 .queryParam("scope", "openid profile email")
@@ -33,6 +33,6 @@ public class GoogleCodeUrlGenerator extends OAuthCodeUrlGenerator {
     @Override
     protected String baseAuthCodeUrl() {
 
-        return codeUrl+"/o/oauth2/auth";
+        return this.codeUrl+"/o/oauth2/auth";
     }
 }

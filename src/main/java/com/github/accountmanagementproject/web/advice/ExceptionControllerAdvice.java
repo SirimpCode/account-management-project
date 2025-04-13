@@ -29,65 +29,65 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(CustomNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) //찾을 수 없는 요청
-    public CustomErrorResponse handleNotFoundException(CustomNotFoundException messageAndRequest) {
+    public CustomErrorResponse<Object> handleNotFoundException(CustomNotFoundException messageAndRequest) {
         return makeResponse(HttpStatus.NOT_FOUND, messageAndRequest);
     }
     @ExceptionHandler(CustomBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST) //잘못된 요청
-    public CustomErrorResponse handleBadRequestException(CustomBadRequestException messageAndRequest) {
+    public CustomErrorResponse<Object> handleBadRequestException(CustomBadRequestException messageAndRequest) {
         return makeResponse(HttpStatus.BAD_REQUEST, messageAndRequest);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     @ResponseStatus(HttpStatus.CONFLICT) //키 중복
-    public CustomErrorResponse handleDuplicateKeyException(DuplicateKeyException messageAndRequest) {
+    public CustomErrorResponse<Object> handleDuplicateKeyException(DuplicateKeyException messageAndRequest) {
         return makeResponse(HttpStatus.CONFLICT, messageAndRequest);
     }
 
     @ExceptionHandler(AccountLockedException.class)
     @ResponseStatus(HttpStatus.LOCKED) //잠긴 계정
-    public CustomErrorResponse handleAccountLockedException(AccountLockedException messageAndRequest) {
+    public CustomErrorResponse<Object> handleAccountLockedException(AccountLockedException messageAndRequest) {
         return makeResponse(HttpStatus.LOCKED, messageAndRequest);
     }
 
     @ExceptionHandler(CustomBadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED) //인증 오류
-    public CustomErrorResponse handleBadCredentialsException(CustomBadCredentialsException messageAndRequest) {
+    public CustomErrorResponse<Object> handleBadCredentialsException(CustomBadCredentialsException messageAndRequest) {
         return makeResponse(HttpStatus.UNAUTHORIZED, messageAndRequest);
     }
 
     @ExceptionHandler(CustomAccessDenied.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) //인가 오류
-    public CustomErrorResponse handleNotAccessDenied(CustomAccessDenied messageAndRequest) {
+    public CustomErrorResponse<Object> handleNotAccessDenied(CustomAccessDenied messageAndRequest) {
         return makeResponse(HttpStatus.FORBIDDEN, messageAndRequest);
     }
 
     @ExceptionHandler(CustomNotAcceptException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE) //처리할 수 없는 요청
-    public CustomErrorResponse handleNotAcceptException(CustomNotAcceptException messageAndRequest) {
+    public CustomErrorResponse<Object> handleNotAcceptException(CustomNotAcceptException messageAndRequest) {
         return makeResponse(HttpStatus.NOT_ACCEPTABLE, messageAndRequest);
     }
 
     @ExceptionHandler(CustomBindException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY) //요청이 올바르지만 처리할 수 없음
-    public CustomErrorResponse handleCustomBindException(CustomBindException messageAndRequest) {
+    public CustomErrorResponse<Object> handleCustomBindException(CustomBindException messageAndRequest) {
         return makeResponse(HttpStatus.UNPROCESSABLE_ENTITY, messageAndRequest);
     }
 
     @ExceptionHandler(CustomServerException.class) // 서버에러지만 예외처리가 필요할때
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public CustomErrorResponse handleCustomServerException(CustomServerException messageAndRequest) {
+    public CustomErrorResponse<Object> handleCustomServerException(CustomServerException messageAndRequest) {
         return makeResponse(HttpStatus.INTERNAL_SERVER_ERROR, messageAndRequest);
     }
 
     @ExceptionHandler(NotFoundSocialAccount.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public CustomErrorResponse handleNotFoundSocialAccount(NotFoundSocialAccount messageAndRequest) {
+    public CustomErrorResponse<Object> handleNotFoundSocialAccount(NotFoundSocialAccount messageAndRequest) {
         return makeResponse(HttpStatus.UNPROCESSABLE_ENTITY, messageAndRequest);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)//데이터 무결성 위반
-    public CustomErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+    public CustomErrorResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Map<String, String> duplicateInfo = getDuplicateKeyAndValue(ex.getMessage());
         if (duplicateInfo != null) {
             return handleDuplicateKeyException(
@@ -131,7 +131,7 @@ public class ExceptionControllerAdvice {
             ConstraintViolationException.class,
             HttpMessageNotReadableException.class
     }) // Valid 익셉션 처리
-    public CustomErrorResponse handleValidException(Exception ex) {
+    public CustomErrorResponse<Object> handleValidException(Exception ex) {
         if (ex instanceof MethodArgumentNotValidException validException) {
             return handleBadRequestException(notValidToBadRequestException(validException));
         } else if (ex instanceof MethodArgumentTypeMismatchException validException) {
@@ -144,8 +144,8 @@ public class ExceptionControllerAdvice {
     }
 
 
-    private CustomErrorResponse makeResponse(HttpStatus httpStatus, MakeRuntimeException exception){
-        return new CustomErrorResponse.ErrorDetail()
+    private CustomErrorResponse<Object> makeResponse(HttpStatus httpStatus, MakeRuntimeException exception){
+        return CustomErrorResponse.builder()
                 .httpStatus(httpStatus)
                 .systemMessage(exception.getMessage())
                 .customMessage(exception.getCustomMessage())
@@ -160,14 +160,14 @@ public class ExceptionControllerAdvice {
         Object fieldValue = fieldError != null ? fieldError.getRejectedValue() : "Unknown Value";
         String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
 
-        return new CustomBadRequestException.of()
+        return CustomBadRequestException.of()
                 .customMessage(errorMessage)
                 .systemMessage("유효성 검사 실패")
                 .request(fieldName+" : "+fieldValue)
                 .build();
     }
     private CustomBadRequestException typeMismatchToBadRequestException(MethodArgumentTypeMismatchException validException){
-        return new CustomBadRequestException.of()
+        return CustomBadRequestException.of()
                 .customMessage("잘못된 타입 전달")
                 .systemMessage(validException.getMessage())
                 .request(validException.getName() +"="+validException.getValue())

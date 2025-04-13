@@ -1,15 +1,12 @@
 package com.github.accountmanagementproject.config.client.oauth;
 
 import com.github.accountmanagementproject.config.client.oauth.dto.tokens.NaverTokens;
-import com.github.accountmanagementproject.config.client.oauth.dto.tokens.OAuthTokens;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.NaverUserInfo;
-import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Getter(value = AccessLevel.PROTECTED)
@@ -41,11 +38,6 @@ public class NaverApiClient extends OAuthApiClient {
         return OAuthProvider.NAVER;
     }
 
-
-    @Override
-    protected MultiValueMap<String, String> makeRequestBody(MultiValueMap<String, String> beingCreatedBody) {
-        return beingCreatedBody;
-    }
 
 
     @Override

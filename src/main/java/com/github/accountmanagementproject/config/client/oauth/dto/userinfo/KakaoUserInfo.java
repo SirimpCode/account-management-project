@@ -7,7 +7,6 @@ import com.github.accountmanagementproject.repository.account.users.enums.OAuthP
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoUserInfo implements OAuthUserInfo {
@@ -18,7 +17,6 @@ public class KakaoUserInfo implements OAuthUserInfo {
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class KakaoAccount {
         private KakaoProfile profile;
         private String email;
@@ -57,8 +55,4 @@ public class KakaoUserInfo implements OAuthUserInfo {
         return OAuthProvider.KAKAO;
     }
 
-    @Override
-    public void setEmail(String email) {
-        this.kakaoAccount.email = email;
-    }
 }

@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.web.dto.account.auth.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.accountmanagementproject.web.dto.account.AccountDefaultSettingExtendsParent;
+import com.github.accountmanagementproject.web.dto.account.AccountParent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
-public class SignUpRequest extends AccountDefaultSettingExtendsParent {
+public class SignUpRequest extends AccountParent{
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "비밀번호는 필수 입니다.")

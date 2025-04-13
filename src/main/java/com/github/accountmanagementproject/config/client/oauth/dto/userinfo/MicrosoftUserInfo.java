@@ -1,24 +1,31 @@
 package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
 import lombok.Getter;
+
 @Getter
-public class GoogleUserInfo implements OAuthUserInfo{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MicrosoftUserInfo implements OAuthUserInfo {
     private String sub;
-    private String email;
-    private String name;
-    private String givenName;
+    @JsonProperty("familyname")
     private String familyName;
+    @JsonProperty("givenname")
+    private String givenName;
+    private String email;
+    private String locale;
     private String picture;
-    private String emailVerified;
 
     @Override
     public String getSocialId() {
         return this.sub;
     }
+
     @Override
     public String getNickname() {
-        return this.name;
+        return this.familyName+this.givenName;
     }
 
     @Override
@@ -28,7 +35,6 @@ public class GoogleUserInfo implements OAuthUserInfo{
 
     @Override
     public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.GOOGLE;
+        return OAuthProvider.MICROSOFT;
     }
-
 }

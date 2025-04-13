@@ -8,7 +8,7 @@ public abstract class MakeRuntimeException extends RuntimeException {
     private final Object request;
 
     // 예외 타입을 제네릭으로 받음
-    protected MakeRuntimeException(ExceptionBuilder<?, ?> exceptionBuilder) {
+    protected MakeRuntimeException(ExceptionBuilder<?,?> exceptionBuilder) {
         super(exceptionBuilder.systemMessage);
         this.customMessage = exceptionBuilder.customMessage;
         this.request = exceptionBuilder.request;
@@ -16,7 +16,7 @@ public abstract class MakeRuntimeException extends RuntimeException {
 
 
     // 제네릭 T: 예외 빌더 타입, E: 예외 클래스 타입
-    public abstract static class ExceptionBuilder<T extends ExceptionBuilder<T, E>, E extends MakeRuntimeException> {
+    public abstract static class ExceptionBuilder<T extends ExceptionBuilder<T,E>, E extends MakeRuntimeException> {
         private String systemMessage;
         private String customMessage;
         private Object request;
