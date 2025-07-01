@@ -70,6 +70,18 @@ public class OAuthController implements OAuthControllerDocs {
     public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginGithub(@RequestBody GithubLoginParams params) {
         return loginOAuth(params);
     }
+    @PostMapping("/microsoft")
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginMicrosoft(@RequestBody MicrosoftLoginParams params) {
+        return loginOAuth(params);
+    }
+    @PostMapping("/twitter")
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginTwitter(@RequestBody TwitterLoginParams params) {
+        return loginOAuth(params);
+    }
+    @PostMapping("/facebook")
+    public ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginFacebook(@RequestBody FacebookLoginParams params) {
+        return loginOAuth(params);
+    }
 
     private ResponseEntity<CustomSuccessResponse<OAuthDtoInterface>> loginOAuth(OAuthLoginParams params) {
         AuthResult result = oAuthLoginService.loginOrCreateTempAccount(params);
