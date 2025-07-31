@@ -8,9 +8,10 @@ plugins {
 group = 'com.github'
 version = '0.0.1-SNAPSHOT'
 def mapStructVersion = "1.6.3"
-def queryDslVersion = "6.10.1"
-def generatedDir = "./src/main/generated"
-def buildDir = "./building"
+def querydslVersion = "7.0"
+def generatedDir = "src/main/generated"
+def buildDir = "building" //여기는 내가 그냥 jar파일 생성되는 폴더로 사용할생각이다.
+
 
 java {
     sourceCompatibility = '17'
@@ -63,8 +64,8 @@ dependencies {
     //email_verification
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     //QueryDsl
-    implementation "io.github.openfeign.querydsl:querydsl-jpa:${queryDslVersion}"
-    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${queryDslVersion}:jpa"
+    implementation "io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}"
+    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa"
 
     //azure storage
     implementation 'com.azure.spring:spring-cloud-azure-starter-storage-blob'
@@ -74,6 +75,17 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+//querydsl QClass 파일 생성 위치를 지정 mapperImpl 도 여기서 같이 정해진다.
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generatedDir))
+}
+// 소스 코드로 인식할 디렉토리에 경로에 Q-Class 파일을 추가
+// 이렇게 하면 Q-Class가 일반 Java 클래스처럼 취급되어 컴파일과 실행 시 클래스패스에 포함됨
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generatedDir]
+}
+
 
 tasks.named('bootJar'){
     mainClass = 'com.github.accountmanagementproject.AccountManagementProjectApplication'
@@ -82,14 +94,7 @@ tasks.named('bootJar'){
     archiveFileName = 'AccountManagementProject.jar'
     archiveVersion = "3.9.3"
 }
-// 소스 코드로 인식할 디렉토리에 경로에 Q-Class 파일을 추가
-// 이렇게 하면 Q-Class가 일반 Java 클래스처럼 취급되어 컴파일과 실행 시 클래스패스에 포함됨
-sourceSets {
-    main.java.srcDirs += [generatedDir+"/queryDsl"]
-}
-
 
 clean {
     delete file(buildDir), file(generatedDir)
-
 }
