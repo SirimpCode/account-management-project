@@ -47,7 +47,7 @@ public class OAuthLoginService {
     public AuthResult loginOrCreateTempAccount(OAuthLoginParams params) {
         //소셜 서버에 요청해서 사용자 정보 받아오기
         OAuthUserInfo oAuthUserInfo = oAuthClientManager.request(params);
-        SocialIdPk socialIdPk = new SocialIdPk(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider());
+        SocialIdPk socialIdPk = SocialIdPk.of(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider());
         //DB 에서 소셜 사용자 정보 찾기
         MyUser requestUser = myUsersRepository.findBySocialIdPkOrUserEmail(socialIdPk, oAuthUserInfo.getEmail())
                 .orElseGet(() -> processTempSignUp(oAuthUserInfo));//없으면 임시 회원가입 진행
@@ -61,19 +61,19 @@ public class OAuthLoginService {
 
     private void updateProfileImgFromOAuthInfo(OAuthUserInfo userInfo, MyUser requestUser) {
         if (userInfo.getProfileImg() != null && Gender.isDefaultProfileImg(requestUser.getProfileImg()))
-            requestUser.setProfileImg( userInfo.getProfileImg() );
+            requestUser.setProfileImg(userInfo.getProfileImg());
 
     }
 
     private void requestUserSetSocialId(MyUser requestUser, SocialIdPk socialIdPk) {
-        boolean hasSocialIdPk = requestUser.getSocialIds().stream()
-                .map(SocialId::getSocialIdPk)
-                .anyMatch(pk -> pk.equals(socialIdPk));
-        if (!hasSocialIdPk) {
-            SocialId newSocialId = SocialId.ofSocialIdPkAndMyUser(socialIdPk, requestUser);
-            if (requestUser.getSocialIds() == null) requestUser.setSocialIds(Set.of(newSocialId));
-            else requestUser.getSocialIds().add(newSocialId);
-        }
+        boolean hasSocialIdPk = requestUser.getSocialIds() != null &&
+                requestUser.getSocialIds().stream()
+                        .map(SocialId::getSocialIdPk)
+                        .anyMatch(pk -> pk.equals(socialIdPk));
+        if (hasSocialIdPk) return;
+
+        SocialId newSocialId = SocialId.ofSocialIdPkAndMyUser(socialIdPk, requestUser);
+        requestUser.addSocialId(newSocialId);
     }
 
     private AuthResult createOAuthSignUpResponse(OAuthUserInfo oAuthUserInfo) {
@@ -118,7 +118,7 @@ public class OAuthLoginService {
 
 
     private SocialId validationAndFindSocialId(OAuthSignUpDto oAuthSignUpDto) {
-        SocialId socialId = socialIdsRepository.findBySocialIdPkJoinMyUser(new SocialIdPk(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))
+        SocialId socialId = socialIdsRepository.findBySocialIdPkJoinMyUser(SocialIdPk.of(oAuthSignUpDto.getSocialId(), oAuthSignUpDto.getProvider()))
                 .orElseThrow(() -> CustomNotFoundException.of()
                         .customMessage("임시 계정이 존재하지 않습니다.")
                         .request("oAuthSignUpDto")

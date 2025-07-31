@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Setter
 @Getter
 @DynamicInsert
+@Setter
 @Entity
 @Table(name = "users")
 public class MyUser {
@@ -154,6 +154,11 @@ public class MyUser {
         return this.getRoles().stream()
                 .map(roles -> new SimpleGrantedAuthority(roles.getName().name()))
                 .collect(Collectors.toSet());
+    }
+
+    public void addSocialId(SocialId socialId) {
+        if (this.socialIds == null) this.socialIds = Set.of(socialId);
+        else this.socialIds.add(socialId);
     }
 
 

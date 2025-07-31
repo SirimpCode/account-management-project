@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+// @RequestParam 등 으로 전달된 값을 convert 메서드를 거쳐 Enum 타입으로 변환하기 위해 하위 Converter 객체들은 @Component 어노테이션을 사용하여 스프링 빈으로 등록되어야 한다.
 @jakarta.persistence.Converter
 public abstract class MyConverter<T extends Enum<T> & MyEnumInterface> implements AttributeConverter<T, String>, Converter<String, T> {
 

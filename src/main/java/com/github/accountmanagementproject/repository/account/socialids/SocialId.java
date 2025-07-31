@@ -33,8 +33,8 @@ public class SocialId {
         return socialId;
     }
 
-    public SocialId(String socialId, OAuthProvider provider, MyUser myUser) {
-        this.socialIdPk = new SocialIdPk(socialId, provider);
+    private SocialId(String socialId, OAuthProvider provider, MyUser myUser) {
+        this.socialIdPk = SocialIdPk.of(socialId, provider);
         this.myUser = myUser;
     }
     public void socialConnectSetting(MyUser myUser){

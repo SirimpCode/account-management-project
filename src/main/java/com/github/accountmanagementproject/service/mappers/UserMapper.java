@@ -2,6 +2,7 @@ package com.github.accountmanagementproject.service.mappers;
 
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.socialids.SocialId;
+import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
@@ -42,7 +43,9 @@ public interface UserMapper {
 
     @AfterMapping
     default void assignSocialId(OAuthUserInfo oAuthUserInfo, @MappingTarget MyUser myUser){
-        myUser.setSocialIds(Set.of(new SocialId(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider(), myUser)));
+        SocialIdPk socialIdPk = SocialIdPk.of(oAuthUserInfo.getSocialId(), oAuthUserInfo.getOAuthProvider());
+        SocialId newSocialId = SocialId.ofSocialIdPkAndMyUser(socialIdPk, myUser);
+        myUser.addSocialId(newSocialId);
     }
     @Mapping(target = "provider", source = "OAuthProvider")
     OAuthSignUpDto oAuthUserInfoToOAuthSignUpDto(OAuthUserInfo oAuthUserInfo);

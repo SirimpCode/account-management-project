@@ -15,7 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = { "socialId", "provider" })
 @NoArgsConstructor
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Embeddable
 public class SocialIdPk implements Serializable {
 
