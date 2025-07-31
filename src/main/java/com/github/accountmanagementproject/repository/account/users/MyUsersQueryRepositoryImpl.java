@@ -4,7 +4,7 @@ import com.github.accountmanagementproject.repository.account.socialids.QSocialI
 import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
 import com.github.accountmanagementproject.repository.account.users.roles.QRole;
 import com.github.accountmanagementproject.repository.account.users.roles.Role;
-import com.github.accountmanagementproject.service.exceptions.CustomBadRequestException;
+import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

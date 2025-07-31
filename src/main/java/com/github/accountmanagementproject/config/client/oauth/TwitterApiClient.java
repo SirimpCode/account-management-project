@@ -4,7 +4,7 @@ import com.github.accountmanagementproject.config.client.oauth.dto.tokens.OAuthT
 import com.github.accountmanagementproject.config.client.oauth.dto.tokens.TwitterTokens;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.TwitterUserInfo;
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,7 @@
 package com.github.accountmanagementproject.config.properties.swagger;
 
 import com.github.accountmanagementproject.config.properties.server.ServerUrlProperties;
+import com.github.accountmanagementproject.config.web.swagger.SwaggerConfig;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,7 @@ import java.util.List;
 @Profile("default")
 @Configuration
 @RequiredArgsConstructor
-public class SwaggerDefault extends SwaggerProperties {
+public class SwaggerDefault extends SwaggerConfig {
 
     private final ServerUrlProperties serverUrlProperties;
 

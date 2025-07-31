@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import lombok.Getter;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)

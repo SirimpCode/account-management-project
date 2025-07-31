@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.config.client.oauth.code;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;

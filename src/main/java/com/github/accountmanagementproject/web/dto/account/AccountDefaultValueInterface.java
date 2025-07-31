@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.dto.account;
 
-import com.github.accountmanagementproject.repository.account.users.enums.Gender;
+import com.github.accountmanagementproject.common.myenum.Gender;
 
 public interface AccountDefaultValueInterface {
     default String getDefaultProfileImg(Gender gender){

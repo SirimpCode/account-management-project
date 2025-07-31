@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.controller.account.auth;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.KakaoLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.NaverLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthDtoInterface;

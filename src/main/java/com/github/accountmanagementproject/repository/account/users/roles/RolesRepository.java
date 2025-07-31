@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.repository.account.users.roles;
 
-import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RolesEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

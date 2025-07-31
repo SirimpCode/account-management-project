@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.dto.account.oauth.response;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import com.github.accountmanagementproject.web.dto.account.AccountParent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.config.client.oauth.dto.userinfo;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import lombok.Getter;
 @Getter
 public class GoogleUserInfo implements OAuthUserInfo{

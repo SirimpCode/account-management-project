@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.dto.account.oauth.request;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.LinkedMultiValueMap;

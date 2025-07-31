@@ -1,9 +1,9 @@
 package com.github.accountmanagementproject.web.controller.account.auth;
 
 
-import com.github.accountmanagementproject.repository.account.users.enums.Gender;
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
-import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.Gender;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.RolesEnum;
 import com.github.accountmanagementproject.service.account.auth.SignUpLoginService;
 import com.github.accountmanagementproject.service.account.oauth.OAuthLoginService;
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;

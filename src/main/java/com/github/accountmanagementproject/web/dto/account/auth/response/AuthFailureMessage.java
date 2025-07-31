@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.web.dto.account.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
+import com.github.accountmanagementproject.common.myenum.UserStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

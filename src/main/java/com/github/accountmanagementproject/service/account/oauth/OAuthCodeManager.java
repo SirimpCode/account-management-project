@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.service.account.oauth;
 
 import com.github.accountmanagementproject.config.client.oauth.code.OAuthCodeUrlGenerator;
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

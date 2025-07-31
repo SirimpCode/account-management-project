@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.repository.account.users.roles;
 
 import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
-import com.github.accountmanagementproject.service.mappers.converter.RoleConverter;
+import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.converter.custom.RoleConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

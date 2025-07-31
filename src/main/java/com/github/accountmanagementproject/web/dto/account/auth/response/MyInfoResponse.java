@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.web.dto.account.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.accountmanagementproject.repository.account.users.enums.RolesEnum;
-import com.github.accountmanagementproject.repository.account.users.enums.UserStatus;
+import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.UserStatus;
 import com.github.accountmanagementproject.web.dto.account.AccountParent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

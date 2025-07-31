@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.dto.account;
 
-import com.github.accountmanagementproject.repository.account.users.enums.Gender;
+import com.github.accountmanagementproject.common.myenum.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.service.account.oauth;
 
 import com.github.accountmanagementproject.config.properties.server.ServerUrlFields;
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

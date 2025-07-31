@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.repository.account.socialids;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
-import com.github.accountmanagementproject.service.mappers.converter.OAuthProviderConverter;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
+import com.github.accountmanagementproject.common.converter.custom.OAuthProviderConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;

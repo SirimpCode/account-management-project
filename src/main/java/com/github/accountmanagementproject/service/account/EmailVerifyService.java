@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.service.account;
 
 import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
 import com.github.accountmanagementproject.repository.redis.RedisRepository;
-import com.github.accountmanagementproject.service.exceptions.CustomServerException;
+import com.github.accountmanagementproject.common.exceptions.CustomServerException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

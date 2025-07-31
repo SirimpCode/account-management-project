@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.service.account.auth.userdetails;
 
-import com.github.accountmanagementproject.config.security.event.CustomAuthFailEvent;
-import com.github.accountmanagementproject.service.exceptions.CustomBadCredentialsEventEx;
-import com.github.accountmanagementproject.service.exceptions.CustomBadCredentialsException;
+import com.github.accountmanagementproject.common.event.CustomAuthFailEvent;
+import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsEventEx;
+import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
 import com.github.accountmanagementproject.web.dto.account.auth.response.AuthFailureMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

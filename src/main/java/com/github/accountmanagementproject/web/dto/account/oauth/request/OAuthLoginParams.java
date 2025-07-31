@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.web.dto.account.oauth.request;
 
-import com.github.accountmanagementproject.repository.account.users.enums.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import org.springframework.util.MultiValueMap;
 
 public interface OAuthLoginParams {
