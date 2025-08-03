@@ -1,13 +1,10 @@
-package com.github.accountmanagementproject.repository.account.users.roles;
+package com.github.accountmanagementproject.repository.account.role;
 
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
 import com.github.accountmanagementproject.common.converter.custom.RoleConverter;
+import com.github.accountmanagementproject.common.myenum.RolesEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Getter
 @Entity
@@ -23,8 +20,6 @@ public class Role {
     @Column(length = 4)
     private RolesEnum name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<MyUser> myUsers;
 
     public Role(Integer id) {
         this.rolesId = id;

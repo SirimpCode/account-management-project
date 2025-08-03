@@ -1,10 +1,10 @@
-package com.github.accountmanagementproject.repository.account.users;
+package com.github.accountmanagementproject.repository.account.user;
 
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.socialid.SocialIdPk;
 
 import java.util.Optional;
 
-public interface MyUsersQueryRepository {
+public interface MyUserQueryRepository {
 
     Optional<MyUser> findBySocialIdPkOrUserEmail(SocialIdPk socialIdPk, String email);
 

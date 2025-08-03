@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.repository.account.friendships;
 
 
-import com.github.accountmanagementproject.repository.account.users.MyUser;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

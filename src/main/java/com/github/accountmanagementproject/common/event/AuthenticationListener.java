@@ -1,10 +1,10 @@
 package com.github.accountmanagementproject.common.event;
 
 import com.github.accountmanagementproject.common.AccountServiceModule;
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.common.myenum.UserStatus;
-import com.github.accountmanagementproject.service.account.auth.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
+import com.github.accountmanagementproject.common.myenum.UserStatus;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.service.account.auth.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.web.dto.account.auth.response.AuthFailureMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

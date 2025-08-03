@@ -1,11 +1,11 @@
-package com.github.accountmanagementproject.repository.account.users;
+package com.github.accountmanagementproject.repository.account.user;
 
-import com.github.accountmanagementproject.repository.account.socialids.SocialId;
-import com.github.accountmanagementproject.common.myenum.Gender;
-import com.github.accountmanagementproject.common.myenum.UserStatus;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.common.converter.custom.GenderConverter;
 import com.github.accountmanagementproject.common.converter.custom.UserStatusConverter;
+import com.github.accountmanagementproject.common.myenum.Gender;
+import com.github.accountmanagementproject.common.myenum.UserStatus;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.socialid.SocialId;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import jakarta.persistence.*;
 import lombok.Getter;

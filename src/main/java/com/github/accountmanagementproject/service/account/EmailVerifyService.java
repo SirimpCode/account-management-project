@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.service.account;
 
-import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
-import com.github.accountmanagementproject.repository.redis.RedisRepository;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
+import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
+import com.github.accountmanagementproject.repository.redis.RedisRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.Random;
 public class EmailVerifyService {
 
     private final JavaMailSender mailSender;
-    private final MyUsersRepository myUsersRepository;
+    private final MyUserRepository myUsersRepository;
     private final RedisRepository redisRepository;
     @Value("${spring.mail.username}")
     private String from;

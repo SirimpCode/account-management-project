@@ -1,8 +1,8 @@
 package com.github.accountmanagementproject.service.account.auth.userdetails;
 
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
 import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Primary
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final MyUsersRepository myUsersRepository;
+    private final MyUserRepository myUsersRepository;
 
 
     @Override

@@ -1,12 +1,12 @@
-package com.github.accountmanagementproject.repository.account.socialids;
+package com.github.accountmanagementproject.repository.account.socialid;
 
-import com.github.accountmanagementproject.repository.account.users.QMyUser;
+import com.github.accountmanagementproject.repository.account.user.QMyUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 @RequiredArgsConstructor
-public class SocialIdsQueryRepositoryImpl implements SocialIdsQueryRepository {
+public class SocialIdQueryRepositoryImpl implements SocialIdQueryRepository {
     private final JPAQueryFactory queryFactory;
 
 
