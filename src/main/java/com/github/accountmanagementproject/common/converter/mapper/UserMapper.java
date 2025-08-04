@@ -1,11 +1,11 @@
 package com.github.accountmanagementproject.common.converter.mapper;
 
-import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
-import com.github.accountmanagementproject.repository.account.socialids.SocialId;
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
-import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.common.myenum.RolesEnum;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
+import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.socialid.SocialId;
+import com.github.accountmanagementproject.repository.account.socialid.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
 import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.response.MyInfoResponse;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;

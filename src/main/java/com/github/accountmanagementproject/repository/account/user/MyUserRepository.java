@@ -1,4 +1,4 @@
-package com.github.accountmanagementproject.repository.account.users;
+package com.github.accountmanagementproject.repository.account.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface MyUsersRepository extends JpaRepository<MyUser, Integer>, MyUsersQueryRepository {
+public interface MyUserRepository extends JpaRepository<MyUser, Integer>, MyUserQueryRepository {
     Optional<MyUser> findByEmail(String email);
     Optional<MyUser> findByPhoneNumber(String phoneNumber);
 

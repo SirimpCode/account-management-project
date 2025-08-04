@@ -1,10 +1,10 @@
 package com.github.accountmanagementproject.common;
 
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomNotFoundException;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class AccountServiceModule {
-    private final MyUsersRepository myUsersRepository;
+    private final MyUserRepository myUsersRepository;
     private final EntityManager entityManager;
     private final HttpSession httpSession;
 

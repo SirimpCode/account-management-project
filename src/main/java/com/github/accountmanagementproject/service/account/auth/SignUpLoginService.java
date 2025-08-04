@@ -1,14 +1,14 @@
 package com.github.accountmanagementproject.service.account.auth;
 
 import com.github.accountmanagementproject.common.AccountServiceModule;
-import com.github.accountmanagementproject.config.security.JwtProvider;
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
+import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
 import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
-import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
+import com.github.accountmanagementproject.config.security.JwtProvider;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SignUpLoginService {
 
-    private final MyUsersRepository myUsersRepository;
+    private final MyUserRepository myUsersRepository;
     private final AccountServiceModule accountServiceModule;
     private final JwtProvider jwtProvider;
 

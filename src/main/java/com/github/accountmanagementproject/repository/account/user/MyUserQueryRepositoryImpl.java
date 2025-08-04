@@ -1,10 +1,10 @@
-package com.github.accountmanagementproject.repository.account.users;
+package com.github.accountmanagementproject.repository.account.user;
 
-import com.github.accountmanagementproject.repository.account.socialids.QSocialId;
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
-import com.github.accountmanagementproject.repository.account.users.roles.QRole;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.socialid.QSocialId;
+import com.github.accountmanagementproject.repository.account.socialid.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.user.roles.QRole;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class MyUsersQueryRepositoryImpl implements MyUsersQueryRepository {
+public class MyUserQueryRepositoryImpl implements MyUserQueryRepository {
     private final JPAQueryFactory queryFactory;
     private final QMyUser qMyUser = QMyUser.myUser;
 

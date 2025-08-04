@@ -1,7 +1,7 @@
-package com.github.accountmanagementproject.repository.account.socialids;
+package com.github.accountmanagementproject.repository.account.socialid;
 
-import com.github.accountmanagementproject.repository.account.users.MyUser;
 import com.github.accountmanagementproject.common.myenum.OAuthProvider;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

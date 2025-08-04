@@ -1,19 +1,19 @@
 package com.github.accountmanagementproject.service.account.oauth;
 
-import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
-import com.github.accountmanagementproject.config.security.JwtProvider;
-import com.github.accountmanagementproject.repository.account.socialids.SocialId;
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdPk;
-import com.github.accountmanagementproject.repository.account.socialids.SocialIdsRepository;
-import com.github.accountmanagementproject.repository.account.users.MyUser;
-import com.github.accountmanagementproject.repository.account.users.MyUsersRepository;
-import com.github.accountmanagementproject.common.myenum.Gender;
-import com.github.accountmanagementproject.common.myenum.OAuthProvider;
-import com.github.accountmanagementproject.repository.account.users.roles.Role;
+import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomNotFoundException;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
-import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
+import com.github.accountmanagementproject.common.myenum.Gender;
+import com.github.accountmanagementproject.common.myenum.OAuthProvider;
+import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
+import com.github.accountmanagementproject.config.security.JwtProvider;
+import com.github.accountmanagementproject.repository.account.role.Role;
+import com.github.accountmanagementproject.repository.account.socialid.SocialId;
+import com.github.accountmanagementproject.repository.account.socialid.SocialIdPk;
+import com.github.accountmanagementproject.repository.account.socialid.SocialIdRepository;
+import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.OAuthLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OAuthLoginService {
-    private final MyUsersRepository myUsersRepository;
-    private final SocialIdsRepository socialIdsRepository;
+    private final MyUserRepository myUsersRepository;
+    private final SocialIdRepository socialIdsRepository;
     private final OAuthClientManager oAuthClientManager;
     private final JwtProvider jwtProvider;
     private final OAuthCodeManager oAuthCodeManager;
