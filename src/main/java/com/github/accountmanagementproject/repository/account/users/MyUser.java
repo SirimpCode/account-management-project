@@ -8,6 +8,7 @@ import com.github.accountmanagementproject.common.converter.custom.GenderConvert
 import com.github.accountmanagementproject.common.converter.custom.UserStatusConverter;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @DynamicInsert
 @Setter
 @Entity
+@EqualsAndHashCode(of = "userId") // userId 를 기준으로 equals, hashCode 를 생성
 @Table(name = "users")
 public class MyUser {
     @Id
