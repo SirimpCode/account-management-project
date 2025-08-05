@@ -3,6 +3,7 @@ package com.github.accountmanagementproject.repository.account.user;
 import com.github.accountmanagementproject.common.converter.custom.GenderConverter;
 import com.github.accountmanagementproject.common.converter.custom.UserStatusConverter;
 import com.github.accountmanagementproject.common.myenum.Gender;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.common.myenum.UserStatus;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.socialid.SocialId;
@@ -161,6 +162,22 @@ public class MyUser {
     public void addSocialId(SocialId socialId) {
         if (this.socialIds == null) this.socialIds = Set.of(socialId);
         else this.socialIds.add(socialId);
+    }
+    /*TODO: 세터있는게 싫어서
+    * @Entity
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "users_phone_number_unique", columnNames = "phone_number"),
+                @UniqueConstraint(name = "users_email_unique", columnNames = "email")
+        })
+@DynamicInsert
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MyUser { 이런식으로 설정하고 아래 메서드를 추가하고싶다. 추후 리팩터링*/
+    public void setBeginRole(RoleEnum beginRoleName){
+        this.roles = Set.of(Role.fromName(beginRoleName));
     }
 
 
