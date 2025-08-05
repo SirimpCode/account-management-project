@@ -3,7 +3,7 @@ package com.github.accountmanagementproject.web.controller.account.auth;
 
 import com.github.accountmanagementproject.common.myenum.Gender;
 import com.github.accountmanagementproject.common.myenum.OAuthProvider;
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.service.account.auth.SignUpLoginService;
 import com.github.accountmanagementproject.service.account.oauth.OAuthLoginService;
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
@@ -64,7 +64,7 @@ public class AuthController implements AuthControllerDocs {
         return CustomSuccessResponse.ofOk(gender.name(), gender);
     }
     @GetMapping("/tttt")
-    public CustomSuccessResponse<RolesEnum> tttt(@Parameter(schema = @Schema(type = "string", example = "카카오")) @RequestParam RolesEnum role){
+    public CustomSuccessResponse<RoleEnum> tttt(@Parameter(schema = @Schema(type = "string", example = "카카오")) @RequestParam RoleEnum role){
         return CustomSuccessResponse.ofOk(role.name(), role);
     }
 

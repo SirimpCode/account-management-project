@@ -2,6 +2,7 @@ package com.github.accountmanagementproject.common;
 
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomNotFoundException;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
 import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
@@ -29,14 +30,14 @@ public class AccountServiceModule {
 
     public Role getNormalUserRole() {
         if (normalUserRole == null) {
-            normalUserRole = new Role(2);
+            normalUserRole = Role.fromName(RoleEnum.ROLE_USER);
         }
         return normalUserRole;
     }
 
     public Role getAdminUserRole() {
         if (adminUserRole == null) {
-            adminUserRole = new Role(1);
+            adminUserRole = Role.fromName(RoleEnum.ROLE_ADMIN);
         }
         return adminUserRole;
     }

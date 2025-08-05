@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.common.converter.custom;
 import com.github.accountmanagementproject.common.myenum.MyEnumInterface;
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import jakarta.persistence.AttributeConverter;
 import lombok.NonNull;
 import org.springframework.core.convert.converter.Converter;
@@ -19,7 +19,7 @@ public abstract class MyConverter<T extends Enum<T> & MyEnumInterface> implement
                 .flatMap(enumValue -> Stream.of(
                         Map.entry(enumValue.getValue(), enumValue),
                         Map.entry(
-                                targetEnumClass.equals(RolesEnum.class) && enumValue.name().startsWith("ROLE_")
+                                targetEnumClass.equals(RoleEnum.class) && enumValue.name().startsWith("ROLE_")
                                         ? enumValue.name().substring(5)
                                         : enumValue.name(),
                                 enumValue

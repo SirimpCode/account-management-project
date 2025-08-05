@@ -5,6 +5,7 @@ import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
 import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
@@ -45,7 +46,7 @@ public class SignUpLoginService {
         signUpRequest.passwordReplace(passwordEncoder.encode(signUpRequest.getPassword()));
 
         MyUser signUpMyUser = UserMapper.INSTANCE.accountDtoToMyUser(signUpRequest);
-        signUpMyUser.setRoles(Set.of(new Role(2)));
+        signUpMyUser.setRoles(Set.of(Role.fromName(RoleEnum.ROLE_USER)));
         //세이브 실행하면서 중복값 발생시 발생되는 익셉션 예외처리
         try {
             myUsersRepository.save(signUpMyUser);

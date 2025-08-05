@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.common.converter.mapper;
 
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.socialid.SocialId;
@@ -31,7 +31,7 @@ public interface UserMapper {
     MyUser accountDtoToMyUser(SignUpRequest signUpRequest);
 
     @Named("getMyRoles")
-    default Set<RolesEnum> myRoles(Set<Role> roles){
+    default Set<RoleEnum> myRoles(Set<Role> roles){
         return roles.stream().map(r->r.getName())
                 .collect(Collectors.toSet());
     }

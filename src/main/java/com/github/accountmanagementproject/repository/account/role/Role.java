@@ -1,7 +1,7 @@
 package com.github.accountmanagementproject.repository.account.role;
 
 import com.github.accountmanagementproject.common.converter.custom.RoleConverter;
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +18,18 @@ public class Role {
 
     @Convert(converter = RoleConverter.class)
     @Column(length = 4)
-    private RolesEnum name;
+    private RoleEnum name;
 
 
-    public Role(Integer id) {
+    private Role(Integer id) {
         this.rolesId = id;
     }
-    public Role(RolesEnum name) {
-        this.name = name;
+    public static Role fromName(RoleEnum name) {
+        return switch (name) {
+            case ROLE_ADMIN -> new Role(1);
+            case ROLE_USER -> new Role(2);
+            case ROLE_SUPER_USER -> new Role(3);
+        };
     }
 }
 

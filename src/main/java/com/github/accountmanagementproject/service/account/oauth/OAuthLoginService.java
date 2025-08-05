@@ -6,6 +6,7 @@ import com.github.accountmanagementproject.common.exceptions.CustomNotFoundExcep
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
 import com.github.accountmanagementproject.common.myenum.Gender;
 import com.github.accountmanagementproject.common.myenum.OAuthProvider;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.role.Role;
@@ -112,7 +113,7 @@ public class OAuthLoginService {
 
     private MyUser processTempSignUp(OAuthUserInfo oAuthUserInfo) {
         MyUser newUser = UserMapper.INSTANCE.oAuthInfoResponseToMyUser(oAuthUserInfo);
-        newUser.setRoles(Set.of(new Role(2)));
+        newUser.setRoles(Set.of(Role.fromName(RoleEnum.ROLE_USER)));
         return myUsersRepository.save(newUser);
     }
 

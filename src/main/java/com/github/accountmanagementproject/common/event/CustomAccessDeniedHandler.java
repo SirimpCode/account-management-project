@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.common.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.accountmanagementproject.common.myenum.RolesEnum;
+import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,7 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 .customMessage("접근 권한 없음")
                 .request(authorities.stream()
                         .map(authority->authority.getAuthority())
-                        .map(roles-> RolesEnum.valueOf(roles).getValue())
+                        .map(roles-> RoleEnum.valueOf(roles).getValue())
                         .collect(Collectors.joining(",")))
                 .build();
 
