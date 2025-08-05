@@ -54,16 +54,11 @@ public class OAuthLoginService {
                 .orElseGet(() -> processTempSignUp(oAuthUserInfo));//없으면 임시 회원가입 진행
         //필요에 따라 유저 정보에 소셜 ID, 프로필이미지 설정
         requestUserSetSocialId(requestUser, socialIdPk);
-        updateProfileImgFromOAuthInfo(oAuthUserInfo, requestUser);
+        requestUser.updateProfileImgFromOAuthInfo(oAuthUserInfo.getProfileImg());
+
 
         //로그인 또는 회원가입 응답 생성
         return requestUser.isEnabled() ? createOAuthLoginResponse(requestUser) : createOAuthSignUpResponse(oAuthUserInfo);
-    }
-
-    private void updateProfileImgFromOAuthInfo(OAuthUserInfo userInfo, MyUser requestUser) {
-        if (userInfo.getProfileImg() != null && Gender.isDefaultProfileImg(requestUser.getProfileImg()))
-            requestUser.setProfileImg(userInfo.getProfileImg());
-
     }
 
     private void requestUserSetSocialId(MyUser requestUser, SocialIdPk socialIdPk) {

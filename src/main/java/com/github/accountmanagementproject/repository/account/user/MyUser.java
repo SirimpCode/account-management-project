@@ -179,7 +179,11 @@ public class MyUser { 이런식으로 설정하고 아래 메서드를 추가하
     public void setBeginRole(RoleEnum beginRoleName){
         this.roles = Set.of(Role.fromName(beginRoleName));
     }
+    public void updateProfileImgFromOAuthInfo(String oauthProfileImage) {
+        if (oauthProfileImage != null && Gender.isDefaultProfileImg(this.profileImg))
+            this.profileImg = oauthProfileImage;
 
+    }
 
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
