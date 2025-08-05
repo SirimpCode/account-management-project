@@ -16,13 +16,15 @@ public class RedisConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${spring.data.redis.password}")
+    @Value("${spring.data.redis.password:#{null}}")
+    // password가 설정되지 않은 경우 null로 처리
     private String password;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-        config.setPassword(password);
+        if (password != null && !password.isEmpty())
+            config.setPassword(password);
         return new LettuceConnectionFactory(config);
     }
     @Bean
