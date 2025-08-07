@@ -3,6 +3,7 @@ package com.github.accountmanagementproject.common;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomNotFoundException;
 import com.github.accountmanagementproject.common.myenum.RoleEnum;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
 import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
@@ -134,15 +136,14 @@ public class AccountServiceModule {
 //    }
 
 
-    @Transactional
-    public MyUser failureCounting(MyUser failUser) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void failureCounting(CustomUserDetails failUser) {
         failUser.loginValueSetting(true);
         myUsersRepository.updateFailureCountByEmail(failUser);
-        return failUser;
     }
 
     @Transactional
-    public void loginSuccessEvent(MyUser sucUser) {
+    public void loginSuccessEvent(CustomUserDetails sucUser) {
         sucUser.loginValueSetting(false);
         myUsersRepository.updateFailureCountByEmail(sucUser);
     }

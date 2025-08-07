@@ -7,6 +7,8 @@ import com.github.accountmanagementproject.common.exceptions.CustomServerExcepti
 import com.github.accountmanagementproject.common.myenum.Gender;
 import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import com.github.accountmanagementproject.common.myenum.RoleEnum;
+import com.github.accountmanagementproject.common.security.provider.CustomAuthenticationProvider;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.role.Role;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,7 @@ public class OAuthLoginService {
     private final OAuthClientManager oAuthClientManager;
     private final JwtProvider jwtProvider;
     private final OAuthCodeManager oAuthCodeManager;
+    private final CustomAuthenticationProvider customAuthenticationProvider;
 
     public String getAuthorizationUrl(OAuthProvider oAuthProvider, String redirectUri) {
         return oAuthCodeManager.getAuthorizationUrl(oAuthProvider, redirectUri);
@@ -79,8 +83,15 @@ public class OAuthLoginService {
                 .httpStatus(HttpStatus.CREATED)
                 .build();
     }
+    //계정의 유효성 여부를 검사하고 SecurityContextHolder에 인증 정보를 설정합니다.
+    //로그인 성공 이벤트도 발행
+    private void securityOAuthSuccessVerify(MyUser myUser){
+        CustomUserDetails userDetails = UserMapper.INSTANCE.myUserToCustomUserDetails(myUser);
+        customAuthenticationProvider.oauthAuthenticate(userDetails);
+    }
 
     private AuthResult createOAuthLoginResponse(MyUser myUser) {
+        securityOAuthSuccessVerify(myUser);
         return AuthResult.builder()
                 .response(createTokenAndSave(myUser))
                 .message("로그인 성공")
@@ -96,7 +107,7 @@ public class OAuthLoginService {
         String accessToken = jwtProvider.createNewAccessToken(myUser.getEmail(), roles);
         String refreshToken = jwtProvider.createNewRefreshToken();
         try {
-            myUser.loginValueSetting(false);
+//            myUser.loginValueSetting(false);
             return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()

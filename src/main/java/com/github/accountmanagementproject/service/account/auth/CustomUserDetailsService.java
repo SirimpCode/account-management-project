@@ -1,7 +1,7 @@
-package com.github.accountmanagementproject.service.account.auth.userdetails;
+package com.github.accountmanagementproject.service.account.auth;
 
 import com.github.accountmanagementproject.common.exceptions.CustomBadCredentialsException;
-import com.github.accountmanagementproject.repository.account.user.MyUser;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -18,13 +18,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public CustomUserDetails loadUserByUsername(String emailOrPhoneNumber) {
-        MyUser myUser = myUsersRepository.findByEmailOrPhoneNumber(emailOrPhoneNumber)
+        return myUsersRepository.findByEmailOrPhoneNumberForAuth(emailOrPhoneNumber)
                 .orElseThrow(() -> CustomBadCredentialsException.of()
                         .systemMessage("User Not Found")
                         .customMessage("존재 하지 않는 유저 입니다.")
                         .build());
-
-        return CustomUserDetails.of(myUser);
     }
 /*CustomAuthenticationProvider 사용으로 주석처리
     private void checkLockedOrDisable(MyUser myUser) {

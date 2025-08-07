@@ -1,6 +1,6 @@
 package com.github.accountmanagementproject.common.exceptions;
 
-import com.github.accountmanagementproject.service.account.auth.userdetails.CustomUserDetails;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import lombok.Getter;
 import org.springframework.security.authentication.BadCredentialsException;
 

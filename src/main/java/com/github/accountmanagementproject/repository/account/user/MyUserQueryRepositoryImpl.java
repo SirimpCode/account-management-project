@@ -1,10 +1,10 @@
 package com.github.accountmanagementproject.repository.account.user;
 
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
-import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.socialid.QSocialId;
 import com.github.accountmanagementproject.repository.account.socialid.SocialIdPk;
 import com.github.accountmanagementproject.repository.account.role.QRole;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,6 +25,7 @@ public class MyUserQueryRepositoryImpl implements MyUserQueryRepository {
         List<MyUser> myUserList = queryFactory.select(qMyUser)
                 .from(qMyUser)
                 .leftJoin(qMyUser.socialIds, qSocialId).fetchJoin()
+                .leftJoin(qMyUser.roles, QRole.role).fetchJoin()
                 .where(qSocialId.socialIdPk.eq(socialIdPk).or(qMyUser.email.eq(email)))
                 .fetch();
         MyUser response = singleOutAUser(myUserList, socialIdPk);
@@ -43,35 +44,35 @@ public class MyUserQueryRepositoryImpl implements MyUserQueryRepository {
                 .build();
     }
     @Override
-    public Optional<MyUser> findByEmailOrPhoneNumber(String emailOrPhoneNumber) {
+    public Optional<CustomUserDetails> findByEmailOrPhoneNumberForAuth(String emailOrPhoneNumber) {
         BooleanExpression emailOrPhoneNumberPredicate = emailOrPhoneNumberPredicate(emailOrPhoneNumber);
 
-        List<MyUser> user = queryFactory
+        List<CustomUserDetails> user = queryFactory
                 .from(qMyUser)
                 .join(qMyUser.roles, QRole.role)
                 .where(emailOrPhoneNumberPredicate)
                 .transform(
-                        GroupBy.groupBy(qMyUser.email).list(
-                                Projections.fields(MyUser.class,
+                        GroupBy.groupBy(qMyUser.userId).list(
+                                Projections.fields(CustomUserDetails.class,
+                                        qMyUser.userId,
                                         qMyUser.email,
                                         qMyUser.nickname,
                                         qMyUser.password,
-                                        qMyUser.failureCount,
                                         qMyUser.status,
+                                        qMyUser.failureCount,
                                         qMyUser.failureDate,
+                                        qMyUser.withdrawalDate,
                                         qMyUser.createdAt,
                                         qMyUser.lastLogin,
-                                        GroupBy.set(
-                                                Projections.fields(Role.class,
-                                                        QRole.role.name)).as("roles")))
-                );
+                                        GroupBy.set(QRole.role.name).as("roles"))
+                ));
 
 
         return Optional.ofNullable(user.size()==1?user.get(0):null);
     }
 
     @Override
-    public void updateFailureCountByEmail(MyUser failUser) {
+    public void updateFailureCountByEmail(CustomUserDetails failUser) {
         queryFactory.update(qMyUser)
                 .set(qMyUser.failureCount, failUser.getFailureCount())
                 .set(qMyUser.failureDate, failUser.getFailureDate())

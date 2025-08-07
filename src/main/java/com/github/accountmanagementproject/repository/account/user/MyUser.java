@@ -117,25 +117,25 @@ public class MyUser {
                 && this.failureDate.isBefore(LocalDateTime.now().minusMinutes(5));
     }
 
-    public boolean isFailureCountingOrLocking() {
-        return this.failureCount < 4;
-    }
-
-    //로그인 실패 또는 성공시의 변화 될 값 DB에 반영
-    public void loginValueSetting(boolean failure) {
-        //5번째 시도이고 5분이내 한번 더 시도했을시 잠금처리
-        this.status = failure ?
-                (isFailureCountingOrLocking() || isUnlockTime() ? UserStatus.NORMAL : UserStatus.LOCK)
-                : UserStatus.NORMAL;
-        //실패시 failureCount 를 1 증가시킨다. 단 계정이 잠길땐 0으로 만들고, 실패한지 5분 이상 지났을시 1부터 다시시작
-        this.failureCount = failure ?
-                (isUnlockTime() ?
-                        1
-                        : (isFailureCountingOrLocking() ? failureCount + 1 : 0))
-                : 0;
-        this.failureDate = failure ? LocalDateTime.now() : null;
-        this.lastLogin = !failure ? LocalDateTime.now() : this.lastLogin;
-    }
+//    public boolean isFailureCountingOrLocking() {
+//        return this.failureCount < 4;
+//    }
+//
+//    //로그인 실패 또는 성공시의 변화 될 값 DB에 반영
+//    public void loginValueSetting(boolean failure) {
+//        //5번째 시도이고 5분이내 한번 더 시도했을시 잠금처리
+//        this.status = failure ?
+//                (isFailureCountingOrLocking() || isUnlockTime() ? UserStatus.NORMAL : UserStatus.LOCK)
+//                : UserStatus.NORMAL;
+//        //실패시 failureCount 를 1 증가시킨다. 단 계정이 잠길땐 0으로 만들고, 실패한지 5분 이상 지났을시 1부터 다시시작
+//        this.failureCount = failure ?
+//                (isUnlockTime() ?
+//                        1
+//                        : (isFailureCountingOrLocking() ? failureCount + 1 : 0))
+//                : 0;
+//        this.failureDate = failure ? LocalDateTime.now() : null;
+//        this.lastLogin = !failure ? LocalDateTime.now() : this.lastLogin;
+//    }
 
     public void oAuthSignUpSetting(OAuthSignUpDto oAuthSignUpDto) {
         this.email = oAuthSignUpDto.getEmail();
@@ -174,7 +174,7 @@ public class MyUser {
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class MyUser { 이런식으로 설정하고 아래 메서드를 추가하고싶다. 추후 리팩터링*/
     public void setBeginRole(RoleEnum beginRoleName){
         this.roles = Set.of(Role.fromName(beginRoleName));

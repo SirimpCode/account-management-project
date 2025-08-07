@@ -1,6 +1,7 @@
 package com.github.accountmanagementproject.common.converter.mapper;
 
 import com.github.accountmanagementproject.common.myenum.RoleEnum;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.config.client.oauth.dto.userinfo.OAuthUserInfo;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.socialid.SocialId;
@@ -47,6 +48,19 @@ public interface UserMapper {
         SocialId newSocialId = SocialId.ofSocialIdPkAndMyUser(socialIdPk, myUser);
         myUser.addSocialId(newSocialId);
     }
+
     @Mapping(target = "provider", source = "OAuthProvider")
     OAuthSignUpDto oAuthUserInfoToOAuthSignUpDto(OAuthUserInfo oAuthUserInfo);
+
+
+    @Mapping(target = "roles", source = "roles", qualifiedByName = "roleSetToRoleEnumSet")
+    CustomUserDetails myUserToCustomUserDetails(MyUser myUser);
+
+    @Named("roleSetToRoleEnumSet")
+    default Set<RoleEnum> roleSetToRoleEnumSet(Set<Role> roles) {
+        if (roles == null) return null;
+        return roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+    }
 }

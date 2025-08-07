@@ -6,6 +6,7 @@ import com.github.accountmanagementproject.common.exceptions.CustomBadCredential
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
 import com.github.accountmanagementproject.common.myenum.RoleEnum;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.config.security.JwtProvider;
 import com.github.accountmanagementproject.repository.account.role.Role;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
@@ -17,6 +18,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ public class SignUpLoginService {
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService customUserDetailsService;
 
 
     @Transactional
@@ -60,7 +63,11 @@ public class SignUpLoginService {
     }
 
     public TokenDto loginResponseToken(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(loginRequest.toAuthentication());
+        //Authentication authentication = authenticationManager.authenticate(loginRequest.toAuthentication());
+        CustomUserDetails details = customUserDetailsService.loadUserByUsername(loginRequest.getEmailOrPhoneNumber());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(details, loginRequest.getPassword())
+        );
 
         String roles = authentication.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())

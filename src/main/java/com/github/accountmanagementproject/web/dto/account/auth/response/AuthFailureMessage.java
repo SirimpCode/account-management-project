@@ -2,6 +2,7 @@ package com.github.accountmanagementproject.web.dto.account.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.accountmanagementproject.common.myenum.UserStatus;
+import com.github.accountmanagementproject.common.security.userdetails.CustomUserDetails;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
 import lombok.Getter;
 
@@ -19,11 +20,11 @@ public class AuthFailureMessage {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final LocalDateTime withdrawalDate;
 
-    public AuthFailureMessage(MyUser myUser){
-        this.nickname = myUser.getNickname();
-        this.failureCount = myUser.getFailureCount() == 0 || myUser.isDisabled() ? null:myUser.getFailureCount();
-        this.status = myUser.getStatus()== UserStatus.NORMAL?null:myUser.getStatus().getValue();
-        this.failureDate = myUser.isDisabled()?null:myUser.getFailureDate();
-        this.withdrawalDate = myUser.getWithdrawalDate();
+    public AuthFailureMessage(CustomUserDetails userDetails){
+        this.nickname = userDetails.getNickname();
+        this.failureCount = userDetails.getFailureCount() == 0 || userDetails.isDisabled() ? null:userDetails.getFailureCount();
+        this.status = userDetails.getStatus()== UserStatus.NORMAL?null:userDetails.getStatus().getValue();
+        this.failureDate = userDetails.isDisabled()?null:userDetails.getFailureDate();
+        this.withdrawalDate = userDetails.getWithdrawalDate();
     }
 }
