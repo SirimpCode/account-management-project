@@ -4,7 +4,6 @@ import com.github.accountmanagementproject.common.converter.mapper.UserMapper;
 import com.github.accountmanagementproject.common.exceptions.CustomBadRequestException;
 import com.github.accountmanagementproject.common.exceptions.CustomNotFoundException;
 import com.github.accountmanagementproject.common.exceptions.CustomServerException;
-import com.github.accountmanagementproject.common.myenum.Gender;
 import com.github.accountmanagementproject.common.myenum.OAuthProvider;
 import com.github.accountmanagementproject.common.myenum.RoleEnum;
 import com.github.accountmanagementproject.common.security.provider.CustomAuthenticationProvider;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -107,7 +105,6 @@ public class OAuthLoginService {
         String accessToken = jwtProvider.createNewAccessToken(myUser.getEmail(), roles);
         String refreshToken = jwtProvider.createNewRefreshToken();
         try {
-//            myUser.loginValueSetting(false);
             return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()

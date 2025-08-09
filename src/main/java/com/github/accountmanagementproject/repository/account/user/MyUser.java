@@ -33,7 +33,7 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column(unique = true, nullable = false, length = 50)
     private String email;
@@ -154,9 +154,9 @@ public class MyUser {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getRoles().stream()
+        return this.roles.stream()
                 .map(roles -> new SimpleGrantedAuthority(roles.getName().name()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public void addSocialId(SocialId socialId) {

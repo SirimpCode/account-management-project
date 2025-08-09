@@ -32,12 +32,10 @@ public class JwtProvider {
 
     private static final long REFRESH_TOKEN_EXPIRATION = 1000*60*10;//테스트를 위해 10분
     private static final long ACCESS_TOKEN_EXPIRATION = 1000*60*60;//60분
-    public static String getTokenType(){
-        return "Bearer";
-    }
+    private static final String TOKEN_TYPE = "Bearer";
 
 
-    public JwtProvider(@Value("${jwtpassword.source}")String keySource, RedisRepository redisRepository) {
+    public JwtProvider(@Value("${jwt-password.source}")String keySource, RedisRepository redisRepository) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySource));
         this.redisRepository = redisRepository;
     }
@@ -74,7 +72,7 @@ public class JwtProvider {
         redisRepository.save(accessToken, refreshToken, exp);
 
         return TokenDto.builder()
-                .tokenType(getTokenType())
+                .tokenType(TOKEN_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
