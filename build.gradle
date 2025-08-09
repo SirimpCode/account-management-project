@@ -9,6 +9,7 @@ group = 'com.github'
 version = '0.0.1-SNAPSHOT'
 def mapStructVersion = "1.6.3"
 def querydslVersion = "7.0"
+def jjwtVersion = "0.12.6"
 def generatedDir = "src/main/generated"
 def buildDir = "building" //여기는 내가 그냥 jar파일 생성되는 폴더로 사용할생각이다.
 
@@ -52,9 +53,9 @@ dependencies {
     //mariadb
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
     //jwt
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     //redis
