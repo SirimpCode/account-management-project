@@ -6,6 +6,7 @@ import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthD
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.ResponseCookie;
 
 @Getter
 @Builder
@@ -16,6 +17,6 @@ public class TokenResponse implements OAuthDtoInterface {
     @Schema(description = "액세스 토큰", example = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs")
     private String accessToken;
     @JsonIgnore
-    private String refreshToken;
+    private ResponseCookie refreshTokenCookie;
 
 }

@@ -4,7 +4,6 @@ package com.github.accountmanagementproject.common.event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.accountmanagementproject.web.dto.response.CustomErrorResponse;
-import com.github.accountmanagementproject.web.filters.JwtFilter;
 import com.nimbusds.jose.util.StandardCharset;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -19,6 +18,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_EXCEPTION_NAME;
+import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_HEADER_NAME;
 
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -35,12 +37,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         // JwtFilter에서 설정한 예외 획득 (현재 코드 유지)
-        Exception resolvedException = (Exception) request.getAttribute(JwtFilter.AUTH_EXCEPTION);
+        Exception resolvedException = (Exception) request.getAttribute(AUTH_EXCEPTION_NAME);
         if (resolvedException == null) {// cause 확인 및 처리
             resolvedException = authException.getCause() instanceof Exception ? (Exception) authException.getCause() : authException;
         }
 
-        String authorizationToken = request.getHeader(JwtFilter.AUTH_HEADER_NAME);
+        String authorizationToken = request.getHeader(AUTH_HEADER_NAME);
         String systemErrorMessage = resolvedException != null ? resolvedException.getMessage() : authException.getMessage();
         String customErrorMessage = resolveCustomErrorMessage(resolvedException);
 

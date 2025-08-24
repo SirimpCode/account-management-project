@@ -9,25 +9,22 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_EXCEPTION_NAME;
+import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_HEADER_NAME;
+
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    public static final String AUTH_EXCEPTION = "auth-exception";
-    public static final String AUTH_HEADER_NAME = "Authorization";
 
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
-        String authToken = request.getHeader(AUTH_HEADER_NAME);
-        String token = StringUtils.hasText(authToken)
-                &&authToken.startsWith("Bearer ")
-                ?authToken.split(" ")[1].trim()
-                :null;
+        String authHeader = request.getHeader(AUTH_HEADER_NAME);
+        String token = JwtProvider.authHeaderToToken(authHeader);
 
         //옵셔널 사용하는 방법과 3항연산자중 취향에 따라 선택 외부 메서드로 빼는 경우도 있음.
 //        String token = Optional.ofNullable(request.getHeader("Authorization"))
@@ -40,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }catch (Exception e){
-                request.setAttribute(AUTH_EXCEPTION, e);
+                request.setAttribute(AUTH_EXCEPTION_NAME, e);
             }
         }
         filterChain.doFilter(request, response);

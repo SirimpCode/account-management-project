@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.boot.web.server.Cookie;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,17 +32,26 @@ public class JwtProvider {
     private final RedisRepository redisRepository;
 
     private final SecretKey key;//= Jwts.SIG.HS256.key().build();  이건 랜덤키 자동생성
-
-
-    public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7);//7일
-    private static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofMinutes(1);//1분
-    private static final String TOKEN_TYPE = "Bearer";
-
-
     public JwtProvider(@Value("${jwt-password.source}") String keySource, RedisRepository redisRepository) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySource));
         this.redisRepository = redisRepository;
     }
+
+
+    public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7);//7일
+    private static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofMinutes(1);//1분
+
+    public static final String TOKEN_TYPE = "Bearer";
+    public static final String AUTH_HEADER_NAME = "Authorization";
+    public static final String AUTH_EXCEPTION_NAME = "auth-exception";
+    public static final String REFRESH_COOKIE_NAME = "RefreshToken";
+
+
+    public static String authHeaderToToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith(TOKEN_TYPE + " ")) return null;
+        return authHeader.replace(TOKEN_TYPE + " ", "");
+    }
+
 
 
     //이메일과 롤을 넣어 엑세스토큰 생성
@@ -73,12 +84,27 @@ public class JwtProvider {
     public TokenResponse saveRefreshTokenAndCreateTokenDto(String accessToken, String refreshToken, Duration exp) {
 
         redisRepository.save(accessToken, refreshToken, exp);
+        ResponseCookie refreshTokenCookie = createRefreshTokenCookie(refreshToken);
 
         return TokenResponse.builder()
                 .tokenType(TOKEN_TYPE)
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshTokenCookie(refreshTokenCookie)
                 .build();
+    }
+
+    private ResponseCookie.ResponseCookieBuilder getBaseCookieBuilder(String value) {
+        return ResponseCookie.from(REFRESH_COOKIE_NAME, value)
+                .httpOnly(true) // JavaScript로 접근 불가
+                .path("/") // 전체 경로에서 사용
+                .sameSite(Cookie.SameSite.STRICT.attributeValue()); // SameSite 설정 CSRF 공격 방지
+//                .secure(true) // HTTPS에서만 전송 (개발 환경에서는 주석 처리)
+    }
+
+    private ResponseCookie createRefreshTokenCookie(String refreshToken) {
+        return refreshToken == null || refreshToken.isBlank() ?
+                getBaseCookieBuilder("").maxAge(0).build()
+                : getBaseCookieBuilder(refreshToken).maxAge(REFRESH_TOKEN_EXPIRATION).build(); // 토큰이 있으면 유효시간 설정
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -137,13 +163,15 @@ public class JwtProvider {
                 .parseSignedClaims(token);
     }
 
-    public void deleteRefreshToken(String accessToken) {
+    public ResponseCookie deleteRefreshToken(String accessToken) {
         String refreshToken = redisRepository.getAndDeleteValue(accessToken);
+
         if (refreshToken != null) {
             log.info("리프레시 토큰 삭제 완료 - refreshToken: {}", refreshToken);
         } else {
             log.warn("삭제할 리프레시 토큰이 없음 - accessToken: {}", accessToken);
         }
+        return createRefreshTokenCookie(null);
     }
 
     public void blackListAccessToken(String accessToken) {

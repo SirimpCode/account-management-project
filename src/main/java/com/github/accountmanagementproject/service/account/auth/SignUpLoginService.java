@@ -17,6 +17,7 @@ import com.github.accountmanagementproject.web.dto.account.auth.response.TokenRe
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -101,10 +102,11 @@ public class SignUpLoginService {
 
     }
 
-    public void logoutInvalidationToken(String accessToken) {
+    public ResponseCookie logoutInvalidationToken(String accessToken) {
         try{
-            jwtProvider.deleteRefreshToken(accessToken);
+            ResponseCookie cookie = jwtProvider.deleteRefreshToken(accessToken);
             jwtProvider.blackListAccessToken(accessToken);
+            return cookie;
         }catch (RedisConnectionFailureException e){
             throw CustomServerException.of()
                     .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
