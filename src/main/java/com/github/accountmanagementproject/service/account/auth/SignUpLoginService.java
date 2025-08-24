@@ -13,7 +13,7 @@ import com.github.accountmanagementproject.repository.account.user.MyUser;
 import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
-import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
+import com.github.accountmanagementproject.web.dto.account.auth.response.TokenResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisConnectionFailureException;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DateTimeException;
-import java.time.Duration;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,7 +61,7 @@ public class SignUpLoginService {
         }
     }
 
-    public TokenDto loginResponseToken(LoginRequest loginRequest) {
+    public TokenResponse loginResponseToken(LoginRequest loginRequest) {
         //Authentication authentication = authenticationManager.authenticate(loginRequest.toAuthentication());
         CustomUserDetails details = customUserDetailsService.loadUserByUsername(loginRequest.getEmailOrPhoneNumber());
         Authentication authentication = authenticationManager.authenticate(
@@ -76,7 +75,7 @@ public class SignUpLoginService {
         String accessToken = jwtProvider.createNewAccessToken(authentication.getName(), roles);
         String refreshToken = jwtProvider.createNewRefreshToken();
         try {
-            return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
+            return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, JwtProvider.REFRESH_TOKEN_EXPIRATION);
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()
                     .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
@@ -85,27 +84,33 @@ public class SignUpLoginService {
         }
     }
 
-    public TokenDto refreshTokenByTokenDto(TokenDto tokenDto) {
+    public TokenResponse refreshTokenByTokens(String accessToken, String refreshToken) {
         try {
-            return jwtProvider.tokenRefresh(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+            return jwtProvider.tokenRefresh(accessToken, refreshToken);
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()
                     .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
                     .customMessage("Redis 서버 연결 실패")
-                    .request(tokenDto)
                     .build();
         } catch (ExpiredJwtException | NoSuchElementException e) {
             throw CustomBadCredentialsException.of()
                     .systemMessage(e.getMessage())
                     .customMessage(e instanceof ExpiredJwtException ? "리프레시 토큰 만료" : "재발급 받을 수 없는 액세스 토큰")
-                    .request(tokenDto)
                     .build();
         }
 
     }
 
-    public void errorTest() {
-        MyUser user = myUsersRepository.findByEmail("abc@abc.com").orElseThrow();
-        myUsersRepository.delete(user);
+    public void logoutInvalidationToken(String accessToken) {
+        try{
+            jwtProvider.deleteRefreshToken(accessToken);
+            jwtProvider.blackListAccessToken(accessToken);
+        }catch (RedisConnectionFailureException e){
+            throw CustomServerException.of()
+                    .systemMessage(e.getMessage()+"   "+e.getCause().getMessage())
+                    .customMessage("Redis 서버 연결 실패")
+                    .build();
+        }
     }
+
 }

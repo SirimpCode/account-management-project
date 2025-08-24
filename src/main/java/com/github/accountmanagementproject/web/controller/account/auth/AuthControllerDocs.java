@@ -2,7 +2,7 @@ package com.github.accountmanagementproject.web.controller.account.auth;
 
 import com.github.accountmanagementproject.web.dto.account.auth.request.LoginRequest;
 import com.github.accountmanagementproject.web.dto.account.auth.request.SignUpRequest;
-import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
+import com.github.accountmanagementproject.web.dto.account.auth.response.TokenResponse;
 import com.github.accountmanagementproject.web.dto.response.CustomSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -115,8 +115,7 @@ public interface AuthControllerDocs {
                                         "message": "로그인 성공",
                                         "responseData": {
                                           "tokenType": "Bearer",
-                                          "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs",
-                                          "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2MTA2N30.y4lrehsGYXDBYM1i92LlGTkg2MbYmkoRt5baWHjh5bg"
+                                          "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs"
                                         },
                                         "timestamp": "2024-10-16T15:34:27.5487649"
                                       }
@@ -183,7 +182,7 @@ public interface AuthControllerDocs {
                                       }
                                     }"""))
     )
-    CustomSuccessResponse<TokenDto> login(@RequestBody LoginRequest loginRequest);
+    ResponseEntity<CustomSuccessResponse<TokenResponse>> login(@RequestBody LoginRequest loginRequest);
 
 
     @Operation(summary = "토큰 재발급", description = "리프레시 토큰을 이용해 새로운 액세스 토큰을 발급")
@@ -200,14 +199,13 @@ public interface AuthControllerDocs {
                                         "message": "토큰 재발급 성공",
                                         "responseData": {
                                           "tokenType": "Bearer",
-                                          "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs",
-                                          "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs"
+                                          "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwNjA0NjcsImV4cCI6MTcyOTA2NDA2Nywic3ViIjoiYWJjM0BhYmMuY29tIiwicm9sZXMiOiJST0xFX1VTRVIifQ.LeC81cXhFI1H_VlKcJlOzRmtR73ITIjqYdOsrPZqPZs"
                                         },
                                         "timestamp": "2024-10-16T15:34:27.5487649"
                                       }
                                     }""")
             )
     )
-    CustomSuccessResponse<TokenDto> regenerateToken(@RequestBody TokenDto tokenDto);
+    ResponseEntity<CustomSuccessResponse<TokenResponse>> regenerateToken(String authHeader, String refreshToken);
 
 }

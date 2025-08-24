@@ -16,7 +16,7 @@ import com.github.accountmanagementproject.repository.account.socialid.SocialIdP
 import com.github.accountmanagementproject.repository.account.socialid.SocialIdRepository;
 import com.github.accountmanagementproject.repository.account.user.MyUser;
 import com.github.accountmanagementproject.repository.account.user.MyUserRepository;
-import com.github.accountmanagementproject.web.dto.account.auth.response.TokenDto;
+import com.github.accountmanagementproject.web.dto.account.auth.response.TokenResponse;
 import com.github.accountmanagementproject.web.dto.account.oauth.request.OAuthLoginParams;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.AuthResult;
 import com.github.accountmanagementproject.web.dto.account.oauth.response.OAuthSignUpDto;
@@ -27,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
-import java.time.Duration;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -98,14 +97,14 @@ public class OAuthLoginService {
     }
 
 
-    private TokenDto createTokenAndSave(MyUser myUser) {
+    private TokenResponse createTokenAndSave(MyUser myUser) {
         String roles = myUser.getRoles().stream().map(role -> role.getName().name())
                 .collect(Collectors.joining(","));
         //토큰 생성
         String accessToken = jwtProvider.createNewAccessToken(myUser.getEmail(), roles);
         String refreshToken = jwtProvider.createNewRefreshToken();
         try {
-            return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, Duration.ofMinutes(3));
+            return jwtProvider.saveRefreshTokenAndCreateTokenDto(accessToken, refreshToken, JwtProvider.REFRESH_TOKEN_EXPIRATION);
         } catch (RedisConnectionFailureException e) {
             throw CustomServerException.of()
                     .systemMessage(e.getMessage())
