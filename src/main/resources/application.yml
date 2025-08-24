@@ -8,6 +8,13 @@ jasypt:
 server: # nginx 환경을 위한 설정 포워딩 되기전 정보들을 받아옴
   forward-headers-strategy: native
 
+
+cool-sms:
+  api-key: ENC(MW3p+7iONpDmGUdGQWV1kqibSNSc9Dy0jvXnloXoxpo=)
+  api-secret: ENC(ZZ2VFe+nZJKwIRr0u302+4YMZAQvCiY49d8O78C/+lJ0WJFFRrNC9qC1U4UqdPfR)
+  domain : https://api.solapi.com
+  phone-number: ENC(U3RR4xvGnLE7hSQfVw4aHA13JJjrEduR)
+
 oauth:
   microsoft:
     client-id: ENC(rjiKRyqXBeKynTgatKnOn/mBdAbdYswntEs0uWueeEomcTUV8jjjqhRqh4X3SEYA)

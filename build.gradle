@@ -70,6 +70,8 @@ dependencies {
 
     //azure storage
     implementation 'com.azure.spring:spring-cloud-azure-starter-storage-blob'
+    //sms 발송
+    implementation 'net.nurigo:sdk:4.2.7'
 
 }
 

@@ -18,7 +18,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.github.accountmanagementproject.common.ResponseEntityUtils.createResponseEntity;
+import static com.github.accountmanagementproject.common.MyUtils.createResponseEntity;
 import static com.github.accountmanagementproject.config.security.JwtProvider.*;
 
 @RestController
