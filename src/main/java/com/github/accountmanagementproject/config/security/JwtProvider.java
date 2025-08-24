@@ -9,7 +9,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.BasicJsonParser;
@@ -118,7 +117,6 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(payload.getSubject(), accessToken, roles);
     }
 
-    @Transactional
     public TokenResponse tokenRefresh(String accessToken, String clientRefreshToken) {
         //리프레시 토큰 유효성 검사와 파싱
         Jws<Claims> refreshTokenClaims = tokenParsing(clientRefreshToken);

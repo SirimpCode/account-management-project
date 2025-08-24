@@ -13,8 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_EXCEPTION_NAME;
-import static com.github.accountmanagementproject.config.security.JwtProvider.AUTH_HEADER_NAME;
+import static com.github.accountmanagementproject.config.security.JwtProvider.*;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -24,7 +23,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader(AUTH_HEADER_NAME);
-        String token = JwtProvider.authHeaderToToken(authHeader);
+        String token = authHeaderToToken(authHeader);
 
         //옵셔널 사용하는 방법과 3항연산자중 취향에 따라 선택 외부 메서드로 빼는 경우도 있음.
 //        String token = Optional.ofNullable(request.getHeader("Authorization"))
